@@ -43,3 +43,9 @@ Log cardio:
 ```bash
 python3 gym531.py cardio-log --date 2026-02-18 --protocol VO2_4x4 --duration 40 --avg-hr 151 --max-hr 170 --notes "good intervals"
 ```
+
+Track cardio benchmark progress (separate table):
+```bash
+python3 gym531.py cardio-progress-add --date 2026-02-14 --duration 30 --speed 6.5 --incline 1 --final-bpm 130 --notes "baseline"
+python3 gym531.py cardio-progress-show
+```

@@ -85,6 +85,20 @@ def ensure_rings_schema(conn: sqlite3.Connection):
         )
         """
     )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS cardio_progress_tests (
+          id INTEGER PRIMARY KEY,
+          test_date TEXT NOT NULL,
+          duration_min INTEGER NOT NULL,
+          speed_kmh REAL NOT NULL,
+          incline_pct REAL NOT NULL,
+          final_bpm INTEGER NOT NULL,
+          notes TEXT,
+          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
     conn.commit()
 
 
@@ -422,6 +436,40 @@ def cmd_cardio_log(args):
     print(f"Logged cardio session for {d.isoformat()} ({protocol}).")
 
 
+def cmd_cardio_progress_add(args):
+    d = parse_date(args.date)
+    conn = get_conn()
+    conn.execute(
+        """
+        INSERT INTO cardio_progress_tests(test_date,duration_min,speed_kmh,incline_pct,final_bpm,notes)
+        VALUES(?,?,?,?,?,?)
+        """,
+        (d.isoformat(), args.duration, args.speed, args.incline, args.final_bpm, args.notes),
+    )
+    conn.commit()
+    print(f"Logged cardio progress test for {d.isoformat()}.")
+
+
+def cmd_cardio_progress_show(args):
+    conn = get_conn()
+    rows = conn.execute(
+        """
+        SELECT test_date, duration_min, speed_kmh, incline_pct, final_bpm, notes
+        FROM cardio_progress_tests
+        ORDER BY date(test_date) ASC, id ASC
+        """
+    ).fetchall()
+    if not rows:
+        print("No cardio progress tests logged yet.")
+        return
+    print("Cardio progress tests:")
+    for r in rows:
+        note = f" | {r['notes']}" if r['notes'] else ""
+        print(
+            f"  {r['test_date']}: {r['duration_min']}min @ {r['speed_kmh']:.1f} km/h, {r['incline_pct']:.1f}% incline, final {r['final_bpm']} bpm{note}"
+        )
+
+
 def main():
     parser = argparse.ArgumentParser(description="5/3/1 + Rings tracker helper")
     sub = parser.add_subparsers(required=True)
@@ -467,6 +515,18 @@ def main():
     p_cl.add_argument("--max-hr", type=int)
     p_cl.add_argument("--notes")
     p_cl.set_defaults(func=cmd_cardio_log)
+
+    p_cpa = sub.add_parser("cardio-progress-add", help="Log cardio progress benchmark")
+    p_cpa.add_argument("--date", help="YYYY-MM-DD")
+    p_cpa.add_argument("--duration", required=True, type=int)
+    p_cpa.add_argument("--speed", required=True, type=float)
+    p_cpa.add_argument("--incline", required=True, type=float)
+    p_cpa.add_argument("--final-bpm", required=True, type=int)
+    p_cpa.add_argument("--notes")
+    p_cpa.set_defaults(func=cmd_cardio_progress_add)
+
+    p_cps = sub.add_parser("cardio-progress-show", help="Show cardio progress benchmarks")
+    p_cps.set_defaults(func=cmd_cardio_progress_show)
 
     args = parser.parse_args()
     args.func(args)
