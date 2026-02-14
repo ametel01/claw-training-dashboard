@@ -160,6 +160,12 @@ def parse_set_triplets(s: str):
     return out
 
 
+def parse_rep_list(s: str):
+    if not s:
+        return []
+    return [int(x.strip()) for x in s.split(",") if x.strip()]
+
+
 def ensure_session(conn: sqlite3.Connection, d: date, notes: str | None, bw: float | None, readiness: int | None):
     td = get_training_day(conn, d)
     block = get_block_for_date(conn, d)
@@ -191,14 +197,24 @@ def cmd_log(args):
 
     main_done = parse_set_triplets(args.main)
     supp_done = parse_set_triplets(args.supp)
+    main_reps_only = parse_rep_list(args.main_reps)
 
-    if len(main_done) != 3:
+    if main_done and len(main_done) != 3:
         raise RuntimeError("Main sets require exactly 3 entries, e.g. 72.5x5,82.5x5,92.5x5")
+    if main_reps_only and len(main_reps_only) != 3:
+        raise RuntimeError("--main-reps needs exactly 3 reps, e.g. 5,5,4")
+    if not main_done and not main_reps_only:
+        # assume completed as prescribed if user only says "completed"
+        main_reps_only = [int(ms[1]) for ms in p["main_sets"]]
 
     session_id, _, _, _ = ensure_session(conn, d, args.notes, args.bodyweight, args.readiness)
     conn.execute("DELETE FROM set_logs WHERE session_id=? AND category IN ('main','supplemental')", (session_id,))
 
-    for i, ((pct, reps, prescribed_weight), (aw, ar)) in enumerate(zip(p["main_sets"], main_done), start=1):
+    for i, (pct, reps, prescribed_weight) in enumerate(p["main_sets"], start=1):
+        if main_done:
+            aw, ar = main_done[i - 1]
+        else:
+            aw, ar = prescribed_weight, main_reps_only[i - 1]
         conn.execute(
             """
             INSERT INTO set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
@@ -216,6 +232,15 @@ def cmd_log(args):
                 """,
                 (session_id, p["supp_lift_id"], "supplemental", i, p["fsl_pct"], p["supp_reps"], aw, ar, None, None),
             )
+    elif args.supp_completed:
+        for i in range(1, p["supp_sets"] + 1):
+            conn.execute(
+                """
+                INSERT INTO set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
+                VALUES(?,?,?,?,?,?,?,?,?,?)
+                """,
+                (session_id, p["supp_lift_id"], "supplemental", i, p["fsl_pct"], p["supp_reps"], p["supp_weight"], p["supp_reps"], None, None),
+            )
 
     conn.commit()
     print(f"Logged session for {d.isoformat()}.")
@@ -231,8 +256,10 @@ def main():
 
     p_log = sub.add_parser("log", help="Log completed workout sets")
     p_log.add_argument("--date", help="YYYY-MM-DD")
-    p_log.add_argument("--main", required=True, help="3 main sets as w x reps CSV, e.g. 72.5x5,82.5x5,92.5x5")
+    p_log.add_argument("--main", default="", help="3 main sets as w x reps CSV, e.g. 72.5x5,82.5x5,92.5x5")
+    p_log.add_argument("--main-reps", default="", help="Main set reps only, e.g. 5,5,4 (weights auto from prescription)")
     p_log.add_argument("--supp", default="", help="Supplemental sets CSV, e.g. 55x10,55x10,55x10,55x10,55x10")
+    p_log.add_argument("--supp-completed", action="store_true", help="Mark supplemental work completed as prescribed")
     p_log.add_argument("--bodyweight", type=float)
     p_log.add_argument("--readiness", type=int)
     p_log.add_argument("--rpe", type=float)
