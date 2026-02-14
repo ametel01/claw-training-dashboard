@@ -1,52 +1,45 @@
-# gym531 helper usage
+# gym531 helper usage (separated tracks)
 
 DB: `gym531.db`
 Script: `gym531.py`
 
-## Barbell (AM) - show workout
+Tracks are separated in DB:
+- Barbell AM: `barbell_sessions`, `barbell_set_logs`
+- Rings PM: `rings_sessions`, `rings_logs`
+- Cardio: `cardio_sessions`, `cardio_intervals`
 
+## Barbell (AM)
+
+Show workout:
 ```bash
 python3 gym531.py today --date 2026-02-16
-# --date optional (defaults to today)
 ```
 
-## Barbell (AM) - log (easy mode: reps only)
-
+Log easy mode:
 ```bash
-python3 gym531.py log \
-  --date 2026-02-16 \
-  --main-reps 5,5,4 \
-  --supp-completed \
-  --bodyweight 78.4 \
-  --readiness 8 \
-  --notes "Missed 1 rep on top set"
+python3 gym531.py log --date 2026-02-16 --main-reps 5,5,4 --supp-completed --notes "Missed 1 rep top set"
 ```
 
-If everything was completed as prescribed, you can omit both `--main` and `--main-reps`.
+## Rings (PM)
 
-## Rings (PM) - show template
-
+Show template:
 ```bash
 python3 gym531.py rings-today --date 2026-02-16
-# Auto-rotates A->B->C->D based on last logged rings session.
-# Or force template:
-python3 gym531.py rings-today --date 2026-02-16 --template B
 ```
 
-## Rings (PM) - log session
-
-Completed as planned:
-
+Log:
 ```bash
 python3 gym531.py rings-log --date 2026-02-16 --template A --completed --notes "solid"
 ```
 
-Completed with changes/missed reps:
+## Cardio
 
+Show daily cardio plan:
 ```bash
-python3 gym531.py rings-log \
-  --date 2026-02-16 \
-  --template A \
-  --missed "Assisted Ring Dips: last set 4 instead of 5" \
-  --notes "rings shaky, regressed"
+python3 gym531.py cardio-today --date 2026-02-18
+```
+
+Log cardio:
+```bash
+python3 gym531.py cardio-log --date 2026-02-18 --protocol VO2_4x4 --duration 40 --avg-hr 151 --max-hr 170 --notes "good intervals"
 ```

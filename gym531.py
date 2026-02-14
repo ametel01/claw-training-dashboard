@@ -234,16 +234,16 @@ def ensure_session(conn: sqlite3.Connection, d: date, notes: str | None, bw: flo
 
     conn.execute(
         """
-        INSERT INTO sessions(session_date, weekday, block_id, week_in_block, day_id, bodyweight_kg, readiness, notes)
+        INSERT INTO barbell_sessions(session_date, weekday, block_id, week_in_block, day_id, bodyweight_kg, readiness, notes)
         VALUES(?,?,?,?,?,?,?,?)
         ON CONFLICT(session_date) DO UPDATE SET
           bodyweight_kg=excluded.bodyweight_kg,
           readiness=excluded.readiness,
-          notes=COALESCE(excluded.notes, sessions.notes)
+          notes=COALESCE(excluded.notes, barbell_sessions.notes)
         """,
         (d.isoformat(), d.isoweekday(), block["id"], week_in_block, td["id"], bw, readiness, notes),
     )
-    row = conn.execute("SELECT id FROM sessions WHERE session_date=?", (d.isoformat(),)).fetchone()
+    row = conn.execute("SELECT id FROM barbell_sessions WHERE session_date=?", (d.isoformat(),)).fetchone()
     return int(row[0]), td, block, week_in_block
 
 
@@ -266,7 +266,7 @@ def cmd_log(args):
         main_reps_only = [int(ms[1]) for ms in p["main_sets"]]
 
     session_id, _, _, _ = ensure_session(conn, d, args.notes, args.bodyweight, args.readiness)
-    conn.execute("DELETE FROM set_logs WHERE session_id=? AND category IN ('main','supplemental')", (session_id,))
+    conn.execute("DELETE FROM barbell_set_logs WHERE session_id=? AND category IN ('main','supplemental')", (session_id,))
 
     for i, (pct, reps, prescribed_weight) in enumerate(p["main_sets"], start=1):
         if main_done:
@@ -275,7 +275,7 @@ def cmd_log(args):
             aw, ar = prescribed_weight, main_reps_only[i - 1]
         conn.execute(
             """
-            INSERT INTO set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
+            INSERT INTO barbell_set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
             VALUES(?,?,?,?,?,?,?,?,?,?)
             """,
             (session_id, p["main_lift_id"], "main", i, pct, reps, aw, ar, args.rpe, None),
@@ -285,7 +285,7 @@ def cmd_log(args):
         for i, (aw, ar) in enumerate(supp_done, start=1):
             conn.execute(
                 """
-                INSERT INTO set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
+                INSERT INTO barbell_set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
                 VALUES(?,?,?,?,?,?,?,?,?,?)
                 """,
                 (session_id, p["supp_lift_id"], "supplemental", i, p["fsl_pct"], p["supp_reps"], aw, ar, None, None),
@@ -294,7 +294,7 @@ def cmd_log(args):
         for i in range(1, p["supp_sets"] + 1):
             conn.execute(
                 """
-                INSERT INTO set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
+                INSERT INTO barbell_set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,rpe,note)
                 VALUES(?,?,?,?,?,?,?,?,?,?)
                 """,
                 (session_id, p["supp_lift_id"], "supplemental", i, p["fsl_pct"], p["supp_reps"], p["supp_weight"], p["supp_reps"], None, None),
@@ -368,6 +368,60 @@ def cmd_rings_log(args):
     print(f"Logged rings session for {d.isoformat()} (Template {template}).")
 
 
+def cmd_cardio_today(args):
+    d = parse_date(args.date)
+    wd = d.isoweekday()
+    print(f"{d.isoformat()} Cardio plan:")
+    if wd in (1, 2, 4, 5):
+        print("  Protocol: Z2")
+        print("  Duration: 40-45 min (Fri 40-45, others 45)")
+        print("  Target HR: 110-125 bpm")
+    elif wd == 3:
+        print("  Protocol: VO2_4x4")
+        print("  10 min Z2 warm-up")
+        print("  4 x 4 min hard @ ~10.5-11.5 km/h, 3 min easy between")
+        print("  5 min cool down")
+        print("  Interval HR target: 160-170 bpm")
+    elif wd == 6:
+        print("  Protocol: VO2_1min")
+        print("  10 min Z2 warm-up")
+        print("  6-8 x 1 min hard / 2 min easy")
+        print("  5 min cool down")
+        print("  Hard HR target: 165-175 bpm")
+    else:
+        print("  Off or very easy walk 20-30 min <110 bpm")
+
+
+def cmd_cardio_log(args):
+    d = parse_date(args.date)
+    conn = get_conn()
+    protocol = args.protocol.upper()
+    if protocol not in ("Z2", "VO2_4X4", "VO2_1MIN"):
+        raise RuntimeError("protocol must be Z2, VO2_4x4, or VO2_1min")
+    protocol = protocol.replace("VO2_4X4", "VO2_4x4").replace("VO2_1MIN", "VO2_1min")
+
+    z2_cap_respected = None
+    if protocol == "Z2" and args.max_hr is not None:
+        z2_cap_respected = 1 if args.max_hr <= 125 else 0
+
+    conn.execute(
+        """
+        INSERT INTO cardio_sessions(session_date,slot,protocol,duration_min,avg_hr,max_hr,z2_cap_respected,notes)
+        VALUES(?,?,?,?,?,?,?,?)
+        ON CONFLICT(session_date,slot) DO UPDATE SET
+          protocol=excluded.protocol,
+          duration_min=excluded.duration_min,
+          avg_hr=excluded.avg_hr,
+          max_hr=excluded.max_hr,
+          z2_cap_respected=excluded.z2_cap_respected,
+          notes=COALESCE(excluded.notes, cardio_sessions.notes)
+        """,
+        (d.isoformat(), "CARDIO", protocol, args.duration, args.avg_hr, args.max_hr, z2_cap_respected, args.notes),
+    )
+    conn.commit()
+    print(f"Logged cardio session for {d.isoformat()} ({protocol}).")
+
+
 def main():
     parser = argparse.ArgumentParser(description="5/3/1 + Rings tracker helper")
     sub = parser.add_subparsers(required=True)
@@ -400,6 +454,19 @@ def main():
     p_rl.add_argument("--missed", default="", help="What changed/missed, free text")
     p_rl.add_argument("--notes")
     p_rl.set_defaults(func=cmd_rings_log)
+
+    p_ct = sub.add_parser("cardio-today", help="Show cardio plan for date")
+    p_ct.add_argument("--date", help="YYYY-MM-DD")
+    p_ct.set_defaults(func=cmd_cardio_today)
+
+    p_cl = sub.add_parser("cardio-log", help="Log cardio session")
+    p_cl.add_argument("--date", help="YYYY-MM-DD")
+    p_cl.add_argument("--protocol", required=True, help="Z2 | VO2_4x4 | VO2_1min")
+    p_cl.add_argument("--duration", type=int)
+    p_cl.add_argument("--avg-hr", type=int)
+    p_cl.add_argument("--max-hr", type=int)
+    p_cl.add_argument("--notes")
+    p_cl.set_defaults(func=cmd_cardio_log)
 
     args = parser.parse_args()
     args.func(args)
