@@ -3,16 +3,14 @@
 DB: `gym531.db`
 Script: `gym531.py`
 
-## Show workout for a day
+## Barbell (AM) - show workout
 
 ```bash
 python3 gym531.py today --date 2026-02-16
 # --date optional (defaults to today)
 ```
 
-## Log workout (easy mode: reps only)
-
-If weights were as prescribed, log only reps:
+## Barbell (AM) - log (easy mode: reps only)
 
 ```bash
 python3 gym531.py log \
@@ -24,21 +22,31 @@ python3 gym531.py log \
   --notes "Missed 1 rep on top set"
 ```
 
-If everything was completed as prescribed, you can omit both `--main` and `--main-reps` and it will auto-log prescribed reps/weights.
+If everything was completed as prescribed, you can omit both `--main` and `--main-reps`.
 
-## Log workout (full mode with exact weights)
+## Rings (PM) - show template
 
 ```bash
-python3 gym531.py log \
-  --date 2026-02-16 \
-  --main 72.5x5,82.5x5,92.5x5 \
-  --supp 55x10,55x10,55x10,55x10,55x10 \
-  --bodyweight 78.4 \
-  --readiness 8 \
-  --notes "Felt good"
+python3 gym531.py rings-today --date 2026-02-16
+# Auto-rotates A->B->C->D based on last logged rings session.
+# Or force template:
+python3 gym531.py rings-today --date 2026-02-16 --template B
 ```
 
-- `--main` expects exactly 3 sets.
-- `--main-reps` expects exactly 3 reps.
-- `--supp` is optional; use CSV with `weightxreps` format.
-- `--supp-completed` auto-logs all prescribed supplemental sets.
+## Rings (PM) - log session
+
+Completed as planned:
+
+```bash
+python3 gym531.py rings-log --date 2026-02-16 --template A --completed --notes "solid"
+```
+
+Completed with changes/missed reps:
+
+```bash
+python3 gym531.py rings-log \
+  --date 2026-02-16 \
+  --template A \
+  --missed "Assisted Ring Dips: last set 4 instead of 5" \
+  --notes "rings shaky, regressed"
+```

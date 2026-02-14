@@ -12,6 +12,33 @@ MAIN_PCTS = {
     3: [0.75, 0.85, 0.95],
 }
 
+RINGS_TEMPLATES = {
+    "A": [
+        "RTO Support Hold — 5×20–30s (rest 60–90s)",
+        "Ring Rows (feet up) — 5×4–6 @31X1 (rest 120s)",
+        "Ring Face Pulls — 4×6–8 @3011 (rest 90s)",
+        "Ring Plank — 3×30–45s (rest 60s)",
+    ],
+    "B": [
+        "RTO Support Shrugs — 4×6–8 @3111 (rest 90s)",
+        "Ring Push-Ups (RTO) — 5×4–6 @31X1 (rest 120s)",
+        "Assisted Ring Dips — 5×3–5 @40X1 (rest 150s)",
+        "Hollow Hold — 3×25–40s (rest 60s)",
+    ],
+    "C": [
+        "Feet-Assisted Pull-Ups — 5×3–5 @31X1 (rest 150s)",
+        "High Ring Rows — 4×4–6 @31X1 (rest 120s)",
+        "False Grip Hold (feet) — 4×20–30s (rest 60s)",
+        "Ring Body Saw — 3×8–12 slow (rest 60s)",
+    ],
+    "D": [
+        "Single-Ring Support — 4×15–25s/side (rest 60s)",
+        "Archer Ring Rows — 5×3–4/side @31X1 (rest 120s)",
+        "Dip Iso (bottom) — 4×10–20s (rest 90s)",
+        "Knee→Pike Tucks — 3×6–10 (rest 60s)",
+    ],
+}
+
 
 def round_to_inc(value: float, inc: float) -> float:
     return round(value / inc) * inc
@@ -26,7 +53,39 @@ def parse_date(s: str | None) -> date:
 def get_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    ensure_rings_schema(conn)
     return conn
+
+
+def ensure_rings_schema(conn: sqlite3.Connection):
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS rings_sessions (
+          id INTEGER PRIMARY KEY,
+          session_date TEXT NOT NULL,
+          slot TEXT NOT NULL DEFAULT 'PM',
+          template TEXT NOT NULL CHECK (template IN ('A','B','C','D')),
+          completed_as_prescribed INTEGER NOT NULL DEFAULT 0,
+          notes TEXT,
+          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(session_date, slot)
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS rings_logs (
+          id INTEGER PRIMARY KEY,
+          session_id INTEGER NOT NULL REFERENCES rings_sessions(id) ON DELETE CASCADE,
+          item_no INTEGER NOT NULL,
+          exercise TEXT NOT NULL,
+          result_text TEXT,
+          completed INTEGER NOT NULL DEFAULT 1
+        )
+        """
+    )
+    conn.commit()
 
 
 def get_config(conn: sqlite3.Connection, key: str, default: str = "") -> str:
@@ -204,7 +263,6 @@ def cmd_log(args):
     if main_reps_only and len(main_reps_only) != 3:
         raise RuntimeError("--main-reps needs exactly 3 reps, e.g. 5,5,4")
     if not main_done and not main_reps_only:
-        # assume completed as prescribed if user only says "completed"
         main_reps_only = [int(ms[1]) for ms in p["main_sets"]]
 
     session_id, _, _, _ = ensure_session(conn, d, args.notes, args.bodyweight, args.readiness)
@@ -246,15 +304,79 @@ def cmd_log(args):
     print(f"Logged session for {d.isoformat()}.")
 
 
+def next_rings_template(conn: sqlite3.Connection) -> str:
+    row = conn.execute(
+        "SELECT template FROM rings_sessions ORDER BY date(session_date) DESC, id DESC LIMIT 1"
+    ).fetchone()
+    if not row:
+        return "A"
+    order = ["A", "B", "C", "D"]
+    idx = order.index(row[0])
+    return order[(idx + 1) % 4]
+
+
+def cmd_rings_today(args):
+    d = parse_date(args.date)
+    conn = get_conn()
+    template = (args.template or next_rings_template(conn)).upper()
+    if template not in RINGS_TEMPLATES:
+        raise RuntimeError("Template must be A/B/C/D")
+
+    print(f"{d.isoformat()} PM Rings — Template {template}")
+    print("Rules: Strength focus, >=2 RIR; if rings shake, regress; rotate A->B->C->D")
+    for i, ex in enumerate(RINGS_TEMPLATES[template], start=1):
+        print(f"  {i}. {ex}")
+
+
+def cmd_rings_log(args):
+    d = parse_date(args.date)
+    conn = get_conn()
+    template = (args.template or next_rings_template(conn)).upper()
+    if template not in RINGS_TEMPLATES:
+        raise RuntimeError("Template must be A/B/C/D")
+
+    conn.execute(
+        """
+        INSERT INTO rings_sessions(session_date,slot,template,completed_as_prescribed,notes)
+        VALUES(?,?,?,?,?)
+        ON CONFLICT(session_date,slot) DO UPDATE SET
+          template=excluded.template,
+          completed_as_prescribed=excluded.completed_as_prescribed,
+          notes=COALESCE(excluded.notes, rings_sessions.notes)
+        """,
+        (d.isoformat(), "PM", template, 1 if args.completed else 0, args.notes),
+    )
+    session_id = conn.execute(
+        "SELECT id FROM rings_sessions WHERE session_date=? AND slot='PM'", (d.isoformat(),)
+    ).fetchone()[0]
+
+    conn.execute("DELETE FROM rings_logs WHERE session_id=?", (session_id,))
+    for i, ex in enumerate(RINGS_TEMPLATES[template], start=1):
+        result = "completed as prescribed" if args.completed else "custom/result not specified"
+        conn.execute(
+            "INSERT INTO rings_logs(session_id,item_no,exercise,result_text,completed) VALUES(?,?,?,?,?)",
+            (session_id, i, ex, result, 1 if args.completed else 0),
+        )
+
+    if args.missed:
+        conn.execute(
+            "INSERT INTO rings_logs(session_id,item_no,exercise,result_text,completed) VALUES(?,?,?,?,?)",
+            (session_id, 99, "Missed/adjustments", args.missed, 0),
+        )
+
+    conn.commit()
+    print(f"Logged rings session for {d.isoformat()} (Template {template}).")
+
+
 def main():
-    parser = argparse.ArgumentParser(description="5/3/1 tracker helper")
+    parser = argparse.ArgumentParser(description="5/3/1 + Rings tracker helper")
     sub = parser.add_subparsers(required=True)
 
-    p_today = sub.add_parser("today", help="Show prescribed workout for date (default: today)")
+    p_today = sub.add_parser("today", help="Show prescribed barbell workout for date (default: today)")
     p_today.add_argument("--date", help="YYYY-MM-DD")
     p_today.set_defaults(func=cmd_today)
 
-    p_log = sub.add_parser("log", help="Log completed workout sets")
+    p_log = sub.add_parser("log", help="Log completed barbell workout sets")
     p_log.add_argument("--date", help="YYYY-MM-DD")
     p_log.add_argument("--main", default="", help="3 main sets as w x reps CSV, e.g. 72.5x5,82.5x5,92.5x5")
     p_log.add_argument("--main-reps", default="", help="Main set reps only, e.g. 5,5,4 (weights auto from prescription)")
@@ -265,6 +387,19 @@ def main():
     p_log.add_argument("--rpe", type=float)
     p_log.add_argument("--notes")
     p_log.set_defaults(func=cmd_log)
+
+    p_rt = sub.add_parser("rings-today", help="Show PM rings template for date")
+    p_rt.add_argument("--date", help="YYYY-MM-DD")
+    p_rt.add_argument("--template", help="A|B|C|D (optional; auto-rotates if omitted)")
+    p_rt.set_defaults(func=cmd_rings_today)
+
+    p_rl = sub.add_parser("rings-log", help="Log PM rings session")
+    p_rl.add_argument("--date", help="YYYY-MM-DD")
+    p_rl.add_argument("--template", help="A|B|C|D (optional; auto-rotates if omitted)")
+    p_rl.add_argument("--completed", action="store_true", help="Completed as prescribed")
+    p_rl.add_argument("--missed", default="", help="What changed/missed, free text")
+    p_rl.add_argument("--notes")
+    p_rl.set_defaults(func=cmd_rings_log)
 
     args = parser.parse_args()
     args.func(args)
