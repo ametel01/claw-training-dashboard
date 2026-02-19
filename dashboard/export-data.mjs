@@ -112,22 +112,39 @@ dates(day) AS (
   UNION ALL
   SELECT date(day, '+1 day') FROM dates
   WHERE day < (SELECT latest_date FROM latest)
+),
+base AS (
+  SELECT
+    d.day AS session_date,
+    ((CAST(strftime('%w', d.day) AS INTEGER) + 6) % 7) + 1 AS weekday
+  FROM dates d
 )
 SELECT
-  d.day AS session_date,
+  b.session_date,
   CASE WHEN bs.id IS NOT NULL THEN 1 ELSE 0 END AS has_barbell,
   CASE WHEN cs.id IS NOT NULL THEN 1 ELSE 0 END AS has_cardio,
   CASE WHEN rs.id IS NOT NULL THEN 1 ELSE 0 END AS has_rings,
   l.name AS barbell_lift,
   cs.protocol AS cardio_protocol,
-  rs.template AS rings_template
-FROM dates d
-LEFT JOIN barbell_sessions bs ON bs.session_date = d.day
-LEFT JOIN training_days td ON td.id = bs.day_id
-LEFT JOIN lifts l ON l.id = td.main_lift_id
-LEFT JOIN cardio_sessions cs ON cs.session_date = d.day
-LEFT JOIN rings_sessions rs ON rs.session_date = d.day
-ORDER BY d.day
+  rs.template AS rings_template,
+  pl_main.name AS planned_barbell_main,
+  pl_supp.name AS planned_barbell_supp,
+  td.supplemental_sets AS planned_supp_sets,
+  td.supplemental_reps AS planned_supp_reps,
+  cpd.session_type AS planned_cardio,
+  rpd.template_code AS planned_rings
+FROM base b
+LEFT JOIN barbell_sessions bs ON bs.session_date = b.session_date
+LEFT JOIN training_days td_done ON td_done.id = bs.day_id
+LEFT JOIN lifts l ON l.id = td_done.main_lift_id
+LEFT JOIN cardio_sessions cs ON cs.session_date = b.session_date
+LEFT JOIN rings_sessions rs ON rs.session_date = b.session_date
+LEFT JOIN training_days td ON td.weekday = b.weekday
+LEFT JOIN lifts pl_main ON pl_main.id = td.main_lift_id
+LEFT JOIN lifts pl_supp ON pl_supp.id = td.supplemental_lift_id
+LEFT JOIN cardio_plan_days cpd ON cpd.weekday = b.weekday
+LEFT JOIN rings_plan_days rpd ON rpd.weekday = b.weekday
+ORDER BY b.session_date
 `);
 
 const barbellRows = sqlJson(`

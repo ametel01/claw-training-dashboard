@@ -41,14 +41,40 @@ function renderWeekProgress(rows) {
 
 function renderDailyTiles(days) {
   const node = document.getElementById('dailyTiles');
+  const today = new Date().toISOString().slice(0, 10);
+
+  const badgeFor = ({ label, planned, done, detail, isPast }) => {
+    const text = `${label}${detail ? `: ${detail}` : ''}`;
+    let cls = 'badge idle';
+    if (planned && done) cls = 'badge done';
+    else if (planned && !done && isPast) cls = 'badge missed';
+    else if (planned) cls = 'badge planned';
+    return `<span class="${cls}">${text}</span>`;
+  };
+
   node.innerHTML = days.map((d) => {
+    const isPast = d.session_date < today;
+
+    const plannedBarbell = !!d.planned_barbell_main;
+    const plannedCardio = !!d.planned_cardio && d.planned_cardio !== 'OFF';
+    const plannedRings = !!d.planned_rings;
+
+    const barbellDetail = plannedBarbell
+      ? `${d.planned_barbell_main}${d.planned_barbell_supp ? ` + ${d.planned_barbell_supp} ${d.planned_supp_sets || ''}x${d.planned_supp_reps || ''}` : ''}`.trim()
+      : d.barbell_lift;
+
+    const cardioDetail = d.planned_cardio || d.cardio_protocol;
+    const ringsDetail = d.planned_rings || d.rings_template;
+
     const badges = [
-      `<span class="badge ${d.has_cardio ? 'ok' : ''}">Cardio${d.cardio_protocol ? `: ${d.cardio_protocol}` : ''}</span>`,
-      `<span class="badge ${d.has_barbell ? 'ok' : ''}">Barbell${d.barbell_lift ? `: ${d.barbell_lift}` : ''}</span>`,
-      `<span class="badge ${d.has_rings ? 'ok' : ''}">Rings${d.rings_template ? `: ${d.rings_template}` : ''}</span>`
+      badgeFor({ label: 'Barbell', planned: plannedBarbell, done: !!d.has_barbell, detail: barbellDetail, isPast }),
+      badgeFor({ label: 'Cardio', planned: plannedCardio, done: !!d.has_cardio, detail: cardioDetail, isPast }),
+      badgeFor({ label: 'Rings', planned: plannedRings, done: !!d.has_rings, detail: ringsDetail, isPast })
     ].join('');
 
-    const title = d.has_barbell || d.has_cardio || d.has_rings ? 'Trained' : 'Recovery';
+    const completionCount = [d.has_barbell, d.has_cardio, d.has_rings].filter(Boolean).length;
+    const title = completionCount ? `Completed: ${completionCount}/3` : (isPast ? 'No logs' : 'Planned');
+
     return `
       <article class="tile" role="button" tabindex="0" data-date="${d.session_date}">
         <div class="tile-date">${d.session_date}</div>

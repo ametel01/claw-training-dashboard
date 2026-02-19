@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-19T22:55:46.532Z",
+  "generatedAt": "2026-02-19T23:10:14.379Z",
   "totals": {
     "barbell_sessions": 3,
     "cardio_sessions": 3,
@@ -66,7 +66,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Deadlift",
+      "planned_barbell_supp": "Press",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "D"
     },
     {
       "session_date": "2026-01-31",
@@ -75,7 +81,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_1min",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-01",
@@ -84,7 +96,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "OFF",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-02",
@@ -93,7 +111,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Squat",
+      "planned_barbell_supp": "Bench",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "A"
     },
     {
       "session_date": "2026-02-03",
@@ -102,7 +126,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Press",
+      "planned_barbell_supp": "Deadlift",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "B"
     },
     {
       "session_date": "2026-02-04",
@@ -111,7 +141,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_4x4",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-05",
@@ -120,7 +156,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Bench",
+      "planned_barbell_supp": "Squat",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "C"
     },
     {
       "session_date": "2026-02-06",
@@ -129,7 +171,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Deadlift",
+      "planned_barbell_supp": "Press",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "D"
     },
     {
       "session_date": "2026-02-07",
@@ -138,7 +186,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_1min",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-08",
@@ -147,7 +201,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "OFF",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-09",
@@ -156,7 +216,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Squat",
+      "planned_barbell_supp": "Bench",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "A"
     },
     {
       "session_date": "2026-02-10",
@@ -165,7 +231,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Press",
+      "planned_barbell_supp": "Deadlift",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "B"
     },
     {
       "session_date": "2026-02-11",
@@ -174,7 +246,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_4x4",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-12",
@@ -183,7 +261,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Bench",
+      "planned_barbell_supp": "Squat",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "C"
     },
     {
       "session_date": "2026-02-13",
@@ -192,7 +276,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Deadlift",
+      "planned_barbell_supp": "Press",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "D"
     },
     {
       "session_date": "2026-02-14",
@@ -201,7 +291,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_1min",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-15",
@@ -210,7 +306,13 @@
       "has_rings": 0,
       "barbell_lift": null,
       "cardio_protocol": "Z2",
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "OFF",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-16",
@@ -219,7 +321,13 @@
       "has_rings": 0,
       "barbell_lift": "Squat",
       "cardio_protocol": null,
-      "rings_template": null
+      "rings_template": null,
+      "planned_barbell_main": "Squat",
+      "planned_barbell_supp": "Bench",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "A"
     },
     {
       "session_date": "2026-02-17",
@@ -228,7 +336,13 @@
       "has_rings": 1,
       "barbell_lift": "Press",
       "cardio_protocol": "Z2",
-      "rings_template": "A"
+      "rings_template": "A",
+      "planned_barbell_main": "Press",
+      "planned_barbell_supp": "Deadlift",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "B"
     },
     {
       "session_date": "2026-02-18",
@@ -237,7 +351,13 @@
       "has_rings": 1,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": "B"
+      "rings_template": "B",
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_4x4",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-19",
@@ -246,7 +366,13 @@
       "has_rings": 1,
       "barbell_lift": "Bench",
       "cardio_protocol": "VO2_4x4",
-      "rings_template": "C"
+      "rings_template": "C",
+      "planned_barbell_main": "Bench",
+      "planned_barbell_supp": "Squat",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "C"
     }
   ],
   "details": {

@@ -126,7 +126,10 @@ h2 { font-size: 18px; }
   padding: 2px 8px;
   color: #ccd7f7;
 }
-.badge.ok { border-color: #2c8b5f; color: #a8efcb; }
+.badge.done { border-color: #2c8b5f; color: #a8efcb; background: rgba(44, 139, 95, 0.15); }
+.badge.planned { border-color: #3f65b8; color: #b9ccff; background: rgba(63, 101, 184, 0.14); }
+.badge.missed { border-color: #b88b3f; color: #ffd79b; background: rgba(184, 139, 63, 0.14); }
+.badge.idle { border-color: #2d3f75; color: #9fb0dd; background: rgba(45, 63, 117, 0.12); }
 
 .modal {
   position: fixed;
