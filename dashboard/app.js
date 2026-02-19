@@ -176,7 +176,7 @@ function renderRingsDetails(rows = [], planned = {}) {
   `;
 }
 
-function bindDetailClicks(details, dailyTiles = []) {
+function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   const modal = document.getElementById('detailModal');
   const title = document.getElementById('detailTitle');
   const body = document.getElementById('detailBody');
@@ -187,6 +187,16 @@ function bindDetailClicks(details, dailyTiles = []) {
   }
 
   const planByDate = Object.fromEntries((dailyTiles || []).map((d) => [d.session_date, d]));
+  for (const w of (weekProgress || [])) {
+    if (!planByDate[w.session_date]) {
+      planByDate[w.session_date] = {
+        session_date: w.session_date,
+        planned_barbell_main: w.main_lift,
+        planned_cardio: w.cardio_plan,
+        planned_rings: w.rings_plan
+      };
+    }
+  }
 
   function openForDate(date) {
     title.textContent = `Training details · ${date}`;
@@ -231,7 +241,7 @@ function bindDetailClicks(details, dailyTiles = []) {
     renderTotals(data.totals || {});
     renderWeekProgress(data.weekProgress || []);
     renderDailyTiles(data.dailyTiles || []);
-    bindDetailClicks(data.details || {}, data.dailyTiles || []);
+    bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);
     document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
   } catch (err) {
     document.body.innerHTML = `<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${err}</pre></main>`;
