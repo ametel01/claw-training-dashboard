@@ -65,11 +65,46 @@ function section(title, content) {
 
 function renderBarbellDetails(rows = []) {
   if (!rows.length) return '<p class="muted">No barbell session logged.</p>';
-  const list = rows.map((r) => {
+
+  const mainRows = rows.filter((r) => r.category === 'main');
+  const suppRows = rows.filter((r) => r.category === 'supplemental');
+
+  const mainList = mainRows.map((r) => {
     const note = r.note ? `<div class="detail-note">${r.note}</div>` : '';
-    return `<li><strong>${r.lift}</strong> · ${r.category} set ${r.set_no}: ${r.actual_weight_kg ?? '-'} × ${r.actual_reps ?? '-'}${note}</li>`;
+    return `<li><strong>${r.lift}</strong> · main set ${r.set_no}: ${r.actual_weight_kg ?? '-'} × ${r.actual_reps ?? '-'}${note}</li>`;
   }).join('');
-  return `<ul class="detail-list">${list}</ul>`;
+
+  let supplementalHtml = '<p class="muted">No supplemental work logged.</p>';
+  if (suppRows.length) {
+    const byLift = new Map();
+    for (const r of suppRows) {
+      const key = r.lift || 'Supplemental';
+      if (!byLift.has(key)) byLift.set(key, []);
+      byLift.get(key).push(r);
+    }
+
+    const items = [];
+    for (const [lift, arr] of byLift.entries()) {
+      const setCount = arr.length;
+      const repsSet = [...new Set(arr.map((x) => x.actual_reps).filter((v) => v != null))];
+      const weightSet = [...new Set(arr.map((x) => x.actual_weight_kg).filter((v) => v != null))];
+      const noteSet = [...new Set(arr.map((x) => x.note).filter(Boolean))];
+
+      const repsText = repsSet.length === 1 ? repsSet[0] : arr.map((x) => x.actual_reps ?? '-').join('/');
+      const weightText = weightSet.length === 1 ? ` @ ${weightSet[0]} kg` : '';
+      const noteText = noteSet.length ? `<div class="detail-note">${noteSet.join(' · ')}</div>` : '';
+
+      items.push(`<li><strong>${lift}</strong> · supplemental: ${setCount}×${repsText}${weightText}${noteText}</li>`);
+    }
+
+    supplementalHtml = `<ul class="detail-list">${items.join('')}</ul>`;
+  }
+
+  return `
+    ${mainList ? `<h5 class="detail-subtitle">Main</h5><ul class="detail-list">${mainList}</ul>` : '<p class="muted">No main work logged.</p>'}
+    <h5 class="detail-subtitle">Supplemental (compressed)</h5>
+    ${supplementalHtml}
+  `;
 }
 
 function renderCardioDetails(rows = []) {

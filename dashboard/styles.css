@@ -180,6 +180,11 @@ h2 { font-size: 18px; }
   font-size: 12px;
   margin-top: 4px;
 }
+.detail-subtitle {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #c9d8ff;
+}
 
 @media (max-width: 900px) {
   .card-grid { grid-template-columns: repeat(2, 1fr); }
