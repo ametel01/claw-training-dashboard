@@ -27,7 +27,7 @@ function renderTotals(totals) {
 function renderWeekProgress(rows) {
   const node = document.getElementById('weekRows');
   node.innerHTML = rows.map((r) => `
-    <article class="week-row">
+    <article class="week-row" role="button" tabindex="0" data-date="${r.session_date}">
       <div>
         <div class="week-day">${r.day_name}</div>
         <div class="muted">${r.session_date}</div>
@@ -132,7 +132,7 @@ function renderRingsDetails(rows = []) {
   `;
 }
 
-function bindTileClicks(details) {
+function bindDetailClicks(details) {
   const modal = document.getElementById('detailModal');
   const title = document.getElementById('detailTitle');
   const body = document.getElementById('detailBody');
@@ -140,6 +140,22 @@ function bindTileClicks(details) {
 
   function close() {
     modal.classList.remove('open');
+  }
+
+  function openForDate(date) {
+    title.textContent = `Training details · ${date}`;
+
+    const barbell = details?.barbellByDate?.[date] || [];
+    const cardio = details?.cardioByDate?.[date] || [];
+    const rings = details?.ringsByDate?.[date] || [];
+
+    body.innerHTML = [
+      section('Barbell', renderBarbellDetails(barbell)),
+      section('Cardio', renderCardioDetails(cardio)),
+      section('Rings', renderRingsDetails(rings))
+    ].join('');
+
+    modal.classList.add('open');
   }
 
   closeBtn.addEventListener('click', close);
@@ -150,26 +166,10 @@ function bindTileClicks(details) {
     if (e.key === 'Escape') close();
   });
 
-  document.querySelectorAll('.tile').forEach((tile) => {
-    const open = () => {
-      const date = tile.dataset.date;
-      title.textContent = `Training details · ${date}`;
-
-      const barbell = details?.barbellByDate?.[date] || [];
-      const cardio = details?.cardioByDate?.[date] || [];
-      const rings = details?.ringsByDate?.[date] || [];
-
-      body.innerHTML = [
-        section('Barbell', renderBarbellDetails(barbell)),
-        section('Cardio', renderCardioDetails(cardio)),
-        section('Rings', renderRingsDetails(rings))
-      ].join('');
-
-      modal.classList.add('open');
-    };
-
-    tile.addEventListener('click', open);
-    tile.addEventListener('keydown', (e) => {
+  document.querySelectorAll('.tile, .week-row').forEach((el) => {
+    const open = () => openForDate(el.dataset.date);
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         open();
@@ -184,7 +184,7 @@ function bindTileClicks(details) {
     renderTotals(data.totals || {});
     renderWeekProgress(data.weekProgress || []);
     renderDailyTiles(data.dailyTiles || []);
-    bindTileClicks(data.details || {});
+    bindDetailClicks(data.details || {});
     document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
   } catch (err) {
     document.body.innerHTML = `<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${err}</pre></main>`;
