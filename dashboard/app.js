@@ -89,8 +89,16 @@ function section(title, content) {
   return `<section class="detail-section"><h4>${title}</h4>${content}</section>`;
 }
 
-function renderBarbellDetails(rows = []) {
-  if (!rows.length) return '<p class="muted">No barbell session logged.</p>';
+function renderBarbellDetails(rows = [], planned = {}) {
+  if (!rows.length) {
+    if (planned?.planned_barbell_main) {
+      const supp = planned?.planned_barbell_supp
+        ? ` + ${planned.planned_barbell_supp} ${planned.planned_supp_sets || ''}x${planned.planned_supp_reps || ''}`
+        : '';
+      return `<p class="muted">No barbell session logged.</p><p><strong>Planned:</strong> ${planned.planned_barbell_main}${supp}</p>`;
+    }
+    return '<p class="muted">No barbell session logged.</p>';
+  }
 
   const mainRows = rows.filter((r) => r.category === 'main');
   const suppRows = rows.filter((r) => r.category === 'supplemental');
@@ -133,8 +141,13 @@ function renderBarbellDetails(rows = []) {
   `;
 }
 
-function renderCardioDetails(rows = []) {
-  if (!rows.length) return '<p class="muted">No cardio session logged.</p>';
+function renderCardioDetails(rows = [], planned = {}) {
+  if (!rows.length) {
+    if (planned?.planned_cardio && planned.planned_cardio !== 'OFF') {
+      return `<p class="muted">No cardio session logged.</p><p><strong>Planned:</strong> ${planned.planned_cardio}</p>`;
+    }
+    return '<p class="muted">No cardio session logged.</p>';
+  }
   const head = rows[0];
   const intervals = rows.filter((r) => r.interval_no != null);
   const intervalList = intervals.length
@@ -148,8 +161,13 @@ function renderCardioDetails(rows = []) {
   `;
 }
 
-function renderRingsDetails(rows = []) {
-  if (!rows.length) return '<p class="muted">No rings session logged.</p>';
+function renderRingsDetails(rows = [], planned = {}) {
+  if (!rows.length) {
+    if (planned?.planned_rings) {
+      return `<p class="muted">No rings session logged.</p><p><strong>Planned:</strong> Template ${planned.planned_rings}</p>`;
+    }
+    return '<p class="muted">No rings session logged.</p>';
+  }
   const tpl = rows[0].template || '-';
   const list = rows.filter((r) => r.item_no != null).map((r) => `<li>${r.item_no}. ${r.exercise}${r.result_text ? ` · ${r.result_text}` : ''}</li>`).join('');
   return `
@@ -158,7 +176,7 @@ function renderRingsDetails(rows = []) {
   `;
 }
 
-function bindDetailClicks(details) {
+function bindDetailClicks(details, dailyTiles = []) {
   const modal = document.getElementById('detailModal');
   const title = document.getElementById('detailTitle');
   const body = document.getElementById('detailBody');
@@ -168,17 +186,20 @@ function bindDetailClicks(details) {
     modal.classList.remove('open');
   }
 
+  const planByDate = Object.fromEntries((dailyTiles || []).map((d) => [d.session_date, d]));
+
   function openForDate(date) {
     title.textContent = `Training details · ${date}`;
 
     const barbell = details?.barbellByDate?.[date] || [];
     const cardio = details?.cardioByDate?.[date] || [];
     const rings = details?.ringsByDate?.[date] || [];
+    const planned = planByDate?.[date] || {};
 
     body.innerHTML = [
-      section('Barbell', renderBarbellDetails(barbell)),
-      section('Cardio', renderCardioDetails(cardio)),
-      section('Rings', renderRingsDetails(rings))
+      section('Barbell', renderBarbellDetails(barbell, planned)),
+      section('Cardio', renderCardioDetails(cardio, planned)),
+      section('Rings', renderRingsDetails(rings, planned))
     ].join('');
 
     modal.classList.add('open');
@@ -210,7 +231,7 @@ function bindDetailClicks(details) {
     renderTotals(data.totals || {});
     renderWeekProgress(data.weekProgress || []);
     renderDailyTiles(data.dailyTiles || []);
-    bindDetailClicks(data.details || {});
+    bindDetailClicks(data.details || {}, data.dailyTiles || []);
     document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
   } catch (err) {
     document.body.innerHTML = `<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${err}</pre></main>`;
