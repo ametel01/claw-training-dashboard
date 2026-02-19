@@ -197,6 +197,81 @@ WHERE rs.session_date >= date('now','localtime','-90 day')
 ORDER BY rs.session_date, rl.item_no
 `);
 
+const plannedBarbellRows = sqlJson(`
+SELECT
+  session_date,
+  category,
+  lift,
+  set_no,
+  prescribed_reps,
+  planned_weight_kg
+FROM v_planned_barbell_sets
+WHERE session_date >= date('now','localtime','-90 day')
+ORDER BY session_date, category, set_no
+`);
+
+const plannedCardioRows = sqlJson(`
+WITH RECURSIVE dates(day) AS (
+  SELECT date('now','localtime','-90 day')
+  UNION ALL
+  SELECT date(day, '+1 day') FROM dates
+  WHERE day < date('now','localtime','+14 day')
+),
+base AS (
+  SELECT
+    day AS session_date,
+    ((CAST(strftime('%w', day) AS INTEGER) + 6) % 7) + 1 AS weekday
+  FROM dates
+)
+SELECT
+  b.session_date,
+  cpd.session_type,
+  cpd.duration_min,
+  cpd.warmup_min,
+  cpd.cooldown_min,
+  cpd.vo2_intervals_min,
+  cpd.vo2_intervals_max,
+  cpd.vo2_work_min,
+  cpd.vo2_easy_min,
+  cpd.speed_low_kmh,
+  cpd.speed_high_kmh,
+  cpd.target_hr_min,
+  cpd.target_hr_max,
+  cpd.notes
+FROM base b
+LEFT JOIN cardio_plan_days cpd ON cpd.weekday = b.weekday
+ORDER BY b.session_date
+`);
+
+const plannedRingsRows = sqlJson(`
+WITH RECURSIVE dates(day) AS (
+  SELECT date('now','localtime','-90 day')
+  UNION ALL
+  SELECT date(day, '+1 day') FROM dates
+  WHERE day < date('now','localtime','+14 day')
+),
+base AS (
+  SELECT
+    day AS session_date,
+    ((CAST(strftime('%w', day) AS INTEGER) + 6) % 7) + 1 AS weekday
+  FROM dates
+)
+SELECT
+  b.session_date,
+  rpd.template_code,
+  rti.item_no,
+  rti.exercise,
+  rti.sets_text,
+  rti.reps_or_time,
+  rti.tempo,
+  rti.rest_text
+FROM base b
+LEFT JOIN rings_plan_days rpd ON rpd.weekday = b.weekday
+LEFT JOIN rings_templates rt ON rt.code = rpd.template_code
+LEFT JOIN rings_template_items rti ON rti.template_id = rt.id
+ORDER BY b.session_date, rti.item_no
+`);
+
 const payload = {
   generatedAt: new Date().toISOString(),
   totals,
@@ -205,7 +280,10 @@ const payload = {
   details: {
     barbellByDate: groupByDate(barbellRows),
     cardioByDate: groupByDate(cardioRows),
-    ringsByDate: groupByDate(ringsRows)
+    ringsByDate: groupByDate(ringsRows),
+    plannedBarbellByDate: groupByDate(plannedBarbellRows),
+    plannedCardioByDate: groupByDate(plannedCardioRows),
+    plannedRingsByDate: groupByDate(plannedRingsRows)
   }
 };
 

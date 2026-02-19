@@ -196,6 +196,20 @@ h2 { font-size: 18px; }
   font-size: 13px;
   color: #c9d8ff;
 }
+.planned-block {
+  border: 1px solid #3f65b8;
+  background: rgba(63, 101, 184, 0.16);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: #d7e6ff;
+}
+.planned-title {
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #b6cbff;
+  margin-bottom: 6px;
+}
 
 @media (max-width: 900px) {
   .card-grid { grid-template-columns: repeat(2, 1fr); }

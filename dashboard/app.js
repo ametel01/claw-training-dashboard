@@ -91,13 +91,27 @@ function section(title, content) {
 
 function renderBarbellDetails(rows = [], planned = {}) {
   if (!rows.length) {
-    if (planned?.planned_barbell_main) {
-      const supp = planned?.planned_barbell_supp
-        ? ` + ${planned.planned_barbell_supp} ${planned.planned_supp_sets || ''}x${planned.planned_supp_reps || ''}`
-        : '';
-      return `<p class="muted">No barbell session logged.</p><p><strong>Planned:</strong> ${planned.planned_barbell_main}${supp}</p>`;
+    const pRows = planned?.plannedBarbellRows || [];
+    if (!pRows.length) return '<p class="muted">No barbell session logged.</p>';
+
+    const main = pRows.filter((r) => r.category === 'main');
+    const supp = pRows.filter((r) => r.category === 'supplemental');
+
+    const mainText = main.map((r) => `${r.planned_weight_kg}×${r.prescribed_reps}`).join(' · ');
+    let suppText = '';
+    if (supp.length) {
+      const s = supp[0];
+      suppText = `${s.lift}: ${supp.length}×${s.prescribed_reps} @ ${s.planned_weight_kg} kg`;
     }
-    return '<p class="muted">No barbell session logged.</p>';
+
+    return `
+      <p class="muted">No barbell session logged.</p>
+      <div class="planned-block">
+        <div class="planned-title">Planned (not completed yet)</div>
+        <p><strong>Main ${main[0]?.lift || ''}:</strong> ${mainText || '-'}</p>
+        ${suppText ? `<p><strong>Supplemental:</strong> ${suppText}</p>` : ''}
+      </div>
+    `;
   }
 
   const mainRows = rows.filter((r) => r.category === 'main');
@@ -143,10 +157,23 @@ function renderBarbellDetails(rows = [], planned = {}) {
 
 function renderCardioDetails(rows = [], planned = {}) {
   if (!rows.length) {
-    if (planned?.planned_cardio && planned.planned_cardio !== 'OFF') {
-      return `<p class="muted">No cardio session logged.</p><p><strong>Planned:</strong> ${planned.planned_cardio}</p>`;
-    }
-    return '<p class="muted">No cardio session logged.</p>';
+    const p = planned?.plannedCardio || null;
+    if (!p || !p.session_type || p.session_type === 'OFF') return '<p class="muted">No cardio session logged.</p>';
+
+    const intervalText = p.vo2_intervals_min
+      ? `${p.vo2_intervals_min}${p.vo2_intervals_max && p.vo2_intervals_max !== p.vo2_intervals_min ? `-${p.vo2_intervals_max}` : ''} × ${p.vo2_work_min}m hard / ${p.vo2_easy_min}m easy`
+      : '';
+
+    return `
+      <p class="muted">No cardio session logged.</p>
+      <div class="planned-block">
+        <div class="planned-title">Planned (not completed yet)</div>
+        <p><strong>${p.session_type}</strong> · ${p.duration_min || '-'} min</p>
+        ${intervalText ? `<p>${intervalText}</p>` : ''}
+        ${p.speed_low_kmh ? `<p>Speed: ${p.speed_low_kmh}${p.speed_high_kmh ? `-${p.speed_high_kmh}` : ''} km/h</p>` : ''}
+        ${p.target_hr_min ? `<p>Target HR: ${p.target_hr_min}${p.target_hr_max ? `-${p.target_hr_max}` : ''} bpm</p>` : ''}
+      </div>
+    `;
   }
   const head = rows[0];
   const intervals = rows.filter((r) => r.interval_no != null);
@@ -163,10 +190,23 @@ function renderCardioDetails(rows = [], planned = {}) {
 
 function renderRingsDetails(rows = [], planned = {}) {
   if (!rows.length) {
-    if (planned?.planned_rings) {
-      return `<p class="muted">No rings session logged.</p><p><strong>Planned:</strong> Template ${planned.planned_rings}</p>`;
-    }
-    return '<p class="muted">No rings session logged.</p>';
+    const pRows = planned?.plannedRingsRows || [];
+    if (!pRows.length || !pRows[0]?.template_code) return '<p class="muted">No rings session logged.</p>';
+
+    const tpl = pRows[0].template_code;
+    const list = pRows
+      .filter((r) => r.item_no != null)
+      .map((r) => `<li>${r.item_no}. ${r.exercise} · ${r.sets_text}×${r.reps_or_time}${r.tempo ? ` @ ${r.tempo}` : ''}${r.rest_text ? ` · rest ${r.rest_text}` : ''}</li>`)
+      .join('');
+
+    return `
+      <p class="muted">No rings session logged.</p>
+      <div class="planned-block">
+        <div class="planned-title">Planned (not completed yet)</div>
+        <p><strong>Template ${tpl}</strong></p>
+        <ul class="detail-list">${list}</ul>
+      </div>
+    `;
   }
   const tpl = rows[0].template || '-';
   const list = rows.filter((r) => r.item_no != null).map((r) => `<li>${r.item_no}. ${r.exercise}${r.result_text ? ` · ${r.result_text}` : ''}</li>`).join('');
@@ -204,7 +244,13 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
     const barbell = details?.barbellByDate?.[date] || [];
     const cardio = details?.cardioByDate?.[date] || [];
     const rings = details?.ringsByDate?.[date] || [];
-    const planned = planByDate?.[date] || {};
+    const basePlanned = planByDate?.[date] || {};
+    const planned = {
+      ...basePlanned,
+      plannedBarbellRows: details?.plannedBarbellByDate?.[date] || [],
+      plannedCardio: (details?.plannedCardioByDate?.[date] || [])[0] || null,
+      plannedRingsRows: details?.plannedRingsByDate?.[date] || []
+    };
 
     body.innerHTML = [
       section('Barbell', renderBarbellDetails(barbell, planned)),
