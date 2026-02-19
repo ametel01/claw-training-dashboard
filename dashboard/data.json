@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-19T22:50:38.577Z",
+  "generatedAt": "2026-02-19T22:55:46.532Z",
   "totals": {
     "barbell_sessions": 3,
     "cardio_sessions": 3,
@@ -59,6 +59,69 @@
     }
   ],
   "dailyTiles": [
+    {
+      "session_date": "2026-01-30",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
+    {
+      "session_date": "2026-01-31",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
+    {
+      "session_date": "2026-02-01",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
+    {
+      "session_date": "2026-02-02",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
+    {
+      "session_date": "2026-02-03",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
+    {
+      "session_date": "2026-02-04",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
+    {
+      "session_date": "2026-02-05",
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null
+    },
     {
       "session_date": "2026-02-06",
       "has_barbell": 0,
@@ -185,5 +248,532 @@
       "cardio_protocol": "VO2_4x4",
       "rings_template": "C"
     }
-  ]
+  ],
+  "details": {
+    "barbellByDate": {
+      "2026-02-16": [
+        {
+          "session_date": "2026-02-16",
+          "lift": "Squat",
+          "category": "main",
+          "set_no": 1,
+          "actual_weight_kg": 72.5,
+          "actual_reps": 5,
+          "note": null
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Squat",
+          "category": "main",
+          "set_no": 2,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 5,
+          "note": null
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Squat",
+          "category": "main",
+          "set_no": 3,
+          "actual_weight_kg": 92.5,
+          "actual_reps": 3,
+          "note": "Sharp back pain at rep 3 of top squat set; set stopped"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 1,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 2,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 3,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 4,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 5,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 6,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 7,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 8,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 9,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-16",
+          "lift": "Bench",
+          "category": "supplemental",
+          "set_no": 10,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        }
+      ],
+      "2026-02-17": [
+        {
+          "session_date": "2026-02-17",
+          "lift": "Press",
+          "category": "main",
+          "set_no": 1,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Press",
+          "category": "main",
+          "set_no": 2,
+          "actual_weight_kg": 45,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Press",
+          "category": "main",
+          "set_no": 3,
+          "actual_weight_kg": 50,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 1,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 2,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 3,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 4,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 5,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 6,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 7,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 8,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 9,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        },
+        {
+          "session_date": "2026-02-17",
+          "lift": "Deadlift",
+          "category": "supplemental",
+          "set_no": 10,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 0,
+          "note": "Skipped due to back pain from yesterday"
+        }
+      ],
+      "2026-02-19": [
+        {
+          "session_date": "2026-02-19",
+          "lift": "Bench",
+          "category": "main",
+          "set_no": 1,
+          "actual_weight_kg": 57.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Bench",
+          "category": "main",
+          "set_no": 2,
+          "actual_weight_kg": 67.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Bench",
+          "category": "main",
+          "set_no": 3,
+          "actual_weight_kg": 77.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Bench",
+          "category": "main",
+          "set_no": 4,
+          "actual_weight_kg": 67.5,
+          "actual_reps": 5,
+          "note": "Extra SSL set added"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Squat",
+          "category": "supplemental",
+          "set_no": 1,
+          "actual_weight_kg": 60,
+          "actual_reps": 10,
+          "note": "Adjusted from planned BBS due to residual back pain"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Squat",
+          "category": "supplemental",
+          "set_no": 2,
+          "actual_weight_kg": 60,
+          "actual_reps": 10,
+          "note": "Adjusted from planned BBS due to residual back pain"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Squat",
+          "category": "supplemental",
+          "set_no": 3,
+          "actual_weight_kg": 60,
+          "actual_reps": 10,
+          "note": "Adjusted from planned BBS due to residual back pain"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Squat",
+          "category": "supplemental",
+          "set_no": 4,
+          "actual_weight_kg": 60,
+          "actual_reps": 10,
+          "note": "Adjusted from planned BBS due to residual back pain"
+        },
+        {
+          "session_date": "2026-02-19",
+          "lift": "Squat",
+          "category": "supplemental",
+          "set_no": 5,
+          "actual_weight_kg": 60,
+          "actual_reps": 10,
+          "note": "Adjusted from planned BBS due to residual back pain"
+        }
+      ]
+    },
+    "cardioByDate": {
+      "2026-02-15": [
+        {
+          "session_date": "2026-02-15",
+          "protocol": "Z2",
+          "duration_min": 30,
+          "max_hr": 140,
+          "notes": "Logged from chat: 30min @ 6.5 km/h, closing BPM 140",
+          "interval_no": null,
+          "work_min": null,
+          "easy_min": null,
+          "target_speed_kmh": null,
+          "achieved_hr": null,
+          "interval_note": null
+        }
+      ],
+      "2026-02-17": [
+        {
+          "session_date": "2026-02-17",
+          "protocol": "Z2",
+          "duration_min": 30,
+          "max_hr": 141,
+          "notes": "Logged from chat: 30min @ 6.5 km/h, end BPM 141",
+          "interval_no": null,
+          "work_min": null,
+          "easy_min": null,
+          "target_speed_kmh": null,
+          "achieved_hr": null,
+          "interval_note": null
+        }
+      ],
+      "2026-02-19": [
+        {
+          "session_date": "2026-02-19",
+          "protocol": "VO2_4x4",
+          "duration_min": 40,
+          "max_hr": 172,
+          "notes": "Moved from 2026-02-18 per user correction: 10min Z2 warm-up + 4x4 hard/3min easy + 5min cool down; hard speed 12.0 km/h; incline 0%",
+          "interval_no": 1,
+          "work_min": 4,
+          "easy_min": 3,
+          "target_speed_kmh": 12,
+          "achieved_hr": null,
+          "interval_note": "VO2 interval @ 0% incline"
+        },
+        {
+          "session_date": "2026-02-19",
+          "protocol": "VO2_4x4",
+          "duration_min": 40,
+          "max_hr": 172,
+          "notes": "Moved from 2026-02-18 per user correction: 10min Z2 warm-up + 4x4 hard/3min easy + 5min cool down; hard speed 12.0 km/h; incline 0%",
+          "interval_no": 2,
+          "work_min": 4,
+          "easy_min": 3,
+          "target_speed_kmh": 12,
+          "achieved_hr": null,
+          "interval_note": "VO2 interval @ 0% incline"
+        },
+        {
+          "session_date": "2026-02-19",
+          "protocol": "VO2_4x4",
+          "duration_min": 40,
+          "max_hr": 172,
+          "notes": "Moved from 2026-02-18 per user correction: 10min Z2 warm-up + 4x4 hard/3min easy + 5min cool down; hard speed 12.0 km/h; incline 0%",
+          "interval_no": 3,
+          "work_min": 4,
+          "easy_min": 3,
+          "target_speed_kmh": 12,
+          "achieved_hr": null,
+          "interval_note": "VO2 interval @ 0% incline"
+        },
+        {
+          "session_date": "2026-02-19",
+          "protocol": "VO2_4x4",
+          "duration_min": 40,
+          "max_hr": 172,
+          "notes": "Moved from 2026-02-18 per user correction: 10min Z2 warm-up + 4x4 hard/3min easy + 5min cool down; hard speed 12.0 km/h; incline 0%",
+          "interval_no": 4,
+          "work_min": 4,
+          "easy_min": 3,
+          "target_speed_kmh": 12,
+          "achieved_hr": 172,
+          "interval_note": "VO2 interval @ 0% incline; max BPM 172"
+        }
+      ]
+    },
+    "ringsByDate": {
+      "2026-02-17": [
+        {
+          "session_date": "2026-02-17",
+          "template": "A",
+          "completed_as_prescribed": 1,
+          "notes": "Carry-over split A completed (previous day skipped)",
+          "item_no": 1,
+          "exercise": "RTO Support Hold",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-17",
+          "template": "A",
+          "completed_as_prescribed": 1,
+          "notes": "Carry-over split A completed (previous day skipped)",
+          "item_no": 2,
+          "exercise": "Ring Rows (feet up)",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-17",
+          "template": "A",
+          "completed_as_prescribed": 1,
+          "notes": "Carry-over split A completed (previous day skipped)",
+          "item_no": 3,
+          "exercise": "Ring Face Pulls",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-17",
+          "template": "A",
+          "completed_as_prescribed": 1,
+          "notes": "Carry-over split A completed (previous day skipped)",
+          "item_no": 4,
+          "exercise": "Ring Plank",
+          "result_text": "completed as prescribed"
+        }
+      ],
+      "2026-02-18": [
+        {
+          "session_date": "2026-02-18",
+          "template": "B",
+          "completed_as_prescribed": 1,
+          "notes": "Template B completed as prescribed",
+          "item_no": 1,
+          "exercise": "RTO Support Shrugs",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-18",
+          "template": "B",
+          "completed_as_prescribed": 1,
+          "notes": "Template B completed as prescribed",
+          "item_no": 2,
+          "exercise": "Ring Push-Ups (RTO)",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-18",
+          "template": "B",
+          "completed_as_prescribed": 1,
+          "notes": "Template B completed as prescribed",
+          "item_no": 3,
+          "exercise": "Assisted Ring Dips",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-18",
+          "template": "B",
+          "completed_as_prescribed": 1,
+          "notes": "Template B completed as prescribed",
+          "item_no": 4,
+          "exercise": "Hollow Hold",
+          "result_text": "completed as prescribed"
+        }
+      ],
+      "2026-02-19": [
+        {
+          "session_date": "2026-02-19",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Template C completed as prescribed",
+          "item_no": 1,
+          "exercise": "Feet-Assisted Pull-Ups",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-19",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Template C completed as prescribed",
+          "item_no": 2,
+          "exercise": "High Ring Rows",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-19",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Template C completed as prescribed",
+          "item_no": 3,
+          "exercise": "False Grip Hold (feet)",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-19",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Template C completed as prescribed",
+          "item_no": 4,
+          "exercise": "Ring Body Saw",
+          "result_text": "completed as prescribed"
+        }
+      ]
+    }
+  }
 }

@@ -15,6 +15,15 @@ function sqlJson(sql) {
   return raw ? JSON.parse(raw) : [];
 }
 
+function groupByDate(rows, key = 'session_date') {
+  return rows.reduce((acc, row) => {
+    const d = row[key];
+    if (!acc[d]) acc[d] = [];
+    acc[d].push(row);
+    return acc;
+  }, {});
+}
+
 const totals = sqlJson(`
 WITH latest AS (
   SELECT MAX(session_date) AS latest_date
@@ -55,7 +64,6 @@ WITH latest AS (
 week_window AS (
   SELECT
     anchor_date,
-    ((CAST(strftime('%w', anchor_date) AS INTEGER) + 6) % 7) + 1 AS anchor_weekday,
     date(anchor_date, '-' || (((CAST(strftime('%w', anchor_date) AS INTEGER) + 6) % 7)) || ' day') AS week_start
   FROM latest
 ),
@@ -100,7 +108,7 @@ latest AS (
   )
 ),
 dates(day) AS (
-  SELECT date((SELECT latest_date FROM latest), '-13 day')
+  SELECT date((SELECT latest_date FROM latest), '-20 day')
   UNION ALL
   SELECT date(day, '+1 day') FROM dates
   WHERE day < (SELECT latest_date FROM latest)
@@ -122,11 +130,66 @@ LEFT JOIN rings_sessions rs ON rs.session_date = d.day
 ORDER BY d.day
 `);
 
+const barbellRows = sqlJson(`
+SELECT
+  bs.session_date,
+  l.name AS lift,
+  bsl.category,
+  bsl.set_no,
+  bsl.actual_weight_kg,
+  bsl.actual_reps,
+  bsl.note
+FROM barbell_set_logs bsl
+JOIN barbell_sessions bs ON bs.id = bsl.session_id
+JOIN lifts l ON l.id = bsl.lift_id
+WHERE bs.session_date >= date('now','localtime','-90 day')
+ORDER BY bs.session_date, bsl.category, bsl.set_no
+`);
+
+const cardioRows = sqlJson(`
+SELECT
+  cs.session_date,
+  cs.protocol,
+  cs.duration_min,
+  cs.max_hr,
+  cs.notes,
+  ci.interval_no,
+  ci.work_min,
+  ci.easy_min,
+  ci.target_speed_kmh,
+  ci.achieved_hr,
+  ci.note AS interval_note
+FROM cardio_sessions cs
+LEFT JOIN cardio_intervals ci ON ci.session_id = cs.id
+WHERE cs.session_date >= date('now','localtime','-90 day')
+ORDER BY cs.session_date, ci.interval_no
+`);
+
+const ringsRows = sqlJson(`
+SELECT
+  rs.session_date,
+  rs.template,
+  rs.completed_as_prescribed,
+  rs.notes,
+  rl.item_no,
+  rl.exercise,
+  rl.result_text
+FROM rings_sessions rs
+LEFT JOIN rings_logs rl ON rl.session_id = rs.id
+WHERE rs.session_date >= date('now','localtime','-90 day')
+ORDER BY rs.session_date, rl.item_no
+`);
+
 const payload = {
   generatedAt: new Date().toISOString(),
   totals,
   weekProgress,
-  dailyTiles
+  dailyTiles,
+  details: {
+    barbellByDate: groupByDate(barbellRows),
+    cardioByDate: groupByDate(cardioRows),
+    ringsByDate: groupByDate(ringsRows)
+  }
 };
 
 writeFileSync(outPath, JSON.stringify(payload, null, 2) + '\n', 'utf8');
