@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym531 Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="kicker">GYM531 TRACKER</p>
+        <h1>Training Dashboard</h1>
+      </div>
+      <p id="generatedAt" class="muted"></p>
+    </header>
+
+    <section id="totals" class="card-grid"></section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Week Progress</h2>
+        <span class="muted">Barbell · Cardio · Rings</span>
+      </div>
+      <div id="weekRows" class="week-rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Daily Activity Tiles</h2>
+        <span class="muted">Last 14 days</span>
+      </div>
+      <div id="dailyTiles" class="tiles"></div>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
