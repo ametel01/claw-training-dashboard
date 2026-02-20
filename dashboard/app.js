@@ -80,7 +80,9 @@ function renderDailyTiles(days) {
     return `<span class="${cls}">${text}</span>`;
   };
 
-  node.innerHTML = days.map((d) => {
+  const orderedDays = [...days].reverse();
+
+  node.innerHTML = orderedDays.map((d) => {
     const isPast = d.session_date < today;
 
     const plannedBarbell = !!d.planned_barbell_main;
