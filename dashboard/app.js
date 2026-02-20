@@ -69,7 +69,8 @@ function renderWeekProgress(rows) {
 
 function renderDailyTiles(days) {
   const node = document.getElementById('dailyTiles');
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
   const badgeFor = ({ label, planned, done, detail, isPast }) => {
     if (!planned) return '';
@@ -338,7 +339,8 @@ async function renderDashboard() {
     const todayBtn = document.getElementById('todayBtn');
     if (todayBtn) {
       todayBtn.addEventListener('click', () => {
-        const today = new Date().toISOString().slice(0, 10);
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const target = document.querySelector(`[data-date="${today}"]`);
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         if (window.__openDetailForDate) window.__openDetailForDate(today);
