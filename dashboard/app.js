@@ -105,9 +105,10 @@ function renderDailyTiles(days) {
     const completionCount = [d.has_barbell, d.has_cardio, d.has_rings].filter(Boolean).length;
     const title = completionCount ? `Completed: ${completionCount}/3` : (isPast ? 'No logs' : 'Planned');
 
+    const dow = new Date(`${d.session_date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short' });
     return `
       <article class="tile" role="button" tabindex="0" data-date="${d.session_date}">
-        <div class="tile-date">${d.session_date}</div>
+        <div class="tile-date">${dow} · ${d.session_date}</div>
         <div class="tile-main">${title}</div>
         <div class="tile-flags">${badges}</div>
       </article>
