@@ -1,7 +1,22 @@
+const DASHBOARD_TIMEZONE = 'Asia/Manila';
+
 async function loadData() {
   const res = await fetch('./data.json', { cache: 'no-store' });
   if (!res.ok) throw new Error('Could not load data.json');
   return res.json();
+}
+
+function currentDateInDashboardTZ() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: DASHBOARD_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(new Date());
+  const y = parts.find((p) => p.type === 'year')?.value;
+  const m = parts.find((p) => p.type === 'month')?.value;
+  const d = parts.find((p) => p.type === 'day')?.value;
+  return `${y}-${m}-${d}`;
 }
 
 function statCard(label, value) {
@@ -69,8 +84,7 @@ function renderWeekProgress(rows) {
 
 function renderDailyTiles(days) {
   const node = document.getElementById('dailyTiles');
-  const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const today = currentDateInDashboardTZ();
 
   const badgeFor = ({ label, planned, done, detail, isPast }) => {
     if (!planned) return '';
@@ -339,8 +353,7 @@ async function renderDashboard() {
     const todayBtn = document.getElementById('todayBtn');
     if (todayBtn) {
       todayBtn.addEventListener('click', () => {
-        const now = new Date();
-        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const today = currentDateInDashboardTZ();
         const target = document.querySelector(`[data-date="${today}"]`);
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         if (window.__openDetailForDate) window.__openDetailForDate(today);
