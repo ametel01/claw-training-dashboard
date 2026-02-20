@@ -7,6 +7,7 @@ import os
 
 ROOT = Path(__file__).resolve().parents[1]
 PORT = 8080
+NODE_BIN = "/Users/brunoclaw/.nvm/versions/node/v24.13.1/bin/node"
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -27,7 +28,7 @@ class Handler(SimpleHTTPRequestHandler):
 
         try:
             subprocess.run([
-                "node", str(ROOT / "dashboard" / "export-data.mjs")
+                NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
             ], check=True, cwd=str(ROOT), capture_output=True, text=True)
             self._send_json(200, {"ok": True})
         except subprocess.CalledProcessError as e:
