@@ -72,13 +72,11 @@ function renderDailyTiles(days) {
   const today = new Date().toISOString().slice(0, 10);
 
   const badgeFor = ({ label, planned, done, detail, isPast }) => {
-    const text = planned
-      ? `${label}${detail ? `: ${detail}` : ''}`
-      : `${label}: not expected`;
-    let cls = 'badge idle';
-    if (planned && done) cls = 'badge done';
-    else if (planned && !done && isPast) cls = 'badge missed';
-    else if (planned) cls = 'badge planned';
+    if (!planned) return '';
+    const text = `${label}${detail ? `: ${detail}` : ''}`;
+    let cls = 'badge planned';
+    if (done) cls = 'badge done';
+    else if (!done && isPast) cls = 'badge missed';
     return `<span class="${cls}">${text}</span>`;
   };
 
@@ -102,13 +100,17 @@ function renderDailyTiles(days) {
       badgeFor({ label: 'Barbell', planned: plannedBarbell, done: !!d.has_barbell, detail: barbellDetail, isPast }),
       badgeFor({ label: 'Cardio', planned: plannedCardio, done: !!d.has_cardio, detail: cardioDetail, isPast }),
       badgeFor({ label: 'Rings', planned: plannedRings, done: !!d.has_rings, detail: ringsDetail, isPast })
-    ].join('');
+    ].filter(Boolean).join('');
 
-    const completionCount = [d.has_barbell, d.has_cardio, d.has_rings].filter(Boolean).length;
+    const completionCount = [
+      plannedBarbell && d.has_barbell,
+      plannedCardio && d.has_cardio,
+      plannedRings && d.has_rings
+    ].filter(Boolean).length;
     const plannedCount = [plannedBarbell, plannedCardio, plannedRings].filter(Boolean).length;
-    const title = completionCount
-      ? `Completed: ${completionCount}/3`
-      : (plannedCount === 0 ? 'Rest day (no training expected)' : (isPast ? 'Not completed yet' : 'Planned'));
+    const title = plannedCount === 0
+      ? 'Rest day (no training expected)'
+      : `Completed: ${completionCount}/${plannedCount}`;
 
     const dow = new Date(`${d.session_date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short' });
     return `
