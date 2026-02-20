@@ -30,6 +30,29 @@ body {
   align-items: end;
   margin-bottom: 18px;
 }
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn-primary {
+  border: 1px solid #3f65b8;
+  background: rgba(63, 101, 184, 0.2);
+  color: #d7e6ff;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-weight: 600;
+}
+.weekly-pill {
+  border: 1px solid #2f447d;
+  background: rgba(47, 68, 125, 0.2);
+  color: #c9d8ff;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
 
 h1, h2, p { margin: 0; }
 .kicker { font-size: 12px; letter-spacing: 0.14em; color: var(--accent); }

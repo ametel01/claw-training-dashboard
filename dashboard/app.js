@@ -24,6 +24,34 @@ function renderTotals(totals) {
   ].join('');
 }
 
+function renderWeeklyCompletion(weekRows = []) {
+  let planned = 0;
+  let done = 0;
+
+  weekRows.forEach((r) => {
+    const pBarbell = !!r.main_lift;
+    const pCardio = !!r.cardio_plan && r.cardio_plan !== 'OFF';
+    const pRings = !!r.rings_plan;
+
+    if (pBarbell) {
+      planned += 1;
+      if (r.barbell_done) done += 1;
+    }
+    if (pCardio) {
+      planned += 1;
+      if (r.cardio_done) done += 1;
+    }
+    if (pRings) {
+      planned += 1;
+      if (r.rings_done) done += 1;
+    }
+  });
+
+  const pct = planned ? Math.round((done / planned) * 100) : 0;
+  const pill = document.getElementById('weeklyCompletion');
+  if (pill) pill.textContent = `Week: ${done}/${planned} (${pct}%)`;
+}
+
 function renderWeekProgress(rows) {
   const node = document.getElementById('weekRows');
   node.innerHTML = rows.map((r) => `
@@ -261,6 +289,8 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
     modal.classList.add('open');
   }
 
+  window.__openDetailForDate = openForDate;
+
   closeBtn.addEventListener('click', close);
   modal.addEventListener('click', (e) => {
     if (e.target === modal) close();
@@ -288,6 +318,18 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
     renderWeekProgress(data.weekProgress || []);
     renderDailyTiles(data.dailyTiles || []);
     bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);
+    renderWeeklyCompletion(data.weekProgress || []);
+
+    const todayBtn = document.getElementById('todayBtn');
+    if (todayBtn) {
+      todayBtn.addEventListener('click', () => {
+        const today = new Date().toISOString().slice(0, 10);
+        const target = document.querySelector(`[data-date="${today}"]`);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (window.__openDetailForDate) window.__openDetailForDate(today);
+      });
+    }
+
     document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
   } catch (err) {
     document.body.innerHTML = `<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${err}</pre></main>`;
