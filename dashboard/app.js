@@ -72,7 +72,9 @@ function renderDailyTiles(days) {
   const today = new Date().toISOString().slice(0, 10);
 
   const badgeFor = ({ label, planned, done, detail, isPast }) => {
-    const text = `${label}${detail ? `: ${detail}` : ''}`;
+    const text = planned
+      ? `${label}${detail ? `: ${detail}` : ''}`
+      : `${label}: not expected`;
     let cls = 'badge idle';
     if (planned && done) cls = 'badge done';
     else if (planned && !done && isPast) cls = 'badge missed';
@@ -103,7 +105,10 @@ function renderDailyTiles(days) {
     ].join('');
 
     const completionCount = [d.has_barbell, d.has_cardio, d.has_rings].filter(Boolean).length;
-    const title = completionCount ? `Completed: ${completionCount}/3` : (isPast ? 'No logs' : 'Planned');
+    const plannedCount = [plannedBarbell, plannedCardio, plannedRings].filter(Boolean).length;
+    const title = completionCount
+      ? `Completed: ${completionCount}/3`
+      : (plannedCount === 0 ? 'Rest day (no training expected)' : (isPast ? 'Not completed yet' : 'Planned'));
 
     const dow = new Date(`${d.session_date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short' });
     return `
@@ -123,7 +128,7 @@ function section(title, content) {
 function renderBarbellDetails(rows = [], planned = {}) {
   if (!rows.length) {
     const pRows = planned?.plannedBarbellRows || [];
-    if (!pRows.length) return '<p class="muted">No barbell session logged.</p>';
+    if (!pRows.length) return '<p class="muted">Not expected today.</p>';
 
     const main = pRows.filter((r) => r.category === 'main');
     const supp = pRows.filter((r) => r.category === 'supplemental');
@@ -189,7 +194,7 @@ function renderBarbellDetails(rows = [], planned = {}) {
 function renderCardioDetails(rows = [], planned = {}) {
   if (!rows.length) {
     const p = planned?.plannedCardio || null;
-    if (!p || !p.session_type || p.session_type === 'OFF') return '<p class="muted">No cardio session logged.</p>';
+    if (!p || !p.session_type || p.session_type === 'OFF') return '<p class="muted">Not expected today (rest / off day).</p>';
 
     const intervalText = p.vo2_intervals_min
       ? `${p.vo2_intervals_min}${p.vo2_intervals_max && p.vo2_intervals_max !== p.vo2_intervals_min ? `-${p.vo2_intervals_max}` : ''} × ${p.vo2_work_min}m hard / ${p.vo2_easy_min}m easy`
@@ -222,7 +227,7 @@ function renderCardioDetails(rows = [], planned = {}) {
 function renderRingsDetails(rows = [], planned = {}) {
   if (!rows.length) {
     const pRows = planned?.plannedRingsRows || [];
-    if (!pRows.length || !pRows[0]?.template_code) return '<p class="muted">No rings session logged.</p>';
+    if (!pRows.length || !pRows[0]?.template_code) return '<p class="muted">Not expected today.</p>';
 
     const tpl = pRows[0].template_code;
     const list = pRows
