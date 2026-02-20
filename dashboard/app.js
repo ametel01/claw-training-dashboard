@@ -311,14 +311,19 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   });
 }
 
+async function renderDashboard() {
+  const data = await loadData();
+  renderTotals(data.totals || {});
+  renderWeekProgress(data.weekProgress || []);
+  renderDailyTiles(data.dailyTiles || []);
+  bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);
+  renderWeeklyCompletion(data.weekProgress || []);
+  document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
+}
+
 (async function init() {
   try {
-    const data = await loadData();
-    renderTotals(data.totals || {});
-    renderWeekProgress(data.weekProgress || []);
-    renderDailyTiles(data.dailyTiles || []);
-    bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);
-    renderWeeklyCompletion(data.weekProgress || []);
+    await renderDashboard();
 
     const todayBtn = document.getElementById('todayBtn');
     if (todayBtn) {
@@ -330,7 +335,27 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
       });
     }
 
-    document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', async () => {
+        const old = refreshBtn.textContent;
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Refreshing...';
+        try {
+          const res = await fetch('/api/refresh', { method: 'POST' });
+          if (!res.ok) throw new Error(`Refresh failed (${res.status})`);
+          await renderDashboard();
+          refreshBtn.textContent = 'Updated ✓';
+          setTimeout(() => { refreshBtn.textContent = old; }, 1200);
+        } catch (e) {
+          console.error(e);
+          refreshBtn.textContent = 'Refresh failed';
+          setTimeout(() => { refreshBtn.textContent = old; }, 2000);
+        } finally {
+          refreshBtn.disabled = false;
+        }
+      });
+    }
   } catch (err) {
     document.body.innerHTML = `<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${err}</pre></main>`;
   }

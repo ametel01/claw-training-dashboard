@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-02-19T23:21:44.166Z",
+  "generatedAt": "2026-02-20T01:25:29.133Z",
   "totals": {
-    "barbell_sessions": 3,
+    "barbell_sessions": 4,
     "cardio_sessions": 3,
     "rings_sessions": 3,
-    "total_training_days": 5,
-    "active_days_last_14": 5,
-    "latest_date": "2026-02-19"
+    "total_training_days": 6,
+    "active_days_last_14": 6,
+    "latest_date": "2026-02-20"
   },
   "weekProgress": [
     {
@@ -53,27 +53,12 @@
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
       "rings_plan": "D",
-      "barbell_done": 0,
+      "barbell_done": 1,
       "cardio_done": 0,
       "rings_done": 0
     }
   ],
   "dailyTiles": [
-    {
-      "session_date": "2026-01-30",
-      "has_barbell": 0,
-      "has_cardio": 0,
-      "has_rings": 0,
-      "barbell_lift": null,
-      "cardio_protocol": null,
-      "rings_template": null,
-      "planned_barbell_main": "Deadlift",
-      "planned_barbell_supp": "Press",
-      "planned_supp_sets": 10,
-      "planned_supp_reps": 5,
-      "planned_cardio": "Z2",
-      "planned_rings": "D"
-    },
     {
       "session_date": "2026-01-31",
       "has_barbell": 0,
@@ -373,6 +358,21 @@
       "planned_supp_reps": 5,
       "planned_cardio": "Z2",
       "planned_rings": "C"
+    },
+    {
+      "session_date": "2026-02-20",
+      "has_barbell": 1,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": "Deadlift",
+      "cardio_protocol": null,
+      "rings_template": null,
+      "planned_barbell_main": "Deadlift",
+      "planned_barbell_supp": "Press",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "D"
     }
   ],
   "details": {
@@ -696,6 +696,125 @@
           "actual_weight_kg": 60,
           "actual_reps": 10,
           "note": "Adjusted from planned BBS due to residual back pain"
+        }
+      ],
+      "2026-02-20": [
+        {
+          "session_date": "2026-02-20",
+          "lift": "Deadlift",
+          "category": "main",
+          "set_no": 1,
+          "actual_weight_kg": 82.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Deadlift",
+          "category": "main",
+          "set_no": 2,
+          "actual_weight_kg": 95,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Deadlift",
+          "category": "main",
+          "set_no": 3,
+          "actual_weight_kg": 107.5,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 1,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 2,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 3,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 4,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 5,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 6,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 7,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 8,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 9,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-20",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 10,
+          "actual_weight_kg": 40,
+          "actual_reps": 5,
+          "note": "Completed as prescribed"
         }
       ]
     },

@@ -45,6 +45,9 @@ body {
   padding: 7px 12px;
   font-weight: 600;
 }
+.btn-primary:disabled {
+  opacity: 0.6;
+}
 .weekly-pill {
   border: 1px solid #2f447d;
   background: rgba(47, 68, 125, 0.2);
