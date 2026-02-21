@@ -71,13 +71,15 @@ function renderWeekProgress(rows) {
   const node = document.getElementById('weekRows');
   node.innerHTML = rows.map((r) => `
     <article class="week-row" role="button" tabindex="0" data-date="${r.session_date}">
-      <div>
+      <div class="week-meta">
         <div class="week-day">${r.day_name}</div>
         <div class="muted">${r.session_date}</div>
       </div>
-      <div>${yesNoChip('Barbell', r.barbell_done, r.main_lift)}</div>
-      <div>${yesNoChip('Cardio', r.cardio_done, r.cardio_plan || 'OFF')}</div>
-      <div>${yesNoChip('Rings', r.rings_done, r.rings_plan || '-')}</div>
+      <div class="week-chips">
+        ${yesNoChip('Barbell', r.barbell_done, r.main_lift || '—')}
+        ${yesNoChip('Cardio', r.cardio_done, r.cardio_plan || 'OFF')}
+        ${yesNoChip('Rings', r.rings_done, r.rings_plan || '—')}
+      </div>
     </article>
   `).join('');
 }
