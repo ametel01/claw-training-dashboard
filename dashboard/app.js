@@ -230,16 +230,29 @@ function renderCardioDetails(rows = [], planned = {}) {
       </div>
     `;
   }
+
   const head = rows[0];
   const intervals = rows.filter((r) => r.interval_no != null);
-  const intervalList = intervals.length
-    ? `<ul class="detail-list">${intervals.map((r) => `<li>Interval ${r.interval_no}: ${r.work_min}m hard / ${r.easy_min}m easy @ ${r.target_speed_kmh ?? '-'} km/h${r.achieved_hr ? ` · HR ${r.achieved_hr}` : ''}</li>`).join('')}</ul>`
-    : '<p class="muted">No interval breakdown stored.</p>';
+
+  let intervalSummary = '<p class="muted">No interval breakdown stored.</p>';
+  if (intervals.length) {
+    const workSet = [...new Set(intervals.map((r) => r.work_min))];
+    const easySet = [...new Set(intervals.map((r) => r.easy_min))];
+    const speedSet = [...new Set(intervals.map((r) => r.target_speed_kmh).filter((v) => v != null))];
+    const hrSet = [...new Set(intervals.map((r) => r.achieved_hr).filter((v) => v != null))];
+
+    const allSame = workSet.length === 1 && easySet.length === 1 && speedSet.length <= 1 && hrSet.length <= 1;
+
+    if (allSame) {
+      intervalSummary = `<p><strong>Intervals:</strong> ${intervals.length}× (${workSet[0]}m hard / ${easySet[0]}m easy)${speedSet.length ? ` @ ${speedSet[0]} km/h` : ''}${hrSet.length ? ` · HR ${hrSet[0]}` : ''}</p>`;
+    } else {
+      intervalSummary = `<ul class="detail-list">${intervals.map((r) => `<li>#${r.interval_no}: ${r.work_min}m / ${r.easy_min}m${r.target_speed_kmh ? ` @ ${r.target_speed_kmh} km/h` : ''}${r.achieved_hr ? ` · HR ${r.achieved_hr}` : ''}</li>`).join('')}</ul>`;
+    }
+  }
 
   return `
     <p><strong>${head.protocol}</strong> · ${head.duration_min ?? '-'} min${head.max_hr ? ` · max HR ${head.max_hr}` : ''}</p>
-    ${head.notes ? `<p class="detail-note">${head.notes}</p>` : ''}
-    ${intervalList}
+    ${intervalSummary}
   `;
 }
 
