@@ -67,12 +67,21 @@ week_window AS (
     date(anchor_date, '-' || (((CAST(strftime('%w', anchor_date) AS INTEGER) + 6) % 7)) || ' day') AS week_start
   FROM latest
 ),
+weekdays AS (
+  SELECT 1 AS weekday, 'Monday' AS day_name
+  UNION ALL SELECT 2, 'Tuesday'
+  UNION ALL SELECT 3, 'Wednesday'
+  UNION ALL SELECT 4, 'Thursday'
+  UNION ALL SELECT 5, 'Friday'
+  UNION ALL SELECT 6, 'Saturday'
+  UNION ALL SELECT 7, 'Sunday'
+),
 days AS (
   SELECT
-    td.weekday,
-    td.day_name,
-    date(ww.week_start, '+' || (td.weekday - 1) || ' day') AS session_date
-  FROM training_days td
+    wd.weekday,
+    wd.day_name,
+    date(ww.week_start, '+' || (wd.weekday - 1) || ' day') AS session_date
+  FROM weekdays wd
   CROSS JOIN week_window ww
 )
 SELECT
@@ -87,8 +96,8 @@ SELECT
   CASE WHEN cs.id IS NOT NULL THEN 1 ELSE 0 END AS cardio_done,
   CASE WHEN rs.id IS NOT NULL THEN 1 ELSE 0 END AS rings_done
 FROM days d
-JOIN training_days td ON td.weekday = d.weekday
-JOIN lifts l ON l.id = td.main_lift_id
+LEFT JOIN training_days td ON td.weekday = d.weekday
+LEFT JOIN lifts l ON l.id = td.main_lift_id
 LEFT JOIN cardio_plan_days cpd ON cpd.weekday = d.weekday
 LEFT JOIN rings_plan_days rpd ON rpd.weekday = d.weekday
 LEFT JOIN barbell_sessions bs ON bs.session_date = d.session_date
