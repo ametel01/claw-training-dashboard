@@ -101,6 +101,7 @@ h2 { font-size: 18px; }
 }
 .est1rm-lift { font-size: 13px; color: #b8c8f4; }
 .est1rm-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.est1rm-level { font-size: 12px; color: #9cc4ff; margin-top: 4px; font-weight: 600; }
 .est1rm-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
 .week-rows { display: grid; gap: 8px; }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-22T03:37:11.246Z",
+  "generatedAt": "2026-02-22T03:45:29.613Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -418,7 +418,10 @@
       "source_date": "2026-02-16",
       "source_weight_kg": 92.5,
       "source_reps": 3,
-      "source_set_no": 3
+      "source_set_no": 3,
+      "bw_ratio": 1.2,
+      "bodyweight_kg": 85,
+      "strength_level": "Beginner"
     },
     {
       "lift": "Bench",
@@ -426,7 +429,10 @@
       "source_date": "2026-02-19",
       "source_weight_kg": 77.5,
       "source_reps": 5,
-      "source_set_no": 3
+      "source_set_no": 3,
+      "bw_ratio": 1.06,
+      "bodyweight_kg": 85,
+      "strength_level": "Novice"
     },
     {
       "lift": "Deadlift",
@@ -434,7 +440,10 @@
       "source_date": "2026-02-20",
       "source_weight_kg": 107.5,
       "source_reps": 5,
-      "source_set_no": 3
+      "source_set_no": 3,
+      "bw_ratio": 1.48,
+      "bodyweight_kg": 85,
+      "strength_level": "Beginner"
     },
     {
       "lift": "Press",
@@ -442,7 +451,10 @@
       "source_date": "2026-02-17",
       "source_weight_kg": 50,
       "source_reps": 5,
-      "source_set_no": 3
+      "source_set_no": 3,
+      "bw_ratio": 0.69,
+      "bodyweight_kg": 85,
+      "strength_level": "Novice"
     }
   ],
   "details": {

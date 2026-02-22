@@ -282,7 +282,10 @@ ORDER BY b.session_date, rti.item_no
 `);
 
 const est1RM = sqlJson(`
-WITH main_sets AS (
+WITH cfg AS (
+  SELECT COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='athlete_bodyweight_kg'), 85.0) AS bw
+),
+main_sets AS (
   SELECT
     l.name AS lift,
     bs.session_date,
@@ -308,15 +311,44 @@ ranked AS (
   FROM main_sets
 )
 SELECT
-  lift,
-  ROUND(e1rm_kg, 1) AS est_1rm_kg,
-  session_date AS source_date,
-  ROUND(weight_kg, 1) AS source_weight_kg,
-  reps AS source_reps,
-  set_no AS source_set_no
-FROM ranked
-WHERE rn = 1
-ORDER BY CASE lift
+  r.lift,
+  ROUND(r.e1rm_kg, 1) AS est_1rm_kg,
+  r.session_date AS source_date,
+  ROUND(r.weight_kg, 1) AS source_weight_kg,
+  r.reps AS source_reps,
+  r.set_no AS source_set_no,
+  ROUND((r.e1rm_kg / cfg.bw), 2) AS bw_ratio,
+  cfg.bw AS bodyweight_kg,
+  CASE
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 2.75 THEN 'Elite'
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 2.25 THEN 'Advanced'
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 1.50 THEN 'Intermediate'
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 1.25 THEN 'Novice'
+    WHEN r.lift='Squat' THEN 'Beginner'
+
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 2.00 THEN 'Elite'
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 1.75 THEN 'Advanced'
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 1.25 THEN 'Intermediate'
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 0.75 THEN 'Novice'
+    WHEN r.lift='Bench' THEN 'Beginner'
+
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 3.00 THEN 'Elite'
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 2.50 THEN 'Advanced'
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 2.00 THEN 'Intermediate'
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 1.50 THEN 'Novice'
+    WHEN r.lift='Deadlift' THEN 'Beginner'
+
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 1.40 THEN 'Elite'
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 1.10 THEN 'Advanced'
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.80 THEN 'Intermediate'
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.55 THEN 'Novice'
+    WHEN r.lift='Press' THEN 'Beginner'
+    ELSE '—'
+  END AS strength_level
+FROM ranked r
+CROSS JOIN cfg
+WHERE r.rn = 1
+ORDER BY CASE r.lift
   WHEN 'Squat' THEN 1
   WHEN 'Bench' THEN 2
   WHEN 'Deadlift' THEN 3

@@ -80,7 +80,8 @@ function renderEst1RM(rows = []) {
     <article class="est1rm-card">
       <div class="est1rm-lift">${r.lift}</div>
       <div class="est1rm-value">${r.est_1rm_kg} kg</div>
-      <div class="est1rm-meta">from ${r.source_weight_kg}×${r.source_reps} (${r.source_date})</div>
+      <div class="est1rm-level">${r.strength_level} · ${r.bw_ratio}x BW</div>
+      <div class="est1rm-meta">BW ${r.bodyweight_kg} kg · from ${r.source_weight_kg}×${r.source_reps} (${r.source_date})</div>
     </article>
   `).join('');
 }
