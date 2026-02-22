@@ -281,11 +281,55 @@ LEFT JOIN rings_template_items rti ON rti.template_id = rt.id
 ORDER BY b.session_date, rti.item_no
 `);
 
+const est1RM = sqlJson(`
+WITH main_sets AS (
+  SELECT
+    l.name AS lift,
+    bs.session_date,
+    bsl.actual_weight_kg AS weight_kg,
+    bsl.actual_reps AS reps,
+    bsl.set_no,
+    (bsl.actual_weight_kg * (1 + (bsl.actual_reps / 30.0))) AS e1rm_kg
+  FROM barbell_set_logs bsl
+  JOIN barbell_sessions bs ON bs.id = bsl.session_id
+  JOIN lifts l ON l.id = bsl.lift_id
+  WHERE bsl.category = 'main'
+    AND bsl.actual_weight_kg IS NOT NULL
+    AND bsl.actual_reps IS NOT NULL
+    AND bsl.actual_reps > 0
+    AND bs.session_date >= date('now','localtime','-84 day')
+),
+ranked AS (
+  SELECT *,
+         ROW_NUMBER() OVER (
+           PARTITION BY lift
+           ORDER BY e1rm_kg DESC, session_date DESC, set_no DESC
+         ) AS rn
+  FROM main_sets
+)
+SELECT
+  lift,
+  ROUND(e1rm_kg, 1) AS est_1rm_kg,
+  session_date AS source_date,
+  ROUND(weight_kg, 1) AS source_weight_kg,
+  reps AS source_reps,
+  set_no AS source_set_no
+FROM ranked
+WHERE rn = 1
+ORDER BY CASE lift
+  WHEN 'Squat' THEN 1
+  WHEN 'Bench' THEN 2
+  WHEN 'Deadlift' THEN 3
+  WHEN 'Press' THEN 4
+  ELSE 99 END
+`);
+
 const payload = {
   generatedAt: new Date().toISOString(),
   totals,
   weekProgress,
   dailyTiles,
+  est1RM,
   details: {
     barbellByDate: groupByDate(barbellRows),
     cardioByDate: groupByDate(cardioRows),

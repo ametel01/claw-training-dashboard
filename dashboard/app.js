@@ -67,6 +67,24 @@ function renderWeeklyCompletion(weekRows = []) {
   if (pill) pill.textContent = `Week: ${done}/${planned} (${pct}%)`;
 }
 
+function renderEst1RM(rows = []) {
+  const node = document.getElementById('est1rmRows');
+  if (!node) return;
+
+  if (!rows.length) {
+    node.innerHTML = '<p class="muted">No main-set data in the last 12 weeks yet.</p>';
+    return;
+  }
+
+  node.innerHTML = rows.map((r) => `
+    <article class="est1rm-card">
+      <div class="est1rm-lift">${r.lift}</div>
+      <div class="est1rm-value">${r.est_1rm_kg} kg</div>
+      <div class="est1rm-meta">from ${r.source_weight_kg}×${r.source_reps} (${r.source_date})</div>
+    </article>
+  `).join('');
+}
+
 function renderWeekProgress(rows) {
   const node = document.getElementById('weekRows');
   node.innerHTML = rows.map((r) => `
@@ -354,6 +372,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
 async function renderDashboard() {
   const data = await loadData();
   renderTotals(data.totals || {});
+  renderEst1RM(data.est1RM || []);
   renderWeekProgress(data.weekProgress || []);
   renderDailyTiles(data.dailyTiles || []);
   bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);

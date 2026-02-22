@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-02-21T00:33:45.279Z",
+  "generatedAt": "2026-02-22T03:37:11.246Z",
   "totals": {
     "barbell_sessions": 4,
-    "cardio_sessions": 4,
+    "cardio_sessions": 5,
     "rings_sessions": 4,
-    "total_training_days": 6,
-    "active_days_last_14": 6,
-    "latest_date": "2026-02-20"
+    "total_training_days": 7,
+    "active_days_last_14": 7,
+    "latest_date": "2026-02-21"
   },
   "weekProgress": [
     {
@@ -78,7 +78,7 @@
       "cardio_plan": "Z2_VO2_1min",
       "rings_plan": null,
       "barbell_done": 0,
-      "cardio_done": 0,
+      "cardio_done": 1,
       "rings_done": 0
     },
     {
@@ -95,21 +95,6 @@
     }
   ],
   "dailyTiles": [
-    {
-      "session_date": "2026-01-31",
-      "has_barbell": 0,
-      "has_cardio": 0,
-      "has_rings": 0,
-      "barbell_lift": null,
-      "cardio_protocol": null,
-      "rings_template": null,
-      "planned_barbell_main": null,
-      "planned_barbell_supp": null,
-      "planned_supp_sets": null,
-      "planned_supp_reps": null,
-      "planned_cardio": "Z2_VO2_1min",
-      "planned_rings": null
-    },
     {
       "session_date": "2026-02-01",
       "has_barbell": 0,
@@ -409,6 +394,55 @@
       "planned_supp_reps": 5,
       "planned_cardio": "Z2",
       "planned_rings": "D"
+    },
+    {
+      "session_date": "2026-02-21",
+      "has_barbell": 0,
+      "has_cardio": 1,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": "VO2_1min",
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_1min",
+      "planned_rings": null
+    }
+  ],
+  "est1RM": [
+    {
+      "lift": "Squat",
+      "est_1rm_kg": 101.8,
+      "source_date": "2026-02-16",
+      "source_weight_kg": 92.5,
+      "source_reps": 3,
+      "source_set_no": 3
+    },
+    {
+      "lift": "Bench",
+      "est_1rm_kg": 90.4,
+      "source_date": "2026-02-19",
+      "source_weight_kg": 77.5,
+      "source_reps": 5,
+      "source_set_no": 3
+    },
+    {
+      "lift": "Deadlift",
+      "est_1rm_kg": 125.4,
+      "source_date": "2026-02-20",
+      "source_weight_kg": 107.5,
+      "source_reps": 5,
+      "source_set_no": 3
+    },
+    {
+      "lift": "Press",
+      "est_1rm_kg": 58.3,
+      "source_date": "2026-02-17",
+      "source_weight_kg": 50,
+      "source_reps": 5,
+      "source_set_no": 3
     }
   ],
   "details": {
@@ -952,6 +986,112 @@
           "target_speed_kmh": null,
           "achieved_hr": null,
           "interval_note": null
+        }
+      ],
+      "2026-02-21": [
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 1,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 2,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 3,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 4,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 5,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 6,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 7,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
+        },
+        {
+          "session_date": "2026-02-21",
+          "protocol": "VO2_1min",
+          "duration_min": 39,
+          "max_hr": null,
+          "notes": "Logged from chat: 10min @6.0 km/h warm-up; 8x(1min @15.0 km/h + 2min @3.0 km/h); avg HR after each hard rep 154",
+          "interval_no": 8,
+          "work_min": 1,
+          "easy_min": 2,
+          "target_speed_kmh": 15,
+          "achieved_hr": 154,
+          "interval_note": "Easy segment at 3.0 km/h"
         }
       ]
     },
@@ -4928,24 +5068,6 @@
       ]
     },
     "plannedCardioByDate": {
-      "2025-11-23": [
-        {
-          "session_date": "2025-11-23",
-          "session_type": "OFF",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": null,
-          "speed_high_kmh": null,
-          "target_hr_min": null,
-          "target_hr_max": 110,
-          "notes": "Off or very easy walk 20-30 min <110 bpm"
-        }
-      ],
       "2025-11-24": [
         {
           "session_date": "2025-11-24",
@@ -5046,12 +5168,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2025-11-30": [
@@ -5172,12 +5294,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2025-12-07": [
@@ -5298,12 +5420,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2025-12-14": [
@@ -5424,12 +5546,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2025-12-21": [
@@ -5550,12 +5672,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2025-12-28": [
@@ -5676,12 +5798,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-01-04": [
@@ -5802,12 +5924,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-01-11": [
@@ -5928,12 +6050,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-01-18": [
@@ -6054,12 +6176,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-01-25": [
@@ -6180,12 +6302,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-02-01": [
@@ -6306,12 +6428,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-02-08": [
@@ -6432,12 +6554,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-02-15": [
@@ -6558,12 +6680,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-02-22": [
@@ -6684,12 +6806,12 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
         }
       ],
       "2026-03-01": [
@@ -6810,28 +6932,34 @@
           "vo2_intervals_min": 6,
           "vo2_intervals_max": 8,
           "vo2_work_min": 1,
-          "vo2_easy_min": 2,
+          "vo2_easy_min": 1.5,
           "speed_low_kmh": 15,
           "speed_high_kmh": 15,
           "target_hr_min": 165,
           "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 2 min easy + 5 min cool down (hard at 15.0 km/h)"
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
+        }
+      ],
+      "2026-03-08": [
+        {
+          "session_date": "2026-03-08",
+          "session_type": "OFF",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": null,
+          "speed_high_kmh": null,
+          "target_hr_min": null,
+          "target_hr_max": 110,
+          "notes": "Off or very easy walk 20-30 min <110 bpm"
         }
       ]
     },
     "plannedRingsByDate": {
-      "2025-11-23": [
-        {
-          "session_date": "2025-11-23",
-          "template_code": null,
-          "item_no": null,
-          "exercise": null,
-          "sets_text": null,
-          "reps_or_time": null,
-          "tempo": null,
-          "rest_text": null
-        }
-      ],
       "2025-11-24": [
         {
           "session_date": "2025-11-24",
@@ -9871,6 +9999,18 @@
       "2026-03-07": [
         {
           "session_date": "2026-03-07",
+          "template_code": null,
+          "item_no": null,
+          "exercise": null,
+          "sets_text": null,
+          "reps_or_time": null,
+          "tempo": null,
+          "rest_text": null
+        }
+      ],
+      "2026-03-08": [
+        {
+          "session_date": "2026-03-08",
           "template_code": null,
           "item_no": null,
           "exercise": null,

@@ -88,6 +88,21 @@ h2 { font-size: 18px; }
 }
 .panel-head { display: flex; justify-content: space-between; margin-bottom: 10px; }
 
+.est1rm-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.est1rm-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0e1630;
+  padding: 10px;
+}
+.est1rm-lift { font-size: 13px; color: #b8c8f4; }
+.est1rm-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.est1rm-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
 .week-rows { display: grid; gap: 8px; }
 .week-row {
   display: grid;
@@ -260,6 +275,13 @@ h2 { font-size: 18px; }
 
   .panel { padding: 10px; margin-bottom: 10px; }
   .panel-head { margin-bottom: 8px; }
+
+  .est1rm-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .est1rm-card { padding: 8px; }
+  .est1rm-value { font-size: 20px; }
 
   .week-rows { gap: 6px; }
   .week-row {
