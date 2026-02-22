@@ -344,7 +344,59 @@ SELECT
     WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.55 THEN 'Novice'
     WHEN r.lift='Press' THEN 'Beginner'
     ELSE '—'
-  END AS strength_level
+  END AS strength_level,
+  CASE
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 2.75 THEN '—'
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 2.25 THEN 'Elite'
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 1.50 THEN 'Advanced'
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 1.25 THEN 'Intermediate'
+    WHEN r.lift='Squat' THEN 'Novice'
+
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 2.00 THEN '—'
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 1.75 THEN 'Elite'
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 1.25 THEN 'Advanced'
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 0.75 THEN 'Intermediate'
+    WHEN r.lift='Bench' THEN 'Novice'
+
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 3.00 THEN '—'
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 2.50 THEN 'Elite'
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 2.00 THEN 'Advanced'
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 1.50 THEN 'Intermediate'
+    WHEN r.lift='Deadlift' THEN 'Novice'
+
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 1.40 THEN '—'
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 1.10 THEN 'Elite'
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.80 THEN 'Advanced'
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.55 THEN 'Intermediate'
+    WHEN r.lift='Press' THEN 'Novice'
+    ELSE '—'
+  END AS next_level,
+  ROUND(cfg.bw * CASE
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 2.75 THEN NULL
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 2.25 THEN 2.75
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 1.50 THEN 2.25
+    WHEN r.lift='Squat' AND (r.e1rm_kg / cfg.bw) >= 1.25 THEN 1.50
+    WHEN r.lift='Squat' THEN 1.25
+
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 2.00 THEN NULL
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 1.75 THEN 2.00
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 1.25 THEN 1.75
+    WHEN r.lift='Bench' AND (r.e1rm_kg / cfg.bw) >= 0.75 THEN 1.25
+    WHEN r.lift='Bench' THEN 0.75
+
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 3.00 THEN NULL
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 2.50 THEN 3.00
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 2.00 THEN 2.50
+    WHEN r.lift='Deadlift' AND (r.e1rm_kg / cfg.bw) >= 1.50 THEN 2.00
+    WHEN r.lift='Deadlift' THEN 1.50
+
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 1.40 THEN NULL
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 1.10 THEN 1.40
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.80 THEN 1.10
+    WHEN r.lift='Press' AND (r.e1rm_kg / cfg.bw) >= 0.55 THEN 0.80
+    WHEN r.lift='Press' THEN 0.55
+    ELSE NULL
+  END, 1) AS next_level_kg
 FROM ranked r
 CROSS JOIN cfg
 WHERE r.rn = 1
