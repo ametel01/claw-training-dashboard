@@ -134,7 +134,7 @@ function renderDailyTiles(days) {
     const ringsDetail = d.planned_rings || d.rings_template;
 
     const pain = d.pain_level || 'green';
-    const painBadge = pain !== 'green' ? `<span class="badge ${pain === 'yellow' ? 'missed' : 'planned'}">Status: ${pain.toUpperCase()}</span>` : '';
+    const painBadge = `<span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>`;
 
     const badges = [
       painBadge,
@@ -362,8 +362,9 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
       plannedRingsRows: details?.plannedRingsByDate?.[date] || []
     };
 
+    const pain = planned.pain_level || 'green';
     body.innerHTML = [
-      section('Day status', `<p><strong>${(planned.pain_level || 'green').toUpperCase()}</strong>${planned.pain_note ? ` · ${planned.pain_note}` : ''}</p>`),
+      section('Day status', `<p><span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>${planned.pain_note ? ` ${planned.pain_note}` : ''}</p>`),
       section('Barbell', renderBarbellDetails(barbell, planned)),
       section('Cardio', renderCardioDetails(cardio, planned)),
       section('Rings', renderRingsDetails(rings, planned))

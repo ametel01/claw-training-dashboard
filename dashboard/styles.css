@@ -179,6 +179,18 @@ h2 { font-size: 18px; }
 .badge.missed { border-color: #b88b3f; color: #ffd79b; background: rgba(184, 139, 63, 0.14); }
 .badge.idle { border-color: #2d3f75; color: #9fb0dd; background: rgba(45, 63, 117, 0.12); }
 
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.06);
+}
+.status-dot.green { background: #4bd28b; }
+.status-dot.yellow { background: #ffc15a; }
+.status-dot.red { background: #ff6b6b; }
+
 .modal {
   position: fixed;
   inset: 0;
