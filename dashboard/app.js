@@ -394,9 +394,9 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
       section('Day status', `
         <p><span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>${planned.pain_note ? ` ${planned.pain_note}` : ''}</p>
         <div class="status-actions">
-          <button type="button" class="status-btn" data-role="set-status" data-date="${date}" data-status="green">🟢 Green</button>
-          <button type="button" class="status-btn" data-role="set-status" data-date="${date}" data-status="yellow">🟡 Yellow</button>
-          <button type="button" class="status-btn" data-role="set-status" data-date="${date}" data-status="red">🔴 Red</button>
+          <button type="button" class="status-btn" onclick="window.setRecoveryStatus('${date}','green')">🟢 Green</button>
+          <button type="button" class="status-btn" onclick="window.setRecoveryStatus('${date}','yellow')">🟡 Yellow</button>
+          <button type="button" class="status-btn" onclick="window.setRecoveryStatus('${date}','red')">🔴 Red</button>
         </div>
       `),
       section('Barbell', renderBarbellDetails(barbell, planned)),
@@ -410,32 +410,9 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   window.__openDetailForDate = openForDate;
 
   closeBtn.addEventListener('click', close);
-  const handleModalStatusClick = async (e) => {
-    if (e.target === modal) {
-      close();
-      return;
-    }
-
-    const targetEl = (e.target instanceof Element) ? e.target : e.target?.parentElement;
-    const btn = targetEl?.closest?.('[data-role="set-status"]');
-    if (btn) {
-      e.preventDefault();
-      e.stopPropagation();
-      const date = btn.dataset.date;
-      const status = btn.dataset.status;
-      try {
-        const res = await fetch(`/api/set-status?date=${encodeURIComponent(date)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
-        if (!res.ok) throw new Error(`set-status failed (${res.status})`);
-        await window.__renderDashboard?.();
-        openForDate(date);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  };
-
-  modal.addEventListener('click', handleModalStatusClick);
-  modal.addEventListener('touchend', handleModalStatusClick, { passive: false });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
   });
@@ -469,6 +446,17 @@ async function renderDashboard() {
 (async function init() {
   try {
     window.__renderDashboard = renderDashboard;
+    window.setRecoveryStatus = async (date, status) => {
+      try {
+        const res = await fetch(`/api/set-status?date=${encodeURIComponent(date)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
+        if (!res.ok) throw new Error(`set-status failed (${res.status})`);
+        await renderDashboard();
+        if (window.__openDetailForDate) window.__openDetailForDate(date);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     await renderDashboard();
     bindStatusPicker(renderDashboard);
 
