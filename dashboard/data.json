@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T07:37:09.667Z",
+  "generatedAt": "2026-02-23T09:41:40.568Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -1743,7 +1743,7 @@
           "lift": "Squat",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-24",
@@ -1751,7 +1751,7 @@
           "lift": "Squat",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-24",
@@ -1759,7 +1759,7 @@
           "lift": "Squat",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 100
         },
         {
           "session_date": "2026-02-24",
@@ -1767,7 +1767,7 @@
           "lift": "Bench",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1775,7 +1775,7 @@
           "lift": "Bench",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1783,7 +1783,7 @@
           "lift": "Bench",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1791,7 +1791,7 @@
           "lift": "Bench",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1799,7 +1799,7 @@
           "lift": "Bench",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1807,7 +1807,7 @@
           "lift": "Bench",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1815,7 +1815,7 @@
           "lift": "Bench",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1823,7 +1823,7 @@
           "lift": "Bench",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1831,7 +1831,7 @@
           "lift": "Bench",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-24",
@@ -1839,7 +1839,7 @@
           "lift": "Bench",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 62.5
         }
       ],
       "2026-02-25": [
@@ -1849,7 +1849,7 @@
           "lift": "Press",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 40
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-25",
@@ -1857,7 +1857,7 @@
           "lift": "Press",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 47.5
         },
         {
           "session_date": "2026-02-25",
@@ -1865,7 +1865,7 @@
           "lift": "Press",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 55
         },
         {
           "session_date": "2026-02-25",
@@ -1873,7 +1873,7 @@
           "lift": "Deadlift",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1881,7 +1881,7 @@
           "lift": "Deadlift",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1889,7 +1889,7 @@
           "lift": "Deadlift",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1897,7 +1897,7 @@
           "lift": "Deadlift",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1905,7 +1905,7 @@
           "lift": "Deadlift",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1913,7 +1913,7 @@
           "lift": "Deadlift",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1921,7 +1921,7 @@
           "lift": "Deadlift",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1929,7 +1929,7 @@
           "lift": "Deadlift",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1937,7 +1937,7 @@
           "lift": "Deadlift",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-25",
@@ -1945,7 +1945,7 @@
           "lift": "Deadlift",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 87.5
         }
       ],
       "2026-02-27": [
@@ -1955,7 +1955,7 @@
           "lift": "Bench",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
+          "planned_weight_kg": 62.5
         },
         {
           "session_date": "2026-02-27",
@@ -1963,12 +1963,36 @@
           "lift": "Bench",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 72.5
         },
         {
           "session_date": "2026-02-27",
           "category": "main",
           "lift": "Bench",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 80
+        },
+        {
+          "session_date": "2026-02-27",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 77.5
+        },
+        {
+          "session_date": "2026-02-27",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 77.5
+        },
+        {
+          "session_date": "2026-02-27",
+          "category": "supplemental",
+          "lift": "Squat",
           "set_no": 3,
           "prescribed_reps": 5,
           "planned_weight_kg": 77.5
@@ -1977,33 +2001,9 @@
           "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-02-27",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-02-27",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-02-27",
-          "category": "supplemental",
-          "lift": "Squat",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-27",
@@ -2011,7 +2011,7 @@
           "lift": "Squat",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-27",
@@ -2019,7 +2019,7 @@
           "lift": "Squat",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-27",
@@ -2027,7 +2027,7 @@
           "lift": "Squat",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-27",
@@ -2035,7 +2035,7 @@
           "lift": "Squat",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-27",
@@ -2043,7 +2043,7 @@
           "lift": "Squat",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-02-27",
@@ -2051,7 +2051,7 @@
           "lift": "Squat",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 77.5
         }
       ],
       "2026-02-28": [
@@ -2061,7 +2061,7 @@
           "lift": "Deadlift",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 87.5
         },
         {
           "session_date": "2026-02-28",
@@ -2069,7 +2069,7 @@
           "lift": "Deadlift",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 100
         },
         {
           "session_date": "2026-02-28",
@@ -2077,7 +2077,7 @@
           "lift": "Deadlift",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 112.5
         },
         {
           "session_date": "2026-02-28",
@@ -2085,7 +2085,7 @@
           "lift": "Press",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2093,7 +2093,7 @@
           "lift": "Press",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2101,7 +2101,7 @@
           "lift": "Press",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2109,7 +2109,7 @@
           "lift": "Press",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2117,7 +2117,7 @@
           "lift": "Press",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2125,7 +2125,7 @@
           "lift": "Press",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2133,7 +2133,7 @@
           "lift": "Press",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2141,7 +2141,7 @@
           "lift": "Press",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2149,7 +2149,7 @@
           "lift": "Press",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         },
         {
           "session_date": "2026-02-28",
@@ -2157,7 +2157,7 @@
           "lift": "Press",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 42.5
         }
       ],
       "2026-03-02": [
@@ -2167,7 +2167,7 @@
           "lift": "Squat",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-02",
@@ -2175,7 +2175,7 @@
           "lift": "Squat",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 92.5
         },
         {
           "session_date": "2026-03-02",
@@ -2183,7 +2183,7 @@
           "lift": "Squat",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 105
         },
         {
           "session_date": "2026-03-02",
@@ -2191,7 +2191,7 @@
           "lift": "Bench",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2199,7 +2199,7 @@
           "lift": "Bench",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2207,7 +2207,7 @@
           "lift": "Bench",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2215,7 +2215,7 @@
           "lift": "Bench",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2223,7 +2223,7 @@
           "lift": "Bench",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2231,7 +2231,7 @@
           "lift": "Bench",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2239,7 +2239,7 @@
           "lift": "Bench",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2247,7 +2247,7 @@
           "lift": "Bench",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2255,7 +2255,7 @@
           "lift": "Bench",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-02",
@@ -2263,7 +2263,7 @@
           "lift": "Bench",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 67.5
         }
       ],
       "2026-03-03": [
@@ -2273,7 +2273,7 @@
           "lift": "Press",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 40
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-03",
@@ -2281,7 +2281,7 @@
           "lift": "Press",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 45
+          "planned_weight_kg": 50
         },
         {
           "session_date": "2026-03-03",
@@ -2289,7 +2289,7 @@
           "lift": "Press",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 57.5
         },
         {
           "session_date": "2026-03-03",
@@ -2297,7 +2297,7 @@
           "lift": "Deadlift",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2305,7 +2305,7 @@
           "lift": "Deadlift",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2313,7 +2313,7 @@
           "lift": "Deadlift",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2321,7 +2321,7 @@
           "lift": "Deadlift",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2329,7 +2329,7 @@
           "lift": "Deadlift",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2337,7 +2337,7 @@
           "lift": "Deadlift",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2345,7 +2345,7 @@
           "lift": "Deadlift",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2353,7 +2353,7 @@
           "lift": "Deadlift",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2361,7 +2361,7 @@
           "lift": "Deadlift",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-03",
@@ -2369,7 +2369,7 @@
           "lift": "Deadlift",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 95
         }
       ],
       "2026-03-05": [
@@ -2379,7 +2379,7 @@
           "lift": "Bench",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
+          "planned_weight_kg": 67.5
         },
         {
           "session_date": "2026-03-05",
@@ -2387,7 +2387,7 @@
           "lift": "Bench",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
+          "planned_weight_kg": 77.5
         },
         {
           "session_date": "2026-03-05",
@@ -2395,7 +2395,7 @@
           "lift": "Bench",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
+          "planned_weight_kg": 85
         },
         {
           "session_date": "2026-03-05",
@@ -2403,7 +2403,7 @@
           "lift": "Squat",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2411,7 +2411,7 @@
           "lift": "Squat",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2419,7 +2419,7 @@
           "lift": "Squat",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2427,7 +2427,7 @@
           "lift": "Squat",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2435,7 +2435,7 @@
           "lift": "Squat",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2443,7 +2443,7 @@
           "lift": "Squat",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2451,7 +2451,7 @@
           "lift": "Squat",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2459,7 +2459,7 @@
           "lift": "Squat",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2467,7 +2467,7 @@
           "lift": "Squat",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         },
         {
           "session_date": "2026-03-05",
@@ -2475,7 +2475,7 @@
           "lift": "Squat",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
+          "planned_weight_kg": 82.5
         }
       ],
       "2026-03-06": [
@@ -2485,7 +2485,7 @@
           "lift": "Deadlift",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
+          "planned_weight_kg": 95
         },
         {
           "session_date": "2026-03-06",
@@ -2493,7 +2493,7 @@
           "lift": "Deadlift",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 95
+          "planned_weight_kg": 107.5
         },
         {
           "session_date": "2026-03-06",
@@ -2501,7 +2501,7 @@
           "lift": "Deadlift",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
+          "planned_weight_kg": 120
         },
         {
           "session_date": "2026-03-06",
@@ -2509,7 +2509,7 @@
           "lift": "Press",
           "set_no": 1,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2517,7 +2517,7 @@
           "lift": "Press",
           "set_no": 2,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2525,7 +2525,7 @@
           "lift": "Press",
           "set_no": 3,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2533,7 +2533,7 @@
           "lift": "Press",
           "set_no": 4,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2541,7 +2541,7 @@
           "lift": "Press",
           "set_no": 5,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2549,7 +2549,7 @@
           "lift": "Press",
           "set_no": 6,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2557,7 +2557,7 @@
           "lift": "Press",
           "set_no": 7,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2565,7 +2565,7 @@
           "lift": "Press",
           "set_no": 8,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2573,7 +2573,7 @@
           "lift": "Press",
           "set_no": 9,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         },
         {
           "session_date": "2026-03-06",
@@ -2581,7 +2581,7 @@
           "lift": "Press",
           "set_no": 10,
           "prescribed_reps": 5,
-          "planned_weight_kg": 50
+          "planned_weight_kg": 45
         }
       ],
       "2026-03-09": [
