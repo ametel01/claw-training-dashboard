@@ -162,6 +162,10 @@ function renderCardioAnalytics(data = {}) {
 
   const recentZ2 = [...(z2Points || [])].filter((p) => p.avg_hr != null).slice(-10);
   let z2Graph = '<p class="muted">No Z2 HR data in last 12 weeks.</p>';
+  if (recentZ2.length === 1) {
+    const p = recentZ2[0];
+    z2Graph = `<p><strong>Only one Z2 HR point so far:</strong> ${p.session_date} · HR ${p.avg_hr}</p>`;
+  }
   if (recentZ2.length >= 2) {
     const w = 320;
     const h = 110;

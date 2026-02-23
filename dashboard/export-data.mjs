@@ -523,7 +523,7 @@ z2_points AS (
   SELECT
     session_date,
     duration_min,
-    avg_hr,
+    COALESCE(avg_hr, max_hr) AS avg_hr,
     max_hr,
     z2_cap_respected
   FROM cardio_sessions
