@@ -39,6 +39,19 @@ function renderTotals(totals) {
   ].join('');
 }
 
+function renderWeekHeader(weekHeader) {
+  const node = document.getElementById('weekHeaderBanner');
+  if (!node) return;
+  if (!weekHeader) {
+    node.innerHTML = '<div class="week-header-title">Cycle info unavailable</div>';
+    return;
+  }
+  node.innerHTML = `
+    <div class="week-header-title">${weekHeader.block_type} Week ${weekHeader.week_in_block}</div>
+    <div class="week-header-meta">Main: ${weekHeader.main_pct} · Supplemental: ${weekHeader.supp_pct}</div>
+  `;
+}
+
 function renderWeeklyCompletion(weekRows = []) {
   let planned = 0;
   let done = 0;
@@ -575,6 +588,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
 
 async function renderDashboard() {
   const data = await loadData();
+  renderWeekHeader(data.weekHeader || null);
   renderTotals(data.totals || {});
   renderEst1RM(data.est1RM || []);
   renderWeekProgress(data.weekProgress || []);

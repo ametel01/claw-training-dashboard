@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T18:14:07.125Z",
+  "generatedAt": "2026-02-23T18:16:29.318Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -7,6 +7,12 @@
     "total_training_days": 7,
     "active_days_last_14": 7,
     "latest_date": "2026-02-21"
+  },
+  "weekHeader": {
+    "block_type": "Leader",
+    "week_in_block": 2,
+    "main_pct": "70/80/90%",
+    "supp_pct": "70%"
   },
   "weekProgress": [
     {

@@ -470,9 +470,50 @@ ORDER BY CASE r.lift
   ELSE 99 END
 `);
 
+const weekHeader = sqlJson(`
+WITH d AS (
+  SELECT date('now','localtime') AS today
+),
+pc AS (
+  SELECT * FROM v_program_calendar
+  WHERE session_date = (SELECT today FROM d)
+  LIMIT 1
+),
+cfg AS (
+  SELECT
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week1_set1_pct'),0.65) AS m_w1_s1,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week1_set2_pct'),0.75) AS m_w1_s2,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week1_set3_pct'),0.85) AS m_w1_s3,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week2_set1_pct'),0.70) AS m_w2_s1,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week2_set2_pct'),0.80) AS m_w2_s2,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week2_set3_pct'),0.90) AS m_w2_s3,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week3_set1_pct'),0.75) AS m_w3_s1,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week3_set2_pct'),0.85) AS m_w3_s2,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='main_week3_set3_pct'),0.95) AS m_w3_s3,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='bbs_week1_pct_tm'),0.65) AS bbs_w1,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='bbs_week2_pct_tm'),0.70) AS bbs_w2,
+    COALESCE((SELECT CAST(value AS REAL) FROM config WHERE key='bbs_week3_pct_tm'),0.75) AS bbs_w3
+)
+SELECT
+  pc.block_type,
+  pc.week_in_block,
+  CASE ((pc.week_in_block - 1) % 3) + 1
+    WHEN 1 THEN printf('%.0f/%.0f/%.0f%%', cfg.m_w1_s1*100, cfg.m_w1_s2*100, cfg.m_w1_s3*100)
+    WHEN 2 THEN printf('%.0f/%.0f/%.0f%%', cfg.m_w2_s1*100, cfg.m_w2_s2*100, cfg.m_w2_s3*100)
+    ELSE printf('%.0f/%.0f/%.0f%%', cfg.m_w3_s1*100, cfg.m_w3_s2*100, cfg.m_w3_s3*100)
+  END AS main_pct,
+  CASE ((pc.week_in_block - 1) % 3) + 1
+    WHEN 1 THEN printf('%.0f%%', cfg.bbs_w1*100)
+    WHEN 2 THEN printf('%.0f%%', cfg.bbs_w2*100)
+    ELSE printf('%.0f%%', cfg.bbs_w3*100)
+  END AS supp_pct
+FROM pc CROSS JOIN cfg
+`)[0] || null;
+
 const payload = {
   generatedAt: new Date().toISOString(),
   totals,
+  weekHeader,
   weekProgress,
   dailyTiles,
   est1RM,
