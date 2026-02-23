@@ -79,6 +79,7 @@ SELECT
   d.weekday,
   d.day_name,
   d.session_date,
+  COALESCE(ps.pain_level, 'green') AS pain_level,
   l.name AS main_lift,
   td.supplemental_sets,
   cpd.session_type AS cardio_plan,
@@ -88,6 +89,7 @@ SELECT
   CASE WHEN rs.id IS NOT NULL THEN 1 ELSE 0 END AS rings_done
 FROM days d
 LEFT JOIN schedule_overrides so ON so.session_date = d.session_date
+LEFT JOIN recovery_status ps ON ps.session_date = d.session_date
 LEFT JOIN training_days td ON td.weekday = CASE
   WHEN COALESCE(so.force_off,0)=1 THEN NULL
   WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
@@ -112,19 +114,16 @@ ORDER BY d.weekday
 
 const dailyTiles = sqlJson(`
 WITH RECURSIVE
-latest AS (
-  SELECT COALESCE(MAX(session_date), date('now','localtime')) AS latest_date
-  FROM (
-    SELECT session_date FROM barbell_sessions
-    UNION ALL SELECT session_date FROM cardio_sessions
-    UNION ALL SELECT session_date FROM rings_sessions
-  )
+bounds AS (
+  SELECT
+    date('now','localtime','-20 day') AS start_date,
+    date('now','localtime','+10 day') AS end_date
 ),
 dates(day) AS (
-  SELECT date((SELECT latest_date FROM latest), '-20 day')
+  SELECT (SELECT start_date FROM bounds)
   UNION ALL
   SELECT date(day, '+1 day') FROM dates
-  WHERE day < (SELECT latest_date FROM latest)
+  WHERE day < (SELECT end_date FROM bounds)
 ),
 base AS (
   SELECT

@@ -368,6 +368,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
     if (!planByDate[w.session_date]) {
       planByDate[w.session_date] = {
         session_date: w.session_date,
+        pain_level: w.pain_level || 'green',
         planned_barbell_main: w.main_lift,
         planned_cardio: w.cardio_plan,
         planned_rings: w.rings_plan
