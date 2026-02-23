@@ -158,15 +158,18 @@ class Handler(SimpleHTTPRequestHandler):
                     p = body.get("plannedCardio") or {}
                     protocol = p.get("session_type") or "Z2"
                     duration = int(p.get("duration_min") or 30)
+
+                    avg_hr_raw = body.get("avgHr")
                     try:
-                        avg_hr = int(p.get("target_hr_min") or 0)
+                        avg_hr = int(avg_hr_raw) if avg_hr_raw is not None else int(p.get("target_hr_min") or 0)
                     except Exception:
                         avg_hr = 0
                     if avg_hr <= 0:
                         avg_hr = 120
+
                     sql = (
                         "INSERT INTO cardio_sessions(session_date,slot,protocol,duration_min,avg_hr,z2_cap_respected,notes) "
-                        f"VALUES('{date}','CARDIO','{protocol}',{duration},{avg_hr},1,'Cardio done from dashboard') "
+                        f"VALUES('{date}','CARDIO','{protocol}',{duration},{avg_hr},1,'Cardio done from dashboard (avg HR logged)') "
                         "ON CONFLICT(session_date,slot) DO UPDATE SET "
                         "protocol=excluded.protocol,duration_min=excluded.duration_min,avg_hr=excluded.avg_hr,z2_cap_respected=excluded.z2_cap_respected,notes=excluded.notes;"
                     )

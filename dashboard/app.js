@@ -752,6 +752,17 @@ async function renderDashboard() {
         payload.suppModifiedText = txt;
       }
 
+      if (action === 'cardio_done') {
+        const hrTxt = prompt('Enter average HR for this cardio session (e.g., 118)');
+        if (!hrTxt) return;
+        const avgHr = parseInt(hrTxt, 10);
+        if (!Number.isFinite(avgHr) || avgHr <= 0) {
+          alert('Please enter a valid average HR number.');
+          return;
+        }
+        payload.avgHr = avgHr;
+      }
+
       try {
         const res = await fetch('/api/log-action', {
           method: 'POST',
