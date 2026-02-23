@@ -53,19 +53,10 @@ SELECT
 `)[0] ?? {};
 
 const weekProgress = sqlJson(`
-WITH latest AS (
-  SELECT COALESCE(MAX(session_date), date('now','localtime')) AS anchor_date
-  FROM (
-    SELECT session_date FROM barbell_sessions
-    UNION ALL SELECT session_date FROM cardio_sessions
-    UNION ALL SELECT session_date FROM rings_sessions
-  )
-),
-week_window AS (
+WITH week_window AS (
   SELECT
-    anchor_date,
-    date(anchor_date, '-' || (((CAST(strftime('%w', anchor_date) AS INTEGER) + 6) % 7)) || ' day') AS week_start
-  FROM latest
+    date('now','localtime') AS anchor_date,
+    date('now','localtime', '-' || (((CAST(strftime('%w', date('now','localtime')) AS INTEGER) + 6) % 7)) || ' day') AS week_start
 ),
 weekdays AS (
   SELECT 1 AS weekday, 'Monday' AS day_name
