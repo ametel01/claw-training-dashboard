@@ -134,7 +134,7 @@ function renderDailyTiles(days) {
     const ringsDetail = d.planned_rings || d.rings_template;
 
     const pain = d.pain_level || 'green';
-    const painBadge = `<span class="status-dot clickable ${pain}" data-date="${d.session_date}" data-role="status-dot" title="Recovery status: ${pain} (tap to change)"></span>`;
+    const painBadge = `<span class="status-dot clickable ${pain}" data-date="${d.session_date}" data-status="${pain}" data-role="status-dot" title="Recovery status: ${pain} (tap to change)"></span>`;
 
     const badges = [
       painBadge,
@@ -329,7 +329,7 @@ function renderRingsDetails(rows = [], planned = {}) {
 function bindStatusPicker(renderDashboardFn) {
   const order = ['green', 'yellow', 'red'];
 
-  document.addEventListener('click', async (e) => {
+  async function handleStatusTap(e) {
     const dot = e.target.closest('[data-role="status-dot"]');
     if (!dot) return;
 
@@ -337,7 +337,7 @@ function bindStatusPicker(renderDashboardFn) {
     e.stopPropagation();
 
     const date = dot.dataset.date;
-    const current = order.find((s) => dot.classList.contains(s)) || 'green';
+    const current = dot.dataset.status || 'green';
     const next = order[(order.indexOf(current) + 1) % order.length];
 
     try {
@@ -347,7 +347,10 @@ function bindStatusPicker(renderDashboardFn) {
     } catch (err) {
       console.error(err);
     }
-  });
+  }
+
+  document.addEventListener('click', handleStatusTap, true);
+  document.addEventListener('touchend', handleStatusTap, true);
 }
 
 function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
