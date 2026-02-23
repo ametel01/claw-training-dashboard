@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import subprocess
 import os
+import re
 from urllib.parse import urlparse, parse_qs
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,6 +14,18 @@ NODE_BIN = "/Users/brunoclaw/.nvm/versions/node/v24.13.1/bin/node"
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
+
+    def _read_json_body(self):
+        length = int(self.headers.get("Content-Length", "0") or 0)
+        raw = self.rfile.read(length) if length > 0 else b"{}"
+        try:
+            return json.loads(raw.decode("utf-8") or "{}")
+        except Exception:
+            return {}
+
+    def _run_sql(self, sql):
+        db = ROOT / "gym531.db"
+        subprocess.run(["sqlite3", str(db), sql], check=True, cwd=str(ROOT), capture_output=True, text=True)
 
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
@@ -53,7 +66,6 @@ class Handler(SimpleHTTPRequestHandler):
                 self._send_json(400, {"ok": False, "error": "date and valid status required"})
                 return
 
-            db = ROOT / "gym531.db"
             sql = (
                 "INSERT INTO recovery_status(session_date,pain_level,note) "
                 f"VALUES('{date}','{status}','Set from dashboard') "
@@ -61,7 +73,108 @@ class Handler(SimpleHTTPRequestHandler):
             )
 
             try:
-                subprocess.run(["sqlite3", str(db), sql], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_sql(sql)
+                subprocess.run([
+                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
+                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._send_json(200, {"ok": True})
+            except subprocess.CalledProcessError as e:
+                self._send_json(500, {"ok": False, "error": (e.stderr or e.stdout or str(e)).strip()})
+            return
+
+        if parsed.path == "/api/log-action":
+            body = self._read_json_body()
+            action = body.get("action")
+            date = body.get("date")
+
+            if not action or not date:
+                self._send_json(400, {"ok": False, "error": "action and date required"})
+                return
+
+            try:
+                if action == "main_done":
+                    rows = body.get("plannedBarbellRows") or []
+                    main_rows = [r for r in rows if r.get("category") == "main"]
+                    if not main_rows:
+                        self._send_json(400, {"ok": False, "error": "no planned main rows"})
+                        return
+
+                    sql = ["BEGIN;"]
+                    sql.append(
+                        f"INSERT INTO barbell_sessions(session_date,weekday,week_in_block,day_id,notes) "
+                        f"VALUES('{date}', ((CAST(strftime('%w','{date}') AS INTEGER)+6)%7)+1, 1, NULL, 'Logged from dashboard main_done') "
+                        f"ON CONFLICT(session_date) DO NOTHING;"
+                    )
+                    sql.append(
+                        f"DELETE FROM barbell_set_logs WHERE session_id=(SELECT id FROM barbell_sessions WHERE session_date='{date}') AND category='main';"
+                    )
+                    for r in main_rows:
+                        lift = str(r.get("lift", "")).replace("'", "''")
+                        set_no = int(r.get("set_no") or 0)
+                        reps = int(r.get("prescribed_reps") or 0)
+                        wt = float(r.get("planned_weight_kg") or 0)
+                        pct = float(r.get("prescribed_pct") or 0)
+                        sql.append(
+                            "INSERT INTO barbell_set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,note) "
+                            f"SELECT bs.id,l.id,'main',{set_no},{pct},{reps},{wt},{reps},'Main done from dashboard' "
+                            f"FROM barbell_sessions bs JOIN lifts l ON l.name='{lift}' WHERE bs.session_date='{date}';"
+                        )
+                    sql.append("COMMIT;")
+                    self._run_sql("\n".join(sql))
+
+                elif action == "supp_modified":
+                    text = (body.get("suppModifiedText") or "").strip()
+                    rows = body.get("plannedBarbellRows") or []
+                    supp_rows = [r for r in rows if r.get("category") == "supplemental"]
+                    if not supp_rows:
+                        self._send_json(400, {"ok": False, "error": "no planned supplemental rows"})
+                        return
+                    m = re.search(r"(\d+)\s*x\s*(\d+)\s*@\s*(\d+(?:\.\d+)?)", text.replace("X", "x"))
+                    if not m:
+                        self._send_json(400, {"ok": False, "error": "format must be like 5x10@60"})
+                        return
+                    sets = int(m.group(1)); reps = int(m.group(2)); wt = float(m.group(3))
+                    lift = str(supp_rows[0].get("lift", "")).replace("'", "''")
+
+                    sql = ["BEGIN;"]
+                    sql.append(
+                        f"INSERT INTO barbell_sessions(session_date,weekday,week_in_block,day_id,notes) "
+                        f"VALUES('{date}', ((CAST(strftime('%w','{date}') AS INTEGER)+6)%7)+1, 1, NULL, 'Logged from dashboard supp_modified') "
+                        f"ON CONFLICT(session_date) DO NOTHING;"
+                    )
+                    sql.append(
+                        f"DELETE FROM barbell_set_logs WHERE session_id=(SELECT id FROM barbell_sessions WHERE session_date='{date}') AND category='supplemental';"
+                    )
+                    for i in range(1, sets + 1):
+                        sql.append(
+                            "INSERT INTO barbell_set_logs(session_id,lift_id,category,set_no,prescribed_reps,actual_weight_kg,actual_reps,note) "
+                            f"SELECT bs.id,l.id,'supplemental',{i},{reps},{wt},{reps},'Supplemental modified from dashboard' "
+                            f"FROM barbell_sessions bs JOIN lifts l ON l.name='{lift}' WHERE bs.session_date='{date}';"
+                        )
+                    sql.append("COMMIT;")
+                    self._run_sql("\n".join(sql))
+
+                elif action == "cardio_done":
+                    p = body.get("plannedCardio") or {}
+                    protocol = p.get("session_type") or "Z2"
+                    duration = int(p.get("duration_min") or 30)
+                    try:
+                        avg_hr = int(p.get("target_hr_min") or 0)
+                    except Exception:
+                        avg_hr = 0
+                    if avg_hr <= 0:
+                        avg_hr = 120
+                    sql = (
+                        "INSERT INTO cardio_sessions(session_date,slot,protocol,duration_min,avg_hr,z2_cap_respected,notes) "
+                        f"VALUES('{date}','CARDIO','{protocol}',{duration},{avg_hr},1,'Cardio done from dashboard') "
+                        "ON CONFLICT(session_date,slot) DO UPDATE SET "
+                        "protocol=excluded.protocol,duration_min=excluded.duration_min,avg_hr=excluded.avg_hr,z2_cap_respected=excluded.z2_cap_respected,notes=excluded.notes;"
+                    )
+                    self._run_sql(sql)
+                else:
+                    self._send_json(400, {"ok": False, "error": "unknown action"})
+                    return
+
                 subprocess.run([
                     NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
                 ], check=True, cwd=str(ROOT), capture_output=True, text=True)

@@ -521,6 +521,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
       plannedCardio: (details?.plannedCardioByDate?.[date] || [])[0] || null,
       plannedRingsRows: details?.plannedRingsByDate?.[date] || []
     };
+    window.__activePlanned = planned;
 
     const pain = planned.pain_level || 'green';
     body.innerHTML = [
@@ -530,6 +531,11 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
           <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'green')">🟢 Green</button>
           <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'yellow')">🟡 Yellow</button>
           <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'red')">🔴 Red</button>
+        </div>
+        <div class="status-actions">
+          <button type="button" class="status-btn" onclick="window.logSessionAction('main_done')">Main done</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_modified')">Supplemental modified</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('cardio_done')">Cardio done</button>
         </div>
       `),
       section('Planned vs Completed (Delta)', renderPlannedVsCompleted(planned, { barbell, cardio, rings })),
@@ -589,6 +595,38 @@ async function renderDashboard() {
         if (!res.ok) throw new Error(`set-status failed (${res.status})`);
         await renderDashboard();
         if (window.__openDetailForDate) window.__openDetailForDate(targetDate);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    window.logSessionAction = async (action) => {
+      const date = window.__activeDetailDate;
+      const planned = window.__activePlanned || {};
+      if (!date) return;
+
+      const payload = {
+        action,
+        date,
+        plannedBarbellRows: planned.plannedBarbellRows || [],
+        plannedCardio: planned.plannedCardio || null
+      };
+
+      if (action === 'supp_modified') {
+        const txt = prompt('Enter modified supplemental in format 5x10@60');
+        if (!txt) return;
+        payload.suppModifiedText = txt;
+      }
+
+      try {
+        const res = await fetch('/api/log-action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error(`log-action failed (${res.status})`);
+        await renderDashboard();
+        if (window.__openDetailForDate) window.__openDetailForDate(date);
       } catch (err) {
         console.error(err);
       }
