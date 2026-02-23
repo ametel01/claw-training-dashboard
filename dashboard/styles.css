@@ -288,6 +288,31 @@ h2 { font-size: 18px; }
   font-size: 12px;
 }
 
+.delta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.delta-col {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  background: #0b1430;
+}
+.delta-title {
+  font-size: 12px;
+  color: #9fc1ff;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.delta-line {
+  font-size: 12px;
+  margin-top: 4px;
+}
+.delta-list {
+  margin-top: 8px;
+}
+
 .status-picker {
   position: fixed;
   z-index: 50;
@@ -332,6 +357,8 @@ h2 { font-size: 18px; }
   }
   .est1rm-card { padding: 8px; }
   .est1rm-value { font-size: 20px; }
+
+  .delta-grid { grid-template-columns: 1fr; }
 
   .week-rows { gap: 6px; }
   .week-row {

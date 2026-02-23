@@ -168,6 +168,100 @@ function section(title, content) {
   return `<section class="detail-section"><h4>${title}</h4>${content}</section>`;
 }
 
+function summarizePlannedBarbell(plannedRows = []) {
+  const main = plannedRows.filter((r) => r.category === 'main');
+  const supp = plannedRows.filter((r) => r.category === 'supplemental');
+
+  const mainText = main.length
+    ? `${main[0].lift}: ${main.map((r) => `${r.planned_weight_kg}×${r.prescribed_reps}`).join(' · ')}`
+    : 'None';
+
+  let suppText = 'None';
+  if (supp.length) {
+    const s = supp[0];
+    suppText = `${s.lift}: ${supp.length}×${s.prescribed_reps} @ ${s.planned_weight_kg} kg`;
+  }
+
+  return { mainText, suppText };
+}
+
+function summarizeActualBarbell(actualRows = []) {
+  const main = actualRows.filter((r) => r.category === 'main');
+  const supp = actualRows.filter((r) => r.category === 'supplemental');
+
+  const mainText = main.length
+    ? `${main[0].lift}: ${main.map((r) => `${r.actual_weight_kg ?? '-'}×${r.actual_reps ?? '-'}`).join(' · ')}`
+    : 'None';
+
+  let suppText = 'None';
+  if (supp.length) {
+    const byLift = new Map();
+    for (const r of supp) {
+      if (!byLift.has(r.lift)) byLift.set(r.lift, []);
+      byLift.get(r.lift).push(r);
+    }
+    const parts = [];
+    for (const [lift, arr] of byLift.entries()) {
+      const reps = [...new Set(arr.map((x) => x.actual_reps).filter((v) => v != null))];
+      const weights = [...new Set(arr.map((x) => x.actual_weight_kg).filter((v) => v != null))];
+      const repText = reps.length === 1 ? reps[0] : arr.map((x) => x.actual_reps ?? '-').join('/');
+      const wtText = weights.length === 1 ? ` @ ${weights[0]} kg` : '';
+      parts.push(`${lift}: ${arr.length}×${repText}${wtText}`);
+    }
+    suppText = parts.join(' | ');
+  }
+
+  return { mainText, suppText };
+}
+
+function renderPlannedVsCompleted(planned = {}, actual = {}) {
+  const plannedBarbellRows = planned?.plannedBarbellRows || [];
+  const actualBarbellRows = actual?.barbell || [];
+
+  const p = summarizePlannedBarbell(plannedBarbellRows);
+  const a = summarizeActualBarbell(actualBarbellRows);
+
+  const deltas = [];
+  if (plannedBarbellRows.length && actualBarbellRows.length) {
+    const pSupp = plannedBarbellRows.filter((r) => r.category === 'supplemental');
+    const aSupp = actualBarbellRows.filter((r) => r.category === 'supplemental');
+
+    if (pSupp.length && aSupp.length) {
+      const pLift = pSupp[0].lift;
+      const pSets = pSupp.length;
+      const pReps = pSupp[0].prescribed_reps;
+      const pWt = pSupp[0].planned_weight_kg;
+
+      const aLift = aSupp[0].lift;
+      const aSets = aSupp.length;
+      const aReps = aSupp[0].actual_reps;
+      const aWt = aSupp[0].actual_weight_kg;
+
+      if (pLift !== aLift || pSets !== aSets || pReps !== aReps || pWt !== aWt) {
+        deltas.push(`Substitution detected: planned ${pLift} ${pSets}×${pReps} @ ${pWt} → completed ${aLift} ${aSets}×${aReps} @ ${aWt}`);
+      }
+    }
+  }
+
+  if (!deltas.length) deltas.push('No major substitution detected.');
+
+  return `
+    <div class="delta-grid">
+      <div class="delta-col">
+        <div class="delta-title">Prescribed</div>
+        <div class="delta-line"><strong>Main:</strong> ${p.mainText}</div>
+        <div class="delta-line"><strong>Supplemental:</strong> ${p.suppText}</div>
+      </div>
+      <div class="delta-col">
+        <div class="delta-title">Completed</div>
+        <div class="delta-line"><strong>Main:</strong> ${a.mainText}</div>
+        <div class="delta-line"><strong>Supplemental:</strong> ${a.suppText}</div>
+      </div>
+    </div>
+    <ul class="detail-list delta-list">${deltas.map((d) => `<li>${d}</li>`).join('')}</ul>
+  `;
+}
+
 function renderBarbellDetails(rows = [], planned = {}) {
   const pain = planned?.pain_level || 'green';
   if (!rows.length) {
@@ -401,6 +495,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
           <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'red')">🔴 Red</button>
         </div>
       `),
+      section('Planned vs Completed (Delta)', renderPlannedVsCompleted(planned, { barbell, cardio, rings })),
       section('Barbell', renderBarbellDetails(barbell, planned)),
       section('Cardio', renderCardioDetails(cardio, planned)),
       section('Rings', renderRingsDetails(rings, planned))
