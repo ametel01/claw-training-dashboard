@@ -134,7 +134,7 @@ function renderDailyTiles(days) {
     const ringsDetail = d.planned_rings || d.rings_template;
 
     const pain = d.pain_level || 'green';
-    const painBadge = `<span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>`;
+    const painBadge = `<span class="status-dot clickable ${pain}" data-date="${d.session_date}" data-role="status-dot" title="Recovery status: ${pain} (tap to change)"></span>`;
 
     const badges = [
       painBadge,
@@ -326,6 +326,48 @@ function renderRingsDetails(rows = [], planned = {}) {
   `;
 }
 
+function bindStatusPicker(renderDashboardFn) {
+  const picker = document.getElementById('statusPicker');
+  if (!picker) return;
+
+  let activeDate = null;
+
+  function hidePicker() {
+    picker.hidden = true;
+    activeDate = null;
+  }
+
+  document.addEventListener('click', (e) => {
+    const dot = e.target.closest('[data-role="status-dot"]');
+    if (dot) {
+      activeDate = dot.dataset.date;
+      picker.hidden = false;
+      picker.style.left = `${Math.min(window.innerWidth - 190, e.clientX)}px`;
+      picker.style.top = `${Math.min(window.innerHeight - 60, e.clientY + 8)}px`;
+      e.stopPropagation();
+      return;
+    }
+
+    if (!picker.contains(e.target)) hidePicker();
+  });
+
+  picker.querySelectorAll('button[data-status]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (!activeDate) return;
+      const status = btn.dataset.status;
+      try {
+        const res = await fetch(`/api/set-status?date=${encodeURIComponent(activeDate)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
+        if (!res.ok) throw new Error(`set-status failed (${res.status})`);
+        await renderDashboardFn();
+      } catch (e) {
+        console.error(e);
+      } finally {
+        hidePicker();
+      }
+    });
+  });
+}
+
 function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   const modal = document.getElementById('detailModal');
   const title = document.getElementById('detailTitle');
@@ -409,6 +451,7 @@ async function renderDashboard() {
 (async function init() {
   try {
     await renderDashboard();
+    bindStatusPicker(renderDashboard);
 
     const todayBtn = document.getElementById('todayBtn');
     if (todayBtn) {

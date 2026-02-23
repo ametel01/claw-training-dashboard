@@ -186,7 +186,9 @@ h2 { font-size: 18px; }
   display: inline-block;
   margin-right: 4px;
   box-shadow: 0 0 0 2px rgba(255,255,255,0.06);
+  cursor: pointer;
 }
+.status-dot.clickable:hover { transform: scale(1.08); }
 .status-dot.green { background: #4bd28b; }
 .status-dot.yellow { background: #ffc15a; }
 .status-dot.red { background: #ff6b6b; }
@@ -269,6 +271,26 @@ h2 { font-size: 18px; }
   text-transform: uppercase;
   color: #b6cbff;
   margin-bottom: 6px;
+}
+
+.status-picker {
+  position: fixed;
+  z-index: 50;
+  background: #101a37;
+  border: 1px solid #3a5596;
+  border-radius: 10px;
+  padding: 6px;
+  display: flex;
+  gap: 6px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+}
+.status-picker button {
+  background: #172651;
+  color: #d7e6ff;
+  border: 1px solid #35589f;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
 }
 
 @media (max-width: 900px) {

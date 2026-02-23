@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T09:41:40.568Z",
+  "generatedAt": "2026-02-23T17:39:08.002Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -2689,27 +2689,115 @@
           "prescribed_reps": 5,
           "planned_weight_kg": 57.5
         }
+      ],
+      "2026-03-10": [
+        {
+          "session_date": "2026-03-10",
+          "category": "main",
+          "lift": "Press",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "main",
+          "lift": "Press",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 45
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "main",
+          "lift": "Press",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 50
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 4,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 5,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 6,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 7,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 8,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 9,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-10",
+          "category": "supplemental",
+          "lift": "Deadlift",
+          "set_no": 10,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        }
       ]
     },
     "plannedCardioByDate": {
-      "2025-11-25": [
-        {
-          "session_date": "2025-11-25",
-          "session_type": "Z2",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": 6,
-          "speed_high_kmh": 7.5,
-          "target_hr_min": 110,
-          "target_hr_max": 125,
-          "notes": "Lift AM / 30 min steady treadmill Z2"
-        }
-      ],
       "2025-11-26": [
         {
           "session_date": "2025-11-26",
@@ -4567,6 +4655,24 @@
       "2026-03-09": [
         {
           "session_date": "2026-03-09",
+          "session_type": "Z2",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": 6,
+          "speed_high_kmh": 7.5,
+          "target_hr_min": 110,
+          "target_hr_max": 125,
+          "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
+      ],
+      "2026-03-10": [
+        {
+          "session_date": "2026-03-10",
           "session_type": "Z2",
           "duration_min": 30,
           "warmup_min": null,
@@ -4584,48 +4690,6 @@
       ]
     },
     "plannedRingsByDate": {
-      "2025-11-25": [
-        {
-          "session_date": "2025-11-25",
-          "template_code": "B",
-          "item_no": 1,
-          "exercise": "RTO Support Shrugs",
-          "sets_text": "4",
-          "reps_or_time": "6-8",
-          "tempo": "3111",
-          "rest_text": "90s"
-        },
-        {
-          "session_date": "2025-11-25",
-          "template_code": "B",
-          "item_no": 2,
-          "exercise": "Ring Push-Ups (RTO)",
-          "sets_text": "5",
-          "reps_or_time": "4-6",
-          "tempo": "31X1",
-          "rest_text": "120s"
-        },
-        {
-          "session_date": "2025-11-25",
-          "template_code": "B",
-          "item_no": 3,
-          "exercise": "Assisted Ring Dips",
-          "sets_text": "5",
-          "reps_or_time": "3-5",
-          "tempo": "40X1",
-          "rest_text": "150s"
-        },
-        {
-          "session_date": "2025-11-25",
-          "template_code": "B",
-          "item_no": 4,
-          "exercise": "Hollow Hold",
-          "sets_text": "3",
-          "reps_or_time": "25-40s",
-          "tempo": null,
-          "rest_text": "60s"
-        }
-      ],
       "2025-11-26": [
         {
           "session_date": "2025-11-26",
@@ -7640,6 +7704,48 @@
           "exercise": "Ring Plank",
           "sets_text": "3",
           "reps_or_time": "30-45s",
+          "tempo": null,
+          "rest_text": "60s"
+        }
+      ],
+      "2026-03-10": [
+        {
+          "session_date": "2026-03-10",
+          "template_code": "B",
+          "item_no": 1,
+          "exercise": "RTO Support Shrugs",
+          "sets_text": "4",
+          "reps_or_time": "6-8",
+          "tempo": "3111",
+          "rest_text": "90s"
+        },
+        {
+          "session_date": "2026-03-10",
+          "template_code": "B",
+          "item_no": 2,
+          "exercise": "Ring Push-Ups (RTO)",
+          "sets_text": "5",
+          "reps_or_time": "4-6",
+          "tempo": "31X1",
+          "rest_text": "120s"
+        },
+        {
+          "session_date": "2026-03-10",
+          "template_code": "B",
+          "item_no": 3,
+          "exercise": "Assisted Ring Dips",
+          "sets_text": "5",
+          "reps_or_time": "3-5",
+          "tempo": "40X1",
+          "rest_text": "150s"
+        },
+        {
+          "session_date": "2026-03-10",
+          "template_code": "B",
+          "item_no": 4,
+          "exercise": "Hollow Hold",
+          "sets_text": "3",
+          "reps_or_time": "25-40s",
           "tempo": null,
           "rest_text": "60s"
         }

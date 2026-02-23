@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import subprocess
 import os
+from urllib.parse import urlparse, parse_qs
 
 ROOT = Path(__file__).resolve().parents[1]
 PORT = 8080
@@ -28,20 +29,48 @@ class Handler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_POST(self):
-        if self.path != "/api/refresh":
-            self._send_json(404, {"ok": False, "error": "Not found"})
+        parsed = urlparse(self.path)
+
+        if parsed.path == "/api/refresh":
+            try:
+                subprocess.run([
+                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
+                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._send_json(200, {"ok": True})
+            except subprocess.CalledProcessError as e:
+                self._send_json(500, {
+                    "ok": False,
+                    "error": (e.stderr or e.stdout or str(e)).strip()
+                })
             return
 
-        try:
-            subprocess.run([
-                NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-            ], check=True, cwd=str(ROOT), capture_output=True, text=True)
-            self._send_json(200, {"ok": True})
-        except subprocess.CalledProcessError as e:
-            self._send_json(500, {
-                "ok": False,
-                "error": (e.stderr or e.stdout or str(e)).strip()
-            })
+        if parsed.path == "/api/set-status":
+            q = parse_qs(parsed.query)
+            date = (q.get("date") or [None])[0]
+            status = (q.get("status") or [None])[0]
+
+            if not date or not status or status not in {"green", "yellow", "red"}:
+                self._send_json(400, {"ok": False, "error": "date and valid status required"})
+                return
+
+            db = ROOT / "gym531.db"
+            sql = (
+                "INSERT INTO recovery_status(session_date,pain_level,note) "
+                f"VALUES('{date}','{status}','Set from dashboard') "
+                "ON CONFLICT(session_date) DO UPDATE SET pain_level=excluded.pain_level;"
+            )
+
+            try:
+                subprocess.run(["sqlite3", str(db), sql], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                subprocess.run([
+                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
+                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._send_json(200, {"ok": True})
+            except subprocess.CalledProcessError as e:
+                self._send_json(500, {"ok": False, "error": (e.stderr or e.stdout or str(e)).strip()})
+            return
+
+        self._send_json(404, {"ok": False, "error": "Not found"})
 
 if __name__ == "__main__":
     server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
