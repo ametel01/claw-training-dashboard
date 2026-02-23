@@ -52,6 +52,48 @@ function renderWeekHeader(weekHeader) {
   `;
 }
 
+function renderTodayGlance(days = []) {
+  const node = document.getElementById('todayGlance');
+  if (!node) return;
+
+  const today = currentDateInDashboardTZ();
+  const d = (days || []).find((x) => x.session_date === today);
+  if (!d) {
+    node.innerHTML = '<div class="today-title">Today at a glance</div><div class="today-meta">No data for today yet.</div>';
+    return;
+  }
+
+  const plannedBarbell = !!d.planned_barbell_main;
+  const plannedCardio = !!d.planned_cardio && d.planned_cardio !== 'OFF';
+  const plannedRings = !!d.planned_rings;
+  const plannedCount = [plannedBarbell, plannedCardio, plannedRings].filter(Boolean).length;
+  const doneCount = [plannedBarbell && d.has_barbell, plannedCardio && d.has_cardio, plannedRings && d.has_rings].filter(Boolean).length;
+
+  const line = (label, plannedText, done) => {
+    if (!plannedText) return '';
+    return `<div class="today-line"><span class="today-chip ${done ? 'done' : 'pending'}">${done ? 'done' : 'pending'}</span><strong>${label}</strong> ${plannedText}</div>`;
+  };
+
+  const barbellText = plannedBarbell
+    ? `${d.planned_barbell_main}${d.planned_barbell_supp ? ` + ${d.planned_barbell_supp} ${d.planned_supp_sets || ''}x${d.planned_supp_reps || ''}` : ''}`
+    : '';
+  const cardioText = plannedCardio ? d.planned_cardio : '';
+  const ringsText = plannedRings ? `Template ${d.planned_rings}` : '';
+
+  node.innerHTML = `
+    <div class="today-title">
+      <span>Today at a glance · ${today}</span>
+      <span><span class="status-dot ${d.pain_level || 'green'}"></span>${doneCount}/${plannedCount || 0}</span>
+    </div>
+    <div class="today-meta">Planned + adjusted + completion in one view</div>
+    <div class="today-lines">
+      ${line('Barbell:', barbellText, !!d.has_barbell)}
+      ${line('Cardio:', cardioText, !!d.has_cardio)}
+      ${line('Rings:', ringsText, !!d.has_rings)}
+    </div>
+  `;
+}
+
 function renderWeeklyCompletion(weekRows = []) {
   let planned = 0;
   let done = 0;
@@ -638,6 +680,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
 async function renderDashboard() {
   const data = await loadData();
   renderWeekHeader(data.weekHeader || null);
+  renderTodayGlance(data.dailyTiles || []);
   renderTotals(data.totals || {});
   renderEst1RM(data.est1RM || []);
   renderCardioAnalytics(data.cardioAnalytics || {});
