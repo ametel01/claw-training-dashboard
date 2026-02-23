@@ -376,6 +376,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   }
 
   function openForDate(date) {
+    window.__activeDetailDate = date;
     title.textContent = `Training details · ${date}`;
 
     const barbell = details?.barbellByDate?.[date] || [];
@@ -394,9 +395,9 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
       section('Day status', `
         <p><span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>${planned.pain_note ? ` ${planned.pain_note}` : ''}</p>
         <div class="status-actions">
-          <button type="button" class="status-btn" onclick="window.setRecoveryStatus('${date}','green')">🟢 Green</button>
-          <button type="button" class="status-btn" onclick="window.setRecoveryStatus('${date}','yellow')">🟡 Yellow</button>
-          <button type="button" class="status-btn" onclick="window.setRecoveryStatus('${date}','red')">🔴 Red</button>
+          <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'green')">🟢 Green</button>
+          <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'yellow')">🟡 Yellow</button>
+          <button type="button" class="status-btn" onclick="window.setRecoveryStatus(null,'red')">🔴 Red</button>
         </div>
       `),
       section('Barbell', renderBarbellDetails(barbell, planned)),
@@ -447,11 +448,13 @@ async function renderDashboard() {
   try {
     window.__renderDashboard = renderDashboard;
     window.setRecoveryStatus = async (date, status) => {
+      const targetDate = date || window.__activeDetailDate;
+      if (!targetDate) return;
       try {
-        const res = await fetch(`/api/set-status?date=${encodeURIComponent(date)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
+        const res = await fetch(`/api/set-status?date=${encodeURIComponent(targetDate)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
         if (!res.ok) throw new Error(`set-status failed (${res.status})`);
         await renderDashboard();
-        if (window.__openDetailForDate) window.__openDetailForDate(date);
+        if (window.__openDetailForDate) window.__openDetailForDate(targetDate);
       } catch (err) {
         console.error(err);
       }
