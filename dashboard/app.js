@@ -410,13 +410,14 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   window.__openDetailForDate = openForDate;
 
   closeBtn.addEventListener('click', close);
-  modal.addEventListener('click', async (e) => {
+  const handleModalStatusClick = async (e) => {
     if (e.target === modal) {
       close();
       return;
     }
 
-    const btn = e.target.closest('[data-role="set-status"]');
+    const targetEl = (e.target instanceof Element) ? e.target : e.target?.parentElement;
+    const btn = targetEl?.closest?.('[data-role="set-status"]');
     if (btn) {
       e.preventDefault();
       e.stopPropagation();
@@ -431,7 +432,10 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
         console.error(err);
       }
     }
-  });
+  };
+
+  modal.addEventListener('click', handleModalStatusClick);
+  modal.addEventListener('touchend', handleModalStatusClick, { passive: false });
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
   });
