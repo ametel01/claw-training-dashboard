@@ -391,7 +391,14 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
 
     const pain = planned.pain_level || 'green';
     body.innerHTML = [
-      section('Day status', `<p><span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>${planned.pain_note ? ` ${planned.pain_note}` : ''}</p>`),
+      section('Day status', `
+        <p><span class="status-dot ${pain}" title="Recovery status: ${pain}"></span>${planned.pain_note ? ` ${planned.pain_note}` : ''}</p>
+        <div class="status-actions">
+          <button type="button" class="status-btn" data-role="set-status" data-date="${date}" data-status="green">🟢 Green</button>
+          <button type="button" class="status-btn" data-role="set-status" data-date="${date}" data-status="yellow">🟡 Yellow</button>
+          <button type="button" class="status-btn" data-role="set-status" data-date="${date}" data-status="red">🔴 Red</button>
+        </div>
+      `),
       section('Barbell', renderBarbellDetails(barbell, planned)),
       section('Cardio', renderCardioDetails(cardio, planned)),
       section('Rings', renderRingsDetails(rings, planned))
@@ -403,8 +410,27 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   window.__openDetailForDate = openForDate;
 
   closeBtn.addEventListener('click', close);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) close();
+  modal.addEventListener('click', async (e) => {
+    if (e.target === modal) {
+      close();
+      return;
+    }
+
+    const btn = e.target.closest('[data-role="set-status"]');
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const date = btn.dataset.date;
+      const status = btn.dataset.status;
+      try {
+        const res = await fetch(`/api/set-status?date=${encodeURIComponent(date)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
+        if (!res.ok) throw new Error(`set-status failed (${res.status})`);
+        await window.__renderDashboard?.();
+        openForDate(date);
+      } catch (err) {
+        console.error(err);
+      }
+    }
   });
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
@@ -438,6 +464,7 @@ async function renderDashboard() {
 
 (async function init() {
   try {
+    window.__renderDashboard = renderDashboard;
     await renderDashboard();
     bindStatusPicker(renderDashboard);
 
