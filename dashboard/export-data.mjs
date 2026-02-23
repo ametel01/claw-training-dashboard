@@ -550,6 +550,20 @@ SELECT
   )) FROM vo2)) AS vo2_points
 `)[0] || {};
 
+const auditLog = sqlJson(`
+SELECT
+  event_time,
+  domain,
+  action,
+  key_name,
+  old_value,
+  new_value,
+  note
+FROM audit_log
+ORDER BY event_time DESC, id DESC
+LIMIT 60
+`);
+
 const payload = {
   generatedAt: new Date().toISOString(),
   totals,
@@ -558,6 +572,7 @@ const payload = {
   dailyTiles,
   est1RM,
   cardioAnalytics,
+  auditLog,
   details: {
     barbellByDate: groupByDate(barbellRows),
     cardioByDate: groupByDate(cardioRows),

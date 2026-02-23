@@ -191,6 +191,32 @@ function renderCardioAnalytics(data = {}) {
   `;
 }
 
+function renderAuditLog(rows = []) {
+  const node = document.getElementById('auditLogPanel');
+  if (!node) return;
+  if (!rows.length) {
+    node.innerHTML = '<p class="muted">No audit events yet.</p>';
+    return;
+  }
+
+  node.innerHTML = `<div class="audit-list">${rows.map((r) => {
+    const ts = (r.event_time || '').replace('T', ' ').slice(0, 19);
+    const change = r.old_value || r.new_value
+      ? `${r.old_value ?? '∅'} → ${r.new_value ?? '∅'}`
+      : '';
+    return `
+      <div class="audit-row">
+        <div class="audit-top">
+          <span>${r.domain} · ${r.action} · ${r.key_name || '-'}</span>
+          <span>${ts}</span>
+        </div>
+        ${change ? `<div class="audit-meta">${change}</div>` : ''}
+        ${r.note ? `<div class="audit-meta">${r.note}</div>` : ''}
+      </div>
+    `;
+  }).join('')}</div>`;
+}
+
 function renderWeekProgress(rows) {
   const node = document.getElementById('weekRows');
   node.innerHTML = rows.map((r) => `
@@ -684,6 +710,7 @@ async function renderDashboard() {
   renderTotals(data.totals || {});
   renderEst1RM(data.est1RM || []);
   renderCardioAnalytics(data.cardioAnalytics || {});
+  renderAuditLog(data.auditLog || []);
   renderWeekProgress(data.weekProgress || []);
   renderDailyTiles(data.dailyTiles || []);
   bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);

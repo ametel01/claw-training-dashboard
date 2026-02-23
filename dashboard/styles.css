@@ -190,6 +190,31 @@ h2 { font-size: 18px; }
   background: linear-gradient(90deg, #57b7ff, #4bd28b);
 }
 
+.audit-list {
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  overflow: auto;
+}
+.audit-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0d1530;
+  padding: 8px;
+  font-size: 12px;
+}
+.audit-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #bdd0ff;
+}
+.audit-meta {
+  color: var(--muted);
+  margin-top: 3px;
+  font-size: 11px;
+}
+
 .week-rows { display: grid; gap: 8px; }
 .week-row {
   display: grid;
