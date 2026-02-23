@@ -426,12 +426,15 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
   });
 
   document.querySelectorAll('.tile, .week-row').forEach((el) => {
-    const open = () => openForDate(el.dataset.date);
+    const open = (evt) => {
+      if (evt?.target?.closest?.('[data-role="status-dot"]')) return;
+      openForDate(el.dataset.date);
+    };
     el.addEventListener('click', open);
     el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        open();
+        open(e);
       }
     });
   });
