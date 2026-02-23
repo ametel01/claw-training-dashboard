@@ -214,6 +214,43 @@ function summarizeActualBarbell(actualRows = []) {
   return { mainText, suppText };
 }
 
+function renderNextSessionSuggestion(planned = {}, actual = {}) {
+  const pain = planned?.pain_level || 'green';
+  const painNote = (planned?.pain_note || '').toLowerCase();
+  const barbell = actual?.barbell || [];
+
+  const date = planned?.session_date;
+  let nextDate = '';
+  if (date) {
+    const d = new Date(`${date}T00:00:00`);
+    d.setDate(d.getDate() + 1);
+    nextDate = d.toISOString().slice(0, 10);
+  }
+
+  let suggestion = 'Proceed as planned next session.';
+
+  const plannedSupp = (planned?.plannedBarbellRows || []).filter((r) => r.category === 'supplemental');
+  const actualSupp = barbell.filter((r) => r.category === 'supplemental');
+  const substitutedSupplemental = plannedSupp.length && actualSupp.length && (
+    plannedSupp[0].lift !== actualSupp[0].lift ||
+    plannedSupp.length !== actualSupp.length ||
+    plannedSupp[0].prescribed_reps !== actualSupp[0].actual_reps ||
+    plannedSupp[0].planned_weight_kg !== actualSupp[0].actual_weight_kg
+  );
+
+  if (pain === 'red') {
+    suggestion = 'Recovery day next: no heavy barbell/rings; easy walk + mobility only.';
+  } else if (pain === 'yellow' || painNote.includes('pain') || painNote.includes('stiff')) {
+    suggestion = 'Keep main lift, reduce supplemental ~20%, and swap VO2 to Z2 if needed.';
+  } else if (substitutedSupplemental) {
+    suggestion = 'Keep the same modified supplemental pattern for one more session, then re-test planned loading.';
+  } else if (barbell.length) {
+    suggestion = 'Session looked stable — continue the planned progression next session.';
+  }
+
+  return `<p><strong>Next session${nextDate ? ` (${nextDate})` : ''}:</strong> ${suggestion}</p>`;
+}
+
 function renderPlannedVsCompleted(planned = {}, actual = {}) {
   const plannedBarbellRows = planned?.plannedBarbellRows || [];
   const actualBarbellRows = actual?.barbell || [];
@@ -496,6 +533,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
         </div>
       `),
       section('Planned vs Completed (Delta)', renderPlannedVsCompleted(planned, { barbell, cardio, rings })),
+      section('Next Session Suggestion', renderNextSessionSuggestion(planned, { barbell, cardio, rings })),
       section('Barbell', renderBarbellDetails(barbell, planned)),
       section('Cardio', renderCardioDetails(cardio, planned)),
       section('Rings', renderRingsDetails(rings, planned))
