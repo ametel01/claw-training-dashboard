@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T06:54:24.874Z",
+  "generatedAt": "2026-02-23T07:37:09.667Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -97,6 +97,8 @@
   "dailyTiles": [
     {
       "session_date": "2026-02-01",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -112,6 +114,8 @@
     },
     {
       "session_date": "2026-02-02",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -127,6 +131,8 @@
     },
     {
       "session_date": "2026-02-03",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -142,6 +148,8 @@
     },
     {
       "session_date": "2026-02-04",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -157,6 +165,8 @@
     },
     {
       "session_date": "2026-02-05",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -172,6 +182,8 @@
     },
     {
       "session_date": "2026-02-06",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -187,6 +199,8 @@
     },
     {
       "session_date": "2026-02-07",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -202,6 +216,8 @@
     },
     {
       "session_date": "2026-02-08",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -217,6 +233,8 @@
     },
     {
       "session_date": "2026-02-09",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -232,6 +250,8 @@
     },
     {
       "session_date": "2026-02-10",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -247,6 +267,8 @@
     },
     {
       "session_date": "2026-02-11",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -262,6 +284,8 @@
     },
     {
       "session_date": "2026-02-12",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -277,6 +301,8 @@
     },
     {
       "session_date": "2026-02-13",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -292,6 +318,8 @@
     },
     {
       "session_date": "2026-02-14",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 0,
@@ -307,6 +335,8 @@
     },
     {
       "session_date": "2026-02-15",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 1,
       "has_rings": 0,
@@ -322,6 +352,8 @@
     },
     {
       "session_date": "2026-02-16",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 1,
       "has_cardio": 0,
       "has_rings": 0,
@@ -337,6 +369,8 @@
     },
     {
       "session_date": "2026-02-17",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 1,
       "has_cardio": 1,
       "has_rings": 1,
@@ -352,6 +386,8 @@
     },
     {
       "session_date": "2026-02-18",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
       "has_rings": 1,
@@ -367,6 +403,8 @@
     },
     {
       "session_date": "2026-02-19",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 1,
       "has_cardio": 1,
       "has_rings": 1,
@@ -382,6 +420,8 @@
     },
     {
       "session_date": "2026-02-20",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 1,
       "has_cardio": 1,
       "has_rings": 1,
@@ -397,6 +437,8 @@
     },
     {
       "session_date": "2026-02-21",
+      "pain_level": "green",
+      "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 1,
       "has_rings": 0,

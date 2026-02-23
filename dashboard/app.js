@@ -133,7 +133,11 @@ function renderDailyTiles(days) {
     const cardioDetail = d.planned_cardio || d.cardio_protocol;
     const ringsDetail = d.planned_rings || d.rings_template;
 
+    const pain = d.pain_level || 'green';
+    const painBadge = pain !== 'green' ? `<span class="badge ${pain === 'yellow' ? 'missed' : 'planned'}">Status: ${pain.toUpperCase()}</span>` : '';
+
     const badges = [
+      painBadge,
       badgeFor({ label: 'Barbell', planned: plannedBarbell, done: !!d.has_barbell, detail: barbellDetail, isPast }),
       badgeFor({ label: 'Cardio', planned: plannedCardio, done: !!d.has_cardio, detail: cardioDetail, isPast }),
       badgeFor({ label: 'Rings', planned: plannedRings, done: !!d.has_rings, detail: ringsDetail, isPast })
@@ -165,6 +169,7 @@ function section(title, content) {
 }
 
 function renderBarbellDetails(rows = [], planned = {}) {
+  const pain = planned?.pain_level || 'green';
   if (!rows.length) {
     const pRows = planned?.plannedBarbellRows || [];
     if (!pRows.length) return '<p class="muted">Not expected today.</p>';
@@ -179,12 +184,17 @@ function renderBarbellDetails(rows = [], planned = {}) {
       suppText = `${s.lift}: ${supp.length}×${s.prescribed_reps} @ ${s.planned_weight_kg} kg`;
     }
 
+    const adjust = pain === 'yellow'
+      ? `<p><strong>Auto-adjust (YELLOW):</strong> keep main, reduce supplemental volume/load.</p>`
+      : (pain === 'red' ? `<p><strong>Auto-adjust (RED):</strong> skip heavy barbell today.</p>` : '');
+
     return `
       <p class="muted">No barbell session logged.</p>
       <div class="planned-block">
         <div class="planned-title">Planned (not completed yet)</div>
         <p><strong>Main ${main[0]?.lift || ''}:</strong> ${mainText || '-'}</p>
         ${suppText ? `<p><strong>Supplemental:</strong> ${suppText}</p>` : ''}
+        ${adjust}
       </div>
     `;
   }
@@ -231,6 +241,7 @@ function renderBarbellDetails(rows = [], planned = {}) {
 }
 
 function renderCardioDetails(rows = [], planned = {}) {
+  const pain = planned?.pain_level || 'green';
   if (!rows.length) {
     const p = planned?.plannedCardio || null;
     if (!p || !p.session_type || p.session_type === 'OFF') return '<p class="muted">Not expected today (rest / off day).</p>';
@@ -238,6 +249,10 @@ function renderCardioDetails(rows = [], planned = {}) {
     const intervalText = p.vo2_intervals_min
       ? `${p.vo2_intervals_min}${p.vo2_intervals_max && p.vo2_intervals_max !== p.vo2_intervals_min ? `-${p.vo2_intervals_max}` : ''} × ${p.vo2_work_min}m hard / ${p.vo2_easy_min}m easy`
       : '';
+
+    const adjust = pain === 'yellow'
+      ? `<p><strong>Auto-adjust (YELLOW):</strong> if VO2, swap to 30 min Z2.</p>`
+      : (pain === 'red' ? `<p><strong>Auto-adjust (RED):</strong> recovery walk only.</p>` : '');
 
     return `
       <p class="muted">No cardio session logged.</p>
@@ -247,6 +262,7 @@ function renderCardioDetails(rows = [], planned = {}) {
         ${intervalText ? `<p>${intervalText}</p>` : ''}
         ${p.speed_low_kmh ? `<p>Speed: ${p.speed_low_kmh}${p.speed_high_kmh ? `-${p.speed_high_kmh}` : ''} km/h</p>` : ''}
         ${p.target_hr_min ? `<p>Target HR: ${p.target_hr_min}${p.target_hr_max ? `-${p.target_hr_max}` : ''} bpm</p>` : ''}
+        ${adjust}
       </div>
     `;
   }
@@ -277,6 +293,7 @@ function renderCardioDetails(rows = [], planned = {}) {
 }
 
 function renderRingsDetails(rows = [], planned = {}) {
+  const pain = planned?.pain_level || 'green';
   if (!rows.length) {
     const pRows = planned?.plannedRingsRows || [];
     if (!pRows.length || !pRows[0]?.template_code) return '<p class="muted">Not expected today.</p>';
@@ -287,12 +304,17 @@ function renderRingsDetails(rows = [], planned = {}) {
       .map((r) => `<li>${r.item_no}. ${r.exercise} · ${r.sets_text}×${r.reps_or_time}${r.tempo ? ` @ ${r.tempo}` : ''}${r.rest_text ? ` · rest ${r.rest_text}` : ''}</li>`)
       .join('');
 
+    const adjust = pain === 'red'
+      ? `<p><strong>Auto-adjust (RED):</strong> skip rings today.</p>`
+      : (pain === 'yellow' ? `<p><strong>Auto-adjust (YELLOW):</strong> keep technique easy, stop if pain rises.</p>` : '');
+
     return `
       <p class="muted">No rings session logged.</p>
       <div class="planned-block">
         <div class="planned-title">Planned (not completed yet)</div>
         <p><strong>Template ${tpl}</strong></p>
         <ul class="detail-list">${list}</ul>
+        ${adjust}
       </div>
     `;
   }
@@ -341,6 +363,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
     };
 
     body.innerHTML = [
+      section('Day status', `<p><strong>${(planned.pain_level || 'green').toUpperCase()}</strong>${planned.pain_note ? ` · ${planned.pain_note}` : ''}</p>`),
       section('Barbell', renderBarbellDetails(barbell, planned)),
       section('Cardio', renderCardioDetails(cardio, planned)),
       section('Rings', renderRingsDetails(rings, planned))

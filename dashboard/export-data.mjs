@@ -134,6 +134,8 @@ base AS (
 )
 SELECT
   b.session_date,
+  COALESCE(ps.pain_level, 'green') AS pain_level,
+  ps.note AS pain_note,
   CASE WHEN bs.id IS NOT NULL THEN 1 ELSE 0 END AS has_barbell,
   CASE WHEN cs.id IS NOT NULL THEN 1 ELSE 0 END AS has_cardio,
   CASE WHEN rs.id IS NOT NULL THEN 1 ELSE 0 END AS has_rings,
@@ -148,6 +150,7 @@ SELECT
   rpd.template_code AS planned_rings
 FROM base b
 LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
+LEFT JOIN recovery_status ps ON ps.session_date = b.session_date
 LEFT JOIN barbell_sessions bs ON bs.session_date = b.session_date
 LEFT JOIN training_days td_done ON td_done.id = bs.day_id
 LEFT JOIN lifts l ON l.id = td_done.main_lift_id
