@@ -100,6 +100,55 @@ function renderEst1RM(rows = []) {
   `).join('');
 }
 
+function renderCardioAnalytics(data = {}) {
+  const node = document.getElementById('cardioAnalytics');
+  if (!node) return;
+
+  const totalZ2 = data.total_z2 || 0;
+  const inCap = data.z2_in_cap || 0;
+  const pct = data.z2_compliance_pct ?? 0;
+
+  let points = data.vo2_points || [];
+  if (typeof points === 'string') {
+    try { points = JSON.parse(points); } catch { points = []; }
+  }
+
+  const recent = [...(points || [])].slice(-8);
+  const maxSpeed = Math.max(15, ...recent.map((p) => Number(p.max_speed_kmh || p.avg_speed_kmh || 0)));
+
+  const vo2Rows = recent.length
+    ? recent.map((p) => {
+        const speed = Number(p.avg_speed_kmh || p.max_speed_kmh || 0);
+        const hr = p.avg_hr ?? p.max_hr ?? '-';
+        const barPct = Math.max(0, Math.min(100, (speed / maxSpeed) * 100));
+        return `
+          <div class="cardio-vo2-row">
+            <div>${p.session_date}</div>
+            <div>${p.protocol}</div>
+            <div>
+              <div>${speed || '-'} km/h · HR ${hr}</div>
+              <div class="cardio-vo2-bar"><span style="width:${barPct}%"></span></div>
+            </div>
+          </div>
+        `;
+      }).join('')
+    : '<p class="muted">No VO2 data in last 12 weeks.</p>';
+
+  node.innerHTML = `
+    <div class="cardio-analytics">
+      <div class="cardio-z2-card">
+        <div class="muted">Z2 compliance</div>
+        <div class="cardio-z2-big">${pct}%</div>
+        <div class="muted">${inCap}/${totalZ2} sessions in cap</div>
+      </div>
+      <div class="cardio-vo2-list">
+        <div class="muted" style="margin-bottom:6px">VO2 speed vs HR trend</div>
+        ${vo2Rows}
+      </div>
+    </div>
+  `;
+}
+
 function renderWeekProgress(rows) {
   const node = document.getElementById('weekRows');
   node.innerHTML = rows.map((r) => `
@@ -591,6 +640,7 @@ async function renderDashboard() {
   renderWeekHeader(data.weekHeader || null);
   renderTotals(data.totals || {});
   renderEst1RM(data.est1RM || []);
+  renderCardioAnalytics(data.cardioAnalytics || {});
   renderWeekProgress(data.weekProgress || []);
   renderDailyTiles(data.dailyTiles || []);
   bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);

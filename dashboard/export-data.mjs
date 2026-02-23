@@ -510,6 +510,46 @@ SELECT
 FROM pc CROSS JOIN cfg
 `)[0] || null;
 
+const cardioAnalytics = sqlJson(`
+WITH z2 AS (
+  SELECT
+    COUNT(*) AS total_z2,
+    SUM(CASE WHEN z2_cap_respected=1 THEN 1 ELSE 0 END) AS z2_in_cap
+  FROM cardio_sessions
+  WHERE protocol='Z2'
+    AND session_date >= date('now','localtime','-84 day')
+),
+vo2 AS (
+  SELECT
+    cs.session_date,
+    cs.protocol,
+    ROUND(AVG(ci.target_speed_kmh),2) AS avg_speed_kmh,
+    ROUND(AVG(ci.achieved_hr),1) AS avg_hr,
+    ROUND(MAX(ci.target_speed_kmh),2) AS max_speed_kmh,
+    MAX(cs.max_hr) AS max_hr
+  FROM cardio_sessions cs
+  LEFT JOIN cardio_intervals ci ON ci.session_id = cs.id
+  WHERE cs.protocol IN ('VO2_4x4','VO2_1min')
+    AND cs.session_date >= date('now','localtime','-84 day')
+  GROUP BY cs.session_date, cs.protocol
+  ORDER BY cs.session_date
+)
+SELECT
+  (SELECT total_z2 FROM z2) AS total_z2,
+  (SELECT z2_in_cap FROM z2) AS z2_in_cap,
+  CASE WHEN (SELECT total_z2 FROM z2) > 0
+       THEN ROUND((SELECT z2_in_cap FROM z2) * 100.0 / (SELECT total_z2 FROM z2), 1)
+       ELSE NULL END AS z2_compliance_pct,
+  json((SELECT json_group_array(json_object(
+    'session_date', session_date,
+    'protocol', protocol,
+    'avg_speed_kmh', avg_speed_kmh,
+    'avg_hr', avg_hr,
+    'max_speed_kmh', max_speed_kmh,
+    'max_hr', max_hr
+  )) FROM vo2)) AS vo2_points
+`)[0] || {};
+
 const payload = {
   generatedAt: new Date().toISOString(),
   totals,
@@ -517,6 +557,7 @@ const payload = {
   weekProgress,
   dailyTiles,
   est1RM,
+  cardioAnalytics,
   details: {
     barbellByDate: groupByDate(barbellRows),
     cardioByDate: groupByDate(cardioRows),

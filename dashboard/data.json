@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T18:16:29.318Z",
+  "generatedAt": "2026-02-23T18:28:38.630Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -690,6 +690,12 @@
       "next_level_kg": 68
     }
   ],
+  "cardioAnalytics": {
+    "total_z2": 3,
+    "z2_in_cap": 1,
+    "z2_compliance_pct": 33.3,
+    "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":null}]"
+  },
   "details": {
     "barbellByDate": {
       "2026-02-16": [
