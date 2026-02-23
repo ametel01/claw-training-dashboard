@@ -327,44 +327,26 @@ function renderRingsDetails(rows = [], planned = {}) {
 }
 
 function bindStatusPicker(renderDashboardFn) {
-  const picker = document.getElementById('statusPicker');
-  if (!picker) return;
+  const order = ['green', 'yellow', 'red'];
 
-  let activeDate = null;
-
-  function hidePicker() {
-    picker.hidden = true;
-    activeDate = null;
-  }
-
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', async (e) => {
     const dot = e.target.closest('[data-role="status-dot"]');
-    if (dot) {
-      activeDate = dot.dataset.date;
-      picker.hidden = false;
-      picker.style.left = `${Math.min(window.innerWidth - 190, e.clientX)}px`;
-      picker.style.top = `${Math.min(window.innerHeight - 60, e.clientY + 8)}px`;
-      e.stopPropagation();
-      return;
+    if (!dot) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const date = dot.dataset.date;
+    const current = order.find((s) => dot.classList.contains(s)) || 'green';
+    const next = order[(order.indexOf(current) + 1) % order.length];
+
+    try {
+      const res = await fetch(`/api/set-status?date=${encodeURIComponent(date)}&status=${encodeURIComponent(next)}`, { method: 'POST' });
+      if (!res.ok) throw new Error(`set-status failed (${res.status})`);
+      await renderDashboardFn();
+    } catch (err) {
+      console.error(err);
     }
-
-    if (!picker.contains(e.target)) hidePicker();
-  });
-
-  picker.querySelectorAll('button[data-status]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      if (!activeDate) return;
-      const status = btn.dataset.status;
-      try {
-        const res = await fetch(`/api/set-status?date=${encodeURIComponent(activeDate)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
-        if (!res.ok) throw new Error(`set-status failed (${res.status})`);
-        await renderDashboardFn();
-      } catch (e) {
-        console.error(e);
-      } finally {
-        hidePicker();
-      }
-    });
   });
 }
 
