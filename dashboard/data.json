@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T18:37:23.923Z",
+  "generatedAt": "2026-02-23T18:50:08.350Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -694,6 +694,7 @@
     "total_z2": 3,
     "z2_in_cap": 1,
     "z2_compliance_pct": 33.3,
+    "z2_points": "[{\"session_date\":\"2026-02-15\",\"duration_min\":30,\"avg_hr\":null,\"max_hr\":140,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-17\",\"duration_min\":30,\"avg_hr\":null,\"max_hr\":141,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-20\",\"duration_min\":30,\"avg_hr\":118,\"max_hr\":null,\"z2_cap_respected\":1}]",
     "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":null}]"
   },
   "auditLog": [],

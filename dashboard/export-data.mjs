@@ -519,6 +519,18 @@ WITH z2 AS (
   WHERE protocol='Z2'
     AND session_date >= date('now','localtime','-84 day')
 ),
+z2_points AS (
+  SELECT
+    session_date,
+    duration_min,
+    avg_hr,
+    max_hr,
+    z2_cap_respected
+  FROM cardio_sessions
+  WHERE protocol='Z2'
+    AND session_date >= date('now','localtime','-84 day')
+  ORDER BY session_date
+),
 vo2 AS (
   SELECT
     cs.session_date,
@@ -540,6 +552,13 @@ SELECT
   CASE WHEN (SELECT total_z2 FROM z2) > 0
        THEN ROUND((SELECT z2_in_cap FROM z2) * 100.0 / (SELECT total_z2 FROM z2), 1)
        ELSE NULL END AS z2_compliance_pct,
+  json((SELECT json_group_array(json_object(
+    'session_date', session_date,
+    'duration_min', duration_min,
+    'avg_hr', avg_hr,
+    'max_hr', max_hr,
+    'z2_cap_respected', z2_cap_respected
+  )) FROM z2_points)) AS z2_points,
   json((SELECT json_group_array(json_object(
     'session_date', session_date,
     'protocol', protocol,

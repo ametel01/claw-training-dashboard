@@ -150,16 +150,56 @@ function renderCardioAnalytics(data = {}) {
   const inCap = data.z2_in_cap || 0;
   const pct = data.z2_compliance_pct ?? 0;
 
-  let points = data.vo2_points || [];
-  if (typeof points === 'string') {
-    try { points = JSON.parse(points); } catch { points = []; }
+  let z2Points = data.z2_points || [];
+  if (typeof z2Points === 'string') {
+    try { z2Points = JSON.parse(z2Points); } catch { z2Points = []; }
   }
 
-  const recent = [...(points || [])].slice(-8);
-  const maxSpeed = Math.max(15, ...recent.map((p) => Number(p.max_speed_kmh || p.avg_speed_kmh || 0)));
+  let vo2Points = data.vo2_points || [];
+  if (typeof vo2Points === 'string') {
+    try { vo2Points = JSON.parse(vo2Points); } catch { vo2Points = []; }
+  }
 
-  const vo2Rows = recent.length
-    ? recent.map((p) => {
+  const recentZ2 = [...(z2Points || [])].filter((p) => p.avg_hr != null).slice(-10);
+  let z2Graph = '<p class="muted">No Z2 HR data in last 12 weeks.</p>';
+  if (recentZ2.length >= 2) {
+    const w = 320;
+    const h = 110;
+    const pad = 14;
+    const hrs = recentZ2.map((p) => Number(p.avg_hr));
+    const minHr = Math.min(105, ...hrs) - 2;
+    const maxHr = Math.max(130, ...hrs) + 2;
+    const span = Math.max(1, maxHr - minHr);
+
+    const pts = recentZ2.map((p, i) => {
+      const x = pad + (i * ((w - pad * 2) / (recentZ2.length - 1)));
+      const y = h - pad - ((Number(p.avg_hr) - minHr) / span) * (h - pad * 2);
+      return { x, y, hr: p.avg_hr, date: p.session_date };
+    });
+
+    const poly = pts.map((p) => `${p.x},${p.y}`).join(' ');
+    const circles = pts.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="2.8"><title>${p.date}: HR ${p.hr}</title></circle>`).join('');
+    const latest = pts[pts.length - 1];
+    const first = pts[0];
+    const delta = (Number(latest.hr) - Number(first.hr)).toFixed(1);
+
+    z2Graph = `
+      <div class="z2-graph-wrap">
+        <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="Z2 average HR trend">
+          <line x1="${pad}" y1="${h - pad}" x2="${w - pad}" y2="${h - pad}" class="z2-axis"/>
+          <polyline points="${poly}" class="z2-line"/>
+          ${circles}
+        </svg>
+        <div class="muted">Last ${recentZ2.length} Z2 sessions · HR trend Δ ${delta}</div>
+      </div>
+    `;
+  }
+
+  const recentVO2 = [...(vo2Points || [])].slice(-8);
+  const maxSpeed = Math.max(15, ...recentVO2.map((p) => Number(p.max_speed_kmh || p.avg_speed_kmh || 0)));
+
+  const vo2Rows = recentVO2.length
+    ? recentVO2.map((p) => {
         const speed = Number(p.avg_speed_kmh || p.max_speed_kmh || 0);
         const hr = p.avg_hr ?? p.max_hr ?? '-';
         const barPct = Math.max(0, Math.min(100, (speed / maxSpeed) * 100));
@@ -182,6 +222,10 @@ function renderCardioAnalytics(data = {}) {
         <div class="muted">Z2 compliance</div>
         <div class="cardio-z2-big">${pct}%</div>
         <div class="muted">${inCap}/${totalZ2} sessions in cap</div>
+      </div>
+      <div class="cardio-vo2-list">
+        <div class="muted" style="margin-bottom:6px">Z2 HR variation trend</div>
+        ${z2Graph}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">VO2 speed vs HR trend</div>
