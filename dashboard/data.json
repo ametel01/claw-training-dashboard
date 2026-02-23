@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T06:51:10.069Z",
+  "generatedAt": "2026-02-23T06:54:24.874Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -13,6 +13,18 @@
       "weekday": 1,
       "day_name": "Monday",
       "session_date": "2026-02-23",
+      "main_lift": null,
+      "supplemental_sets": null,
+      "cardio_plan": null,
+      "rings_plan": null,
+      "barbell_done": 0,
+      "cardio_done": 0,
+      "rings_done": 0
+    },
+    {
+      "weekday": 2,
+      "day_name": "Tuesday",
+      "session_date": "2026-02-24",
       "main_lift": "Squat",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
@@ -22,9 +34,9 @@
       "rings_done": 0
     },
     {
-      "weekday": 2,
-      "day_name": "Tuesday",
-      "session_date": "2026-02-24",
+      "weekday": 3,
+      "day_name": "Wednesday",
+      "session_date": "2026-02-25",
       "main_lift": "Press",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
@@ -34,9 +46,9 @@
       "rings_done": 0
     },
     {
-      "weekday": 3,
-      "day_name": "Wednesday",
-      "session_date": "2026-02-25",
+      "weekday": 4,
+      "day_name": "Thursday",
+      "session_date": "2026-02-26",
       "main_lift": null,
       "supplemental_sets": null,
       "cardio_plan": "Z2_VO2_4x4",
@@ -46,9 +58,9 @@
       "rings_done": 0
     },
     {
-      "weekday": 4,
-      "day_name": "Thursday",
-      "session_date": "2026-02-26",
+      "weekday": 5,
+      "day_name": "Friday",
+      "session_date": "2026-02-27",
       "main_lift": "Bench",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
@@ -58,25 +70,13 @@
       "rings_done": 0
     },
     {
-      "weekday": 5,
-      "day_name": "Friday",
-      "session_date": "2026-02-27",
+      "weekday": 6,
+      "day_name": "Saturday",
+      "session_date": "2026-02-28",
       "main_lift": "Deadlift",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
       "rings_plan": "D",
-      "barbell_done": 0,
-      "cardio_done": 0,
-      "rings_done": 0
-    },
-    {
-      "weekday": 6,
-      "day_name": "Saturday",
-      "session_date": "2026-02-28",
-      "main_lift": null,
-      "supplemental_sets": null,
-      "cardio_plan": "Z2_VO2_1min",
-      "rings_plan": null,
       "barbell_done": 0,
       "cardio_done": 0,
       "rings_done": 0
@@ -87,7 +87,7 @@
       "session_date": "2026-03-01",
       "main_lift": null,
       "supplemental_sets": null,
-      "cardio_plan": "OFF",
+      "cardio_plan": "Z2_VO2_1min",
       "rings_plan": null,
       "barbell_done": 0,
       "cardio_done": 0,
@@ -1694,9 +1694,9 @@
           "planned_weight_kg": 40
         }
       ],
-      "2026-02-23": [
+      "2026-02-24": [
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "main",
           "lift": "Squat",
           "set_no": 1,
@@ -1704,7 +1704,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "main",
           "lift": "Squat",
           "set_no": 2,
@@ -1712,7 +1712,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "main",
           "lift": "Squat",
           "set_no": 3,
@@ -1720,7 +1720,7 @@
           "planned_weight_kg": 92.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 1,
@@ -1728,7 +1728,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 2,
@@ -1736,7 +1736,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 3,
@@ -1744,7 +1744,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 4,
@@ -1752,7 +1752,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 5,
@@ -1760,7 +1760,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 6,
@@ -1768,7 +1768,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 7,
@@ -1776,7 +1776,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 8,
@@ -1784,7 +1784,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 9,
@@ -1792,7 +1792,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 10,
@@ -1800,9 +1800,9 @@
           "planned_weight_kg": 67.5
         }
       ],
-      "2026-02-24": [
+      "2026-02-25": [
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "main",
           "lift": "Press",
           "set_no": 1,
@@ -1810,7 +1810,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "main",
           "lift": "Press",
           "set_no": 2,
@@ -1818,7 +1818,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "main",
           "lift": "Press",
           "set_no": 3,
@@ -1826,7 +1826,7 @@
           "planned_weight_kg": 50
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 1,
@@ -1834,7 +1834,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 2,
@@ -1842,7 +1842,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 3,
@@ -1850,7 +1850,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 4,
@@ -1858,7 +1858,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 5,
@@ -1866,7 +1866,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 6,
@@ -1874,7 +1874,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 7,
@@ -1882,7 +1882,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 8,
@@ -1890,7 +1890,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 9,
@@ -1898,7 +1898,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 10,
@@ -1906,9 +1906,9 @@
           "planned_weight_kg": 95
         }
       ],
-      "2026-02-26": [
+      "2026-02-27": [
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "main",
           "lift": "Bench",
           "set_no": 1,
@@ -1916,7 +1916,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "main",
           "lift": "Bench",
           "set_no": 2,
@@ -1924,7 +1924,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "main",
           "lift": "Bench",
           "set_no": 3,
@@ -1932,7 +1932,7 @@
           "planned_weight_kg": 77.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 1,
@@ -1940,7 +1940,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 2,
@@ -1948,7 +1948,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 3,
@@ -1956,7 +1956,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 4,
@@ -1964,7 +1964,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 5,
@@ -1972,7 +1972,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 6,
@@ -1980,7 +1980,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 7,
@@ -1988,7 +1988,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 8,
@@ -1996,7 +1996,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 9,
@@ -2004,7 +2004,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 10,
@@ -2012,9 +2012,9 @@
           "planned_weight_kg": 82.5
         }
       ],
-      "2026-02-27": [
+      "2026-02-28": [
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "main",
           "lift": "Deadlift",
           "set_no": 1,
@@ -2022,7 +2022,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "main",
           "lift": "Deadlift",
           "set_no": 2,
@@ -2030,7 +2030,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "main",
           "lift": "Deadlift",
           "set_no": 3,
@@ -2038,7 +2038,7 @@
           "planned_weight_kg": 107.5
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 1,
@@ -2046,7 +2046,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 2,
@@ -2054,7 +2054,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 3,
@@ -2062,7 +2062,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 4,
@@ -2070,7 +2070,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 5,
@@ -2078,7 +2078,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 6,
@@ -2086,7 +2086,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 7,
@@ -2094,7 +2094,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 8,
@@ -2102,7 +2102,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 9,
@@ -2110,7 +2110,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 10,
@@ -4273,19 +4273,19 @@
       "2026-02-23": [
         {
           "session_date": "2026-02-23",
-          "session_type": "Z2",
-          "duration_min": 30,
+          "session_type": null,
+          "duration_min": null,
           "warmup_min": null,
           "cooldown_min": null,
           "vo2_intervals_min": null,
           "vo2_intervals_max": null,
           "vo2_work_min": null,
           "vo2_easy_min": null,
-          "speed_low_kmh": 6,
-          "speed_high_kmh": 7.5,
-          "target_hr_min": 110,
-          "target_hr_max": 125,
-          "notes": "Lift AM / 30 min steady treadmill Z2"
+          "speed_low_kmh": null,
+          "speed_high_kmh": null,
+          "target_hr_min": null,
+          "target_hr_max": null,
+          "notes": null
         }
       ],
       "2026-02-24": [
@@ -4309,24 +4309,6 @@
       "2026-02-25": [
         {
           "session_date": "2026-02-25",
-          "session_type": "Z2_VO2_4x4",
-          "duration_min": 40,
-          "warmup_min": 10,
-          "cooldown_min": 5,
-          "vo2_intervals_min": 4,
-          "vo2_intervals_max": 4,
-          "vo2_work_min": 4,
-          "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
-          "target_hr_min": 160,
-          "target_hr_max": 170,
-          "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
-        }
-      ],
-      "2026-02-26": [
-        {
-          "session_date": "2026-02-26",
           "session_type": "Z2",
           "duration_min": 30,
           "warmup_min": null,
@@ -4340,6 +4322,24 @@
           "target_hr_min": 110,
           "target_hr_max": 125,
           "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
+      ],
+      "2026-02-26": [
+        {
+          "session_date": "2026-02-26",
+          "session_type": "Z2_VO2_4x4",
+          "duration_min": 40,
+          "warmup_min": 10,
+          "cooldown_min": 5,
+          "vo2_intervals_min": 4,
+          "vo2_intervals_max": 4,
+          "vo2_work_min": 4,
+          "vo2_easy_min": 3,
+          "speed_low_kmh": 10.5,
+          "speed_high_kmh": 11.5,
+          "target_hr_min": 160,
+          "target_hr_max": 170,
+          "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
         }
       ],
       "2026-02-27": [
@@ -4363,6 +4363,24 @@
       "2026-02-28": [
         {
           "session_date": "2026-02-28",
+          "session_type": "Z2",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": 6,
+          "speed_high_kmh": 7.5,
+          "target_hr_min": 110,
+          "target_hr_max": 125,
+          "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
+      ],
+      "2026-03-01": [
+        {
+          "session_date": "2026-03-01",
           "session_type": "Z2_VO2_1min",
           "duration_min": 35,
           "warmup_min": 10,
@@ -4376,24 +4394,6 @@
           "target_hr_min": 165,
           "target_hr_max": 175,
           "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
-        }
-      ],
-      "2026-03-01": [
-        {
-          "session_date": "2026-03-01",
-          "session_type": "OFF",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": null,
-          "speed_high_kmh": null,
-          "target_hr_min": null,
-          "target_hr_max": 110,
-          "notes": "Off or very easy walk 20-30 min <110 bpm"
         }
       ],
       "2026-03-02": [
@@ -7155,6 +7155,18 @@
       "2026-02-23": [
         {
           "session_date": "2026-02-23",
+          "template_code": null,
+          "item_no": null,
+          "exercise": null,
+          "sets_text": null,
+          "reps_or_time": null,
+          "tempo": null,
+          "rest_text": null
+        }
+      ],
+      "2026-02-24": [
+        {
+          "session_date": "2026-02-24",
           "template_code": "A",
           "item_no": 1,
           "exercise": "RTO Support Hold",
@@ -7164,7 +7176,7 @@
           "rest_text": "60-90s"
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "template_code": "A",
           "item_no": 2,
           "exercise": "Ring Rows (feet up)",
@@ -7174,7 +7186,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "template_code": "A",
           "item_no": 3,
           "exercise": "Ring Face Pulls",
@@ -7184,7 +7196,7 @@
           "rest_text": "90s"
         },
         {
-          "session_date": "2026-02-23",
+          "session_date": "2026-02-24",
           "template_code": "A",
           "item_no": 4,
           "exercise": "Ring Plank",
@@ -7194,9 +7206,9 @@
           "rest_text": "60s"
         }
       ],
-      "2026-02-24": [
+      "2026-02-25": [
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "template_code": "B",
           "item_no": 1,
           "exercise": "RTO Support Shrugs",
@@ -7206,7 +7218,7 @@
           "rest_text": "90s"
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "template_code": "B",
           "item_no": 2,
           "exercise": "Ring Push-Ups (RTO)",
@@ -7216,7 +7228,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "template_code": "B",
           "item_no": 3,
           "exercise": "Assisted Ring Dips",
@@ -7226,7 +7238,7 @@
           "rest_text": "150s"
         },
         {
-          "session_date": "2026-02-24",
+          "session_date": "2026-02-25",
           "template_code": "B",
           "item_no": 4,
           "exercise": "Hollow Hold",
@@ -7236,9 +7248,9 @@
           "rest_text": "60s"
         }
       ],
-      "2026-02-25": [
+      "2026-02-26": [
         {
-          "session_date": "2026-02-25",
+          "session_date": "2026-02-26",
           "template_code": null,
           "item_no": null,
           "exercise": null,
@@ -7248,9 +7260,9 @@
           "rest_text": null
         }
       ],
-      "2026-02-26": [
+      "2026-02-27": [
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "template_code": "C",
           "item_no": 1,
           "exercise": "Feet-Assisted Pull-Ups",
@@ -7260,7 +7272,7 @@
           "rest_text": "150s"
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "template_code": "C",
           "item_no": 2,
           "exercise": "High Ring Rows",
@@ -7270,7 +7282,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "template_code": "C",
           "item_no": 3,
           "exercise": "False Grip Hold (feet)",
@@ -7280,7 +7292,7 @@
           "rest_text": "60s"
         },
         {
-          "session_date": "2026-02-26",
+          "session_date": "2026-02-27",
           "template_code": "C",
           "item_no": 4,
           "exercise": "Ring Body Saw",
@@ -7290,9 +7302,9 @@
           "rest_text": "60s"
         }
       ],
-      "2026-02-27": [
+      "2026-02-28": [
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "template_code": "D",
           "item_no": 1,
           "exercise": "Single-Ring Support",
@@ -7302,7 +7314,7 @@
           "rest_text": "60s"
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "template_code": "D",
           "item_no": 2,
           "exercise": "Archer Ring Rows",
@@ -7312,7 +7324,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "template_code": "D",
           "item_no": 3,
           "exercise": "Dip Iso (bottom)",
@@ -7322,7 +7334,7 @@
           "rest_text": "90s"
         },
         {
-          "session_date": "2026-02-27",
+          "session_date": "2026-02-28",
           "template_code": "D",
           "item_no": 4,
           "exercise": "Knee->Pike Tucks",
@@ -7330,18 +7342,6 @@
           "reps_or_time": "6-10",
           "tempo": null,
           "rest_text": "60s"
-        }
-      ],
-      "2026-02-28": [
-        {
-          "session_date": "2026-02-28",
-          "template_code": null,
-          "item_no": null,
-          "exercise": null,
-          "sets_text": null,
-          "reps_or_time": null,
-          "tempo": null,
-          "rest_text": null
         }
       ],
       "2026-03-01": [
