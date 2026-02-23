@@ -96,10 +96,23 @@ SELECT
   CASE WHEN cs.id IS NOT NULL THEN 1 ELSE 0 END AS cardio_done,
   CASE WHEN rs.id IS NOT NULL THEN 1 ELSE 0 END AS rings_done
 FROM days d
-LEFT JOIN training_days td ON td.weekday = d.weekday
+LEFT JOIN schedule_overrides so ON so.session_date = d.session_date
+LEFT JOIN training_days td ON td.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE d.weekday
+END
 LEFT JOIN lifts l ON l.id = td.main_lift_id
-LEFT JOIN cardio_plan_days cpd ON cpd.weekday = d.weekday
-LEFT JOIN rings_plan_days rpd ON rpd.weekday = d.weekday
+LEFT JOIN cardio_plan_days cpd ON cpd.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE d.weekday
+END
+LEFT JOIN rings_plan_days rpd ON rpd.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE d.weekday
+END
 LEFT JOIN barbell_sessions bs ON bs.session_date = d.session_date
 LEFT JOIN cardio_sessions cs ON cs.session_date = d.session_date
 LEFT JOIN rings_sessions rs ON rs.session_date = d.session_date
@@ -143,16 +156,29 @@ SELECT
   cpd.session_type AS planned_cardio,
   rpd.template_code AS planned_rings
 FROM base b
+LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
 LEFT JOIN barbell_sessions bs ON bs.session_date = b.session_date
 LEFT JOIN training_days td_done ON td_done.id = bs.day_id
 LEFT JOIN lifts l ON l.id = td_done.main_lift_id
 LEFT JOIN cardio_sessions cs ON cs.session_date = b.session_date
 LEFT JOIN rings_sessions rs ON rs.session_date = b.session_date
-LEFT JOIN training_days td ON td.weekday = b.weekday
+LEFT JOIN training_days td ON td.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE b.weekday
+END
 LEFT JOIN lifts pl_main ON pl_main.id = td.main_lift_id
 LEFT JOIN lifts pl_supp ON pl_supp.id = td.supplemental_lift_id
-LEFT JOIN cardio_plan_days cpd ON cpd.weekday = b.weekday
-LEFT JOIN rings_plan_days rpd ON rpd.weekday = b.weekday
+LEFT JOIN cardio_plan_days cpd ON cpd.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE b.weekday
+END
+LEFT JOIN rings_plan_days rpd ON rpd.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE b.weekday
+END
 ORDER BY b.session_date
 `);
 
@@ -207,16 +233,49 @@ ORDER BY rs.session_date, rl.item_no
 `);
 
 const plannedBarbellRows = sqlJson(`
+WITH RECURSIVE dates(day) AS (
+  SELECT date('now','localtime','-90 day')
+  UNION ALL
+  SELECT date(day, '+1 day') FROM dates
+  WHERE day < date('now','localtime','+14 day')
+),
+base AS (
+  SELECT
+    day AS session_date,
+    ((CAST(strftime('%w', day) AS INTEGER) + 6) % 7) + 1 AS weekday,
+    date(day, '-' || (((CAST(strftime('%w', day) AS INTEGER) + 6) % 7)) || ' day') AS week_start
+  FROM dates
+),
+map AS (
+  SELECT
+    b.session_date,
+    CASE
+      WHEN COALESCE(so.force_off,0)=1 THEN NULL
+      WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+      ELSE b.weekday
+    END AS plan_weekday,
+    b.week_start
+  FROM base b
+  LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
+),
+source_dates AS (
+  SELECT
+    m.session_date,
+    CASE WHEN m.plan_weekday IS NULL THEN NULL
+         ELSE date(m.week_start, '+' || (m.plan_weekday - 1) || ' day') END AS source_session_date
+  FROM map m
+)
 SELECT
-  session_date,
-  category,
-  lift,
-  set_no,
-  prescribed_reps,
-  planned_weight_kg
-FROM v_planned_barbell_sets
-WHERE session_date >= date('now','localtime','-90 day')
-ORDER BY session_date, category, set_no
+  sd.session_date,
+  p.category,
+  p.lift,
+  p.set_no,
+  p.prescribed_reps,
+  p.planned_weight_kg
+FROM source_dates sd
+LEFT JOIN v_planned_barbell_sets p ON p.session_date = sd.source_session_date
+WHERE p.session_date IS NOT NULL
+ORDER BY sd.session_date, p.category, p.set_no
 `);
 
 const plannedCardioRows = sqlJson(`
@@ -248,7 +307,12 @@ SELECT
   cpd.target_hr_max,
   cpd.notes
 FROM base b
-LEFT JOIN cardio_plan_days cpd ON cpd.weekday = b.weekday
+LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
+LEFT JOIN cardio_plan_days cpd ON cpd.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE b.weekday
+END
 ORDER BY b.session_date
 `);
 
@@ -275,7 +339,12 @@ SELECT
   rti.tempo,
   rti.rest_text
 FROM base b
-LEFT JOIN rings_plan_days rpd ON rpd.weekday = b.weekday
+LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
+LEFT JOIN rings_plan_days rpd ON rpd.weekday = CASE
+  WHEN COALESCE(so.force_off,0)=1 THEN NULL
+  WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
+  ELSE b.weekday
+END
 LEFT JOIN rings_templates rt ON rt.code = rpd.template_code
 LEFT JOIN rings_template_items rti ON rti.template_id = rt.id
 ORDER BY b.session_date, rti.item_no

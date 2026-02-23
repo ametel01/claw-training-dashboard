@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-22T03:48:16.207Z",
+  "generatedAt": "2026-02-23T06:44:23.097Z",
   "totals": {
     "barbell_sessions": 4,
     "cardio_sessions": 5,
@@ -13,10 +13,10 @@
       "weekday": 1,
       "day_name": "Monday",
       "session_date": "2026-02-16",
-      "main_lift": "Squat",
-      "supplemental_sets": 10,
-      "cardio_plan": "Z2",
-      "rings_plan": "A",
+      "main_lift": null,
+      "supplemental_sets": null,
+      "cardio_plan": null,
+      "rings_plan": null,
       "barbell_done": 1,
       "cardio_done": 0,
       "rings_done": 0
@@ -25,10 +25,10 @@
       "weekday": 2,
       "day_name": "Tuesday",
       "session_date": "2026-02-17",
-      "main_lift": "Press",
+      "main_lift": "Squat",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
-      "rings_plan": "B",
+      "rings_plan": "A",
       "barbell_done": 1,
       "cardio_done": 1,
       "rings_done": 1
@@ -37,10 +37,10 @@
       "weekday": 3,
       "day_name": "Wednesday",
       "session_date": "2026-02-18",
-      "main_lift": null,
-      "supplemental_sets": null,
-      "cardio_plan": "Z2_VO2_4x4",
-      "rings_plan": null,
+      "main_lift": "Press",
+      "supplemental_sets": 10,
+      "cardio_plan": "Z2",
+      "rings_plan": "B",
       "barbell_done": 0,
       "cardio_done": 0,
       "rings_done": 1
@@ -49,6 +49,18 @@
       "weekday": 4,
       "day_name": "Thursday",
       "session_date": "2026-02-19",
+      "main_lift": null,
+      "supplemental_sets": null,
+      "cardio_plan": "Z2_VO2_4x4",
+      "rings_plan": null,
+      "barbell_done": 1,
+      "cardio_done": 1,
+      "rings_done": 1
+    },
+    {
+      "weekday": 5,
+      "day_name": "Friday",
+      "session_date": "2026-02-20",
       "main_lift": "Bench",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
@@ -58,25 +70,13 @@
       "rings_done": 1
     },
     {
-      "weekday": 5,
-      "day_name": "Friday",
-      "session_date": "2026-02-20",
+      "weekday": 6,
+      "day_name": "Saturday",
+      "session_date": "2026-02-21",
       "main_lift": "Deadlift",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
       "rings_plan": "D",
-      "barbell_done": 1,
-      "cardio_done": 1,
-      "rings_done": 1
-    },
-    {
-      "weekday": 6,
-      "day_name": "Saturday",
-      "session_date": "2026-02-21",
-      "main_lift": null,
-      "supplemental_sets": null,
-      "cardio_plan": "Z2_VO2_1min",
-      "rings_plan": null,
       "barbell_done": 0,
       "cardio_done": 1,
       "rings_done": 0
@@ -87,7 +87,7 @@
       "session_date": "2026-02-22",
       "main_lift": null,
       "supplemental_sets": null,
-      "cardio_plan": "OFF",
+      "cardio_plan": "Z2_VO2_1min",
       "rings_plan": null,
       "barbell_done": 0,
       "cardio_done": 0,
@@ -328,12 +328,12 @@
       "barbell_lift": "Squat",
       "cardio_protocol": null,
       "rings_template": null,
-      "planned_barbell_main": "Squat",
-      "planned_barbell_supp": "Bench",
-      "planned_supp_sets": 10,
-      "planned_supp_reps": 5,
-      "planned_cardio": "Z2",
-      "planned_rings": "A"
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": null,
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-17",
@@ -343,12 +343,12 @@
       "barbell_lift": "Press",
       "cardio_protocol": "Z2",
       "rings_template": "A",
-      "planned_barbell_main": "Press",
-      "planned_barbell_supp": "Deadlift",
+      "planned_barbell_main": "Squat",
+      "planned_barbell_supp": "Bench",
       "planned_supp_sets": 10,
       "planned_supp_reps": 5,
       "planned_cardio": "Z2",
-      "planned_rings": "B"
+      "planned_rings": "A"
     },
     {
       "session_date": "2026-02-18",
@@ -358,12 +358,12 @@
       "barbell_lift": null,
       "cardio_protocol": null,
       "rings_template": "B",
-      "planned_barbell_main": null,
-      "planned_barbell_supp": null,
-      "planned_supp_sets": null,
-      "planned_supp_reps": null,
-      "planned_cardio": "Z2_VO2_4x4",
-      "planned_rings": null
+      "planned_barbell_main": "Press",
+      "planned_barbell_supp": "Deadlift",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "B"
     },
     {
       "session_date": "2026-02-19",
@@ -373,12 +373,12 @@
       "barbell_lift": "Bench",
       "cardio_protocol": "VO2_4x4",
       "rings_template": "C",
-      "planned_barbell_main": "Bench",
-      "planned_barbell_supp": "Squat",
-      "planned_supp_sets": 10,
-      "planned_supp_reps": 5,
-      "planned_cardio": "Z2",
-      "planned_rings": "C"
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "Z2_VO2_4x4",
+      "planned_rings": null
     },
     {
       "session_date": "2026-02-20",
@@ -388,12 +388,12 @@
       "barbell_lift": "Deadlift",
       "cardio_protocol": "Z2",
       "rings_template": "D",
-      "planned_barbell_main": "Deadlift",
-      "planned_barbell_supp": "Press",
+      "planned_barbell_main": "Bench",
+      "planned_barbell_supp": "Squat",
       "planned_supp_sets": 10,
       "planned_supp_reps": 5,
       "planned_cardio": "Z2",
-      "planned_rings": "D"
+      "planned_rings": "C"
     },
     {
       "session_date": "2026-02-21",
@@ -403,12 +403,12 @@
       "barbell_lift": null,
       "cardio_protocol": "VO2_1min",
       "rings_template": null,
-      "planned_barbell_main": null,
-      "planned_barbell_supp": null,
-      "planned_supp_sets": null,
-      "planned_supp_reps": null,
-      "planned_cardio": "Z2_VO2_1min",
-      "planned_rings": null
+      "planned_barbell_main": "Deadlift",
+      "planned_barbell_supp": "Press",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "D"
     }
   ],
   "est1RM": [
@@ -1270,9 +1270,9 @@
       ]
     },
     "plannedBarbellByDate": {
-      "2026-02-16": [
+      "2026-02-17": [
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "main",
           "lift": "Squat",
           "set_no": 1,
@@ -1280,7 +1280,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "main",
           "lift": "Squat",
           "set_no": 2,
@@ -1288,7 +1288,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "main",
           "lift": "Squat",
           "set_no": 3,
@@ -1296,7 +1296,7 @@
           "planned_weight_kg": 92.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 1,
@@ -1304,7 +1304,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 2,
@@ -1312,7 +1312,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 3,
@@ -1320,7 +1320,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 4,
@@ -1328,7 +1328,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 5,
@@ -1336,7 +1336,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 6,
@@ -1344,7 +1344,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 7,
@@ -1352,7 +1352,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 8,
@@ -1360,7 +1360,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 9,
@@ -1368,7 +1368,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "category": "supplemental",
           "lift": "Bench",
           "set_no": 10,
@@ -1376,9 +1376,9 @@
           "planned_weight_kg": 57.5
         }
       ],
-      "2026-02-17": [
+      "2026-02-18": [
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "main",
           "lift": "Press",
           "set_no": 1,
@@ -1386,7 +1386,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "main",
           "lift": "Press",
           "set_no": 2,
@@ -1394,7 +1394,7 @@
           "planned_weight_kg": 45
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "main",
           "lift": "Press",
           "set_no": 3,
@@ -1402,7 +1402,7 @@
           "planned_weight_kg": 50
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 1,
@@ -1410,7 +1410,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 2,
@@ -1418,7 +1418,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 3,
@@ -1426,7 +1426,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 4,
@@ -1434,7 +1434,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 5,
@@ -1442,7 +1442,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 6,
@@ -1450,7 +1450,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 7,
@@ -1458,7 +1458,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 8,
@@ -1466,7 +1466,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 9,
@@ -1474,7 +1474,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "category": "supplemental",
           "lift": "Deadlift",
           "set_no": 10,
@@ -1482,9 +1482,9 @@
           "planned_weight_kg": 82.5
         }
       ],
-      "2026-02-19": [
+      "2026-02-20": [
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "main",
           "lift": "Bench",
           "set_no": 1,
@@ -1492,7 +1492,7 @@
           "planned_weight_kg": 57.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "main",
           "lift": "Bench",
           "set_no": 2,
@@ -1500,7 +1500,7 @@
           "planned_weight_kg": 67.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "main",
           "lift": "Bench",
           "set_no": 3,
@@ -1508,7 +1508,7 @@
           "planned_weight_kg": 77.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 1,
@@ -1516,7 +1516,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 2,
@@ -1524,7 +1524,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 3,
@@ -1532,7 +1532,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 4,
@@ -1540,7 +1540,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 5,
@@ -1548,7 +1548,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 6,
@@ -1556,7 +1556,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 7,
@@ -1564,7 +1564,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 8,
@@ -1572,7 +1572,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 9,
@@ -1580,7 +1580,7 @@
           "planned_weight_kg": 72.5
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "category": "supplemental",
           "lift": "Squat",
           "set_no": 10,
@@ -1588,9 +1588,9 @@
           "planned_weight_kg": 72.5
         }
       ],
-      "2026-02-20": [
+      "2026-02-21": [
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "main",
           "lift": "Deadlift",
           "set_no": 1,
@@ -1598,7 +1598,7 @@
           "planned_weight_kg": 82.5
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "main",
           "lift": "Deadlift",
           "set_no": 2,
@@ -1606,7 +1606,7 @@
           "planned_weight_kg": 95
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "main",
           "lift": "Deadlift",
           "set_no": 3,
@@ -1614,7 +1614,7 @@
           "planned_weight_kg": 107.5
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 1,
@@ -1622,7 +1622,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 2,
@@ -1630,7 +1630,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 3,
@@ -1638,7 +1638,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 4,
@@ -1646,7 +1646,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 5,
@@ -1654,7 +1654,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 6,
@@ -1662,7 +1662,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 7,
@@ -1670,7 +1670,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 8,
@@ -1678,7 +1678,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 9,
@@ -1686,7 +1686,7 @@
           "planned_weight_kg": 40
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "category": "supplemental",
           "lift": "Press",
           "set_no": 10,
@@ -2647,2465 +2647,9 @@
           "prescribed_reps": 5,
           "planned_weight_kg": 57.5
         }
-      ],
-      "2026-03-10": [
-        {
-          "session_date": "2026-03-10",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-10",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        }
-      ],
-      "2026-03-12": [
-        {
-          "session_date": "2026-03-12",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-12",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        }
-      ],
-      "2026-03-13": [
-        {
-          "session_date": "2026-03-13",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-13",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        }
-      ],
-      "2026-03-16": [
-        {
-          "session_date": "2026-03-16",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-16",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        }
-      ],
-      "2026-03-17": [
-        {
-          "session_date": "2026-03-17",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-17",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        }
-      ],
-      "2026-03-19": [
-        {
-          "session_date": "2026-03-19",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-19",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        }
-      ],
-      "2026-03-20": [
-        {
-          "session_date": "2026-03-20",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-20",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        }
-      ],
-      "2026-03-23": [
-        {
-          "session_date": "2026-03-23",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-23",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        }
-      ],
-      "2026-03-24": [
-        {
-          "session_date": "2026-03-24",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-24",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        }
-      ],
-      "2026-03-26": [
-        {
-          "session_date": "2026-03-26",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-26",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        }
-      ],
-      "2026-03-27": [
-        {
-          "session_date": "2026-03-27",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-27",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        }
-      ],
-      "2026-03-30": [
-        {
-          "session_date": "2026-03-30",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-03-30",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        }
-      ],
-      "2026-03-31": [
-        {
-          "session_date": "2026-03-31",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-03-31",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        }
-      ],
-      "2026-04-02": [
-        {
-          "session_date": "2026-04-02",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-02",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        }
-      ],
-      "2026-04-03": [
-        {
-          "session_date": "2026-04-03",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-03",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        }
-      ],
-      "2026-04-06": [
-        {
-          "session_date": "2026-04-06",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-06",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        }
-      ],
-      "2026-04-07": [
-        {
-          "session_date": "2026-04-07",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-07",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        }
-      ],
-      "2026-04-09": [
-        {
-          "session_date": "2026-04-09",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-09",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        }
-      ],
-      "2026-04-10": [
-        {
-          "session_date": "2026-04-10",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-10",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        }
-      ],
-      "2026-04-13": [
-        {
-          "session_date": "2026-04-13",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "main",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 92.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-13",
-          "category": "supplemental",
-          "lift": "Bench",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        }
-      ],
-      "2026-04-14": [
-        {
-          "session_date": "2026-04-14",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 45
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "main",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 50
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-14",
-          "category": "supplemental",
-          "lift": "Deadlift",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        }
-      ],
-      "2026-04-16": [
-        {
-          "session_date": "2026-04-16",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 57.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 67.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "main",
-          "lift": "Bench",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 77.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        },
-        {
-          "session_date": "2026-04-16",
-          "category": "supplemental",
-          "lift": "Squat",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 72.5
-        }
-      ],
-      "2026-04-17": [
-        {
-          "session_date": "2026-04-17",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 82.5
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 95
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "main",
-          "lift": "Deadlift",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 107.5
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 1,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 2,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 3,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 4,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 5,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 6,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 7,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 8,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 9,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        },
-        {
-          "session_date": "2026-04-17",
-          "category": "supplemental",
-          "lift": "Press",
-          "set_no": 10,
-          "prescribed_reps": 5,
-          "planned_weight_kg": 40
-        }
       ]
     },
     "plannedCardioByDate": {
-      "2025-11-24": [
-        {
-          "session_date": "2025-11-24",
-          "session_type": "Z2",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": 6,
-          "speed_high_kmh": 7.5,
-          "target_hr_min": 110,
-          "target_hr_max": 125,
-          "notes": "Lift AM / 30 min steady treadmill Z2"
-        }
-      ],
       "2025-11-25": [
         {
           "session_date": "2025-11-25",
@@ -6603,19 +4147,19 @@
       "2026-02-16": [
         {
           "session_date": "2026-02-16",
-          "session_type": "Z2",
-          "duration_min": 30,
+          "session_type": null,
+          "duration_min": null,
           "warmup_min": null,
           "cooldown_min": null,
           "vo2_intervals_min": null,
           "vo2_intervals_max": null,
           "vo2_work_min": null,
           "vo2_easy_min": null,
-          "speed_low_kmh": 6,
-          "speed_high_kmh": 7.5,
-          "target_hr_min": 110,
-          "target_hr_max": 125,
-          "notes": "Lift AM / 30 min steady treadmill Z2"
+          "speed_low_kmh": null,
+          "speed_high_kmh": null,
+          "target_hr_min": null,
+          "target_hr_max": null,
+          "notes": null
         }
       ],
       "2026-02-17": [
@@ -6639,24 +4183,6 @@
       "2026-02-18": [
         {
           "session_date": "2026-02-18",
-          "session_type": "Z2_VO2_4x4",
-          "duration_min": 40,
-          "warmup_min": 10,
-          "cooldown_min": 5,
-          "vo2_intervals_min": 4,
-          "vo2_intervals_max": 4,
-          "vo2_work_min": 4,
-          "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
-          "target_hr_min": 160,
-          "target_hr_max": 170,
-          "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
-        }
-      ],
-      "2026-02-19": [
-        {
-          "session_date": "2026-02-19",
           "session_type": "Z2",
           "duration_min": 30,
           "warmup_min": null,
@@ -6670,6 +4196,24 @@
           "target_hr_min": 110,
           "target_hr_max": 125,
           "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
+      ],
+      "2026-02-19": [
+        {
+          "session_date": "2026-02-19",
+          "session_type": "Z2_VO2_4x4",
+          "duration_min": 40,
+          "warmup_min": 10,
+          "cooldown_min": 5,
+          "vo2_intervals_min": 4,
+          "vo2_intervals_max": 4,
+          "vo2_work_min": 4,
+          "vo2_easy_min": 3,
+          "speed_low_kmh": 10.5,
+          "speed_high_kmh": 11.5,
+          "target_hr_min": 160,
+          "target_hr_max": 170,
+          "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
         }
       ],
       "2026-02-20": [
@@ -6693,6 +4237,24 @@
       "2026-02-21": [
         {
           "session_date": "2026-02-21",
+          "session_type": "Z2",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": 6,
+          "speed_high_kmh": 7.5,
+          "target_hr_min": 110,
+          "target_hr_max": 125,
+          "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
+      ],
+      "2026-02-22": [
+        {
+          "session_date": "2026-02-22",
           "session_type": "Z2_VO2_1min",
           "duration_min": 35,
           "warmup_min": 10,
@@ -6706,24 +4268,6 @@
           "target_hr_min": 165,
           "target_hr_max": 175,
           "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
-        }
-      ],
-      "2026-02-22": [
-        {
-          "session_date": "2026-02-22",
-          "session_type": "OFF",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": null,
-          "speed_high_kmh": null,
-          "target_hr_min": null,
-          "target_hr_max": 110,
-          "notes": "Off or very easy walk 20-30 min <110 bpm"
         }
       ],
       "2026-02-23": [
@@ -6976,52 +4520,28 @@
           "target_hr_min": null,
           "target_hr_max": 110,
           "notes": "Off or very easy walk 20-30 min <110 bpm"
+        }
+      ],
+      "2026-03-09": [
+        {
+          "session_date": "2026-03-09",
+          "session_type": "Z2",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": 6,
+          "speed_high_kmh": 7.5,
+          "target_hr_min": 110,
+          "target_hr_max": 125,
+          "notes": "Lift AM / 30 min steady treadmill Z2"
         }
       ]
     },
     "plannedRingsByDate": {
-      "2025-11-24": [
-        {
-          "session_date": "2025-11-24",
-          "template_code": "A",
-          "item_no": 1,
-          "exercise": "RTO Support Hold",
-          "sets_text": "5",
-          "reps_or_time": "20-30s",
-          "tempo": null,
-          "rest_text": "60-90s"
-        },
-        {
-          "session_date": "2025-11-24",
-          "template_code": "A",
-          "item_no": 2,
-          "exercise": "Ring Rows (feet up)",
-          "sets_text": "5",
-          "reps_or_time": "4-6",
-          "tempo": "31X1",
-          "rest_text": "120s"
-        },
-        {
-          "session_date": "2025-11-24",
-          "template_code": "A",
-          "item_no": 3,
-          "exercise": "Ring Face Pulls",
-          "sets_text": "4",
-          "reps_or_time": "6-8",
-          "tempo": "3011",
-          "rest_text": "90s"
-        },
-        {
-          "session_date": "2025-11-24",
-          "template_code": "A",
-          "item_no": 4,
-          "exercise": "Ring Plank",
-          "sets_text": "3",
-          "reps_or_time": "30-45s",
-          "tempo": null,
-          "rest_text": "60s"
-        }
-      ],
       "2025-11-25": [
         {
           "session_date": "2025-11-25",
@@ -9431,6 +6951,18 @@
       "2026-02-16": [
         {
           "session_date": "2026-02-16",
+          "template_code": null,
+          "item_no": null,
+          "exercise": null,
+          "sets_text": null,
+          "reps_or_time": null,
+          "tempo": null,
+          "rest_text": null
+        }
+      ],
+      "2026-02-17": [
+        {
+          "session_date": "2026-02-17",
           "template_code": "A",
           "item_no": 1,
           "exercise": "RTO Support Hold",
@@ -9440,7 +6972,7 @@
           "rest_text": "60-90s"
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "template_code": "A",
           "item_no": 2,
           "exercise": "Ring Rows (feet up)",
@@ -9450,7 +6982,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "template_code": "A",
           "item_no": 3,
           "exercise": "Ring Face Pulls",
@@ -9460,7 +6992,7 @@
           "rest_text": "90s"
         },
         {
-          "session_date": "2026-02-16",
+          "session_date": "2026-02-17",
           "template_code": "A",
           "item_no": 4,
           "exercise": "Ring Plank",
@@ -9470,9 +7002,9 @@
           "rest_text": "60s"
         }
       ],
-      "2026-02-17": [
+      "2026-02-18": [
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "template_code": "B",
           "item_no": 1,
           "exercise": "RTO Support Shrugs",
@@ -9482,7 +7014,7 @@
           "rest_text": "90s"
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "template_code": "B",
           "item_no": 2,
           "exercise": "Ring Push-Ups (RTO)",
@@ -9492,7 +7024,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "template_code": "B",
           "item_no": 3,
           "exercise": "Assisted Ring Dips",
@@ -9502,7 +7034,7 @@
           "rest_text": "150s"
         },
         {
-          "session_date": "2026-02-17",
+          "session_date": "2026-02-18",
           "template_code": "B",
           "item_no": 4,
           "exercise": "Hollow Hold",
@@ -9512,9 +7044,9 @@
           "rest_text": "60s"
         }
       ],
-      "2026-02-18": [
+      "2026-02-19": [
         {
-          "session_date": "2026-02-18",
+          "session_date": "2026-02-19",
           "template_code": null,
           "item_no": null,
           "exercise": null,
@@ -9524,9 +7056,9 @@
           "rest_text": null
         }
       ],
-      "2026-02-19": [
+      "2026-02-20": [
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "template_code": "C",
           "item_no": 1,
           "exercise": "Feet-Assisted Pull-Ups",
@@ -9536,7 +7068,7 @@
           "rest_text": "150s"
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "template_code": "C",
           "item_no": 2,
           "exercise": "High Ring Rows",
@@ -9546,7 +7078,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "template_code": "C",
           "item_no": 3,
           "exercise": "False Grip Hold (feet)",
@@ -9556,7 +7088,7 @@
           "rest_text": "60s"
         },
         {
-          "session_date": "2026-02-19",
+          "session_date": "2026-02-20",
           "template_code": "C",
           "item_no": 4,
           "exercise": "Ring Body Saw",
@@ -9566,9 +7098,9 @@
           "rest_text": "60s"
         }
       ],
-      "2026-02-20": [
+      "2026-02-21": [
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "template_code": "D",
           "item_no": 1,
           "exercise": "Single-Ring Support",
@@ -9578,7 +7110,7 @@
           "rest_text": "60s"
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "template_code": "D",
           "item_no": 2,
           "exercise": "Archer Ring Rows",
@@ -9588,7 +7120,7 @@
           "rest_text": "120s"
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "template_code": "D",
           "item_no": 3,
           "exercise": "Dip Iso (bottom)",
@@ -9598,7 +7130,7 @@
           "rest_text": "90s"
         },
         {
-          "session_date": "2026-02-20",
+          "session_date": "2026-02-21",
           "template_code": "D",
           "item_no": 4,
           "exercise": "Knee->Pike Tucks",
@@ -9606,18 +7138,6 @@
           "reps_or_time": "6-10",
           "tempo": null,
           "rest_text": "60s"
-        }
-      ],
-      "2026-02-21": [
-        {
-          "session_date": "2026-02-21",
-          "template_code": null,
-          "item_no": null,
-          "exercise": null,
-          "sets_text": null,
-          "reps_or_time": null,
-          "tempo": null,
-          "rest_text": null
         }
       ],
       "2026-02-22": [
@@ -10038,6 +7558,48 @@
           "reps_or_time": null,
           "tempo": null,
           "rest_text": null
+        }
+      ],
+      "2026-03-09": [
+        {
+          "session_date": "2026-03-09",
+          "template_code": "A",
+          "item_no": 1,
+          "exercise": "RTO Support Hold",
+          "sets_text": "5",
+          "reps_or_time": "20-30s",
+          "tempo": null,
+          "rest_text": "60-90s"
+        },
+        {
+          "session_date": "2026-03-09",
+          "template_code": "A",
+          "item_no": 2,
+          "exercise": "Ring Rows (feet up)",
+          "sets_text": "5",
+          "reps_or_time": "4-6",
+          "tempo": "31X1",
+          "rest_text": "120s"
+        },
+        {
+          "session_date": "2026-03-09",
+          "template_code": "A",
+          "item_no": 3,
+          "exercise": "Ring Face Pulls",
+          "sets_text": "4",
+          "reps_or_time": "6-8",
+          "tempo": "3011",
+          "rest_text": "90s"
+        },
+        {
+          "session_date": "2026-03-09",
+          "template_code": "A",
+          "item_no": 4,
+          "exercise": "Ring Plank",
+          "sets_text": "3",
+          "reps_or_time": "30-45s",
+          "tempo": null,
+          "rest_text": "60s"
         }
       ]
     }
