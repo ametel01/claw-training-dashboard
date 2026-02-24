@@ -122,6 +122,36 @@ class Handler(SimpleHTTPRequestHandler):
                     sql.append("COMMIT;")
                     self._run_sql("\n".join(sql))
 
+                elif action == "supp_done":
+                    rows = body.get("plannedBarbellRows") or []
+                    supp_rows = [r for r in rows if r.get("category") == "supplemental"]
+                    if not supp_rows:
+                        self._send_json(400, {"ok": False, "error": "no planned supplemental rows"})
+                        return
+
+                    sql = ["BEGIN;"]
+                    sql.append(
+                        f"INSERT INTO barbell_sessions(session_date,weekday,week_in_block,day_id,notes) "
+                        f"VALUES('{date}', ((CAST(strftime('%w','{date}') AS INTEGER)+6)%7)+1, 1, NULL, 'Logged from dashboard supp_done') "
+                        f"ON CONFLICT(session_date) DO NOTHING;"
+                    )
+                    sql.append(
+                        f"DELETE FROM barbell_set_logs WHERE session_id=(SELECT id FROM barbell_sessions WHERE session_date='{date}') AND category='supplemental';"
+                    )
+                    for r in supp_rows:
+                        lift = str(r.get("lift", "")).replace("'", "''")
+                        set_no = int(r.get("set_no") or 0)
+                        reps = int(r.get("prescribed_reps") or 0)
+                        wt = float(r.get("planned_weight_kg") or 0)
+                        pct = float(r.get("prescribed_pct") or 0)
+                        sql.append(
+                            "INSERT INTO barbell_set_logs(session_id,lift_id,category,set_no,prescribed_pct,prescribed_reps,actual_weight_kg,actual_reps,note) "
+                            f"SELECT bs.id,l.id,'supplemental',{set_no},{pct},{reps},{wt},{reps},'Supplemental done from dashboard' "
+                            f"FROM barbell_sessions bs JOIN lifts l ON l.name='{lift}' WHERE bs.session_date='{date}';"
+                        )
+                    sql.append("COMMIT;")
+                    self._run_sql("\n".join(sql))
+
                 elif action == "supp_modified":
                     text = (body.get("suppModifiedText") or "").strip()
                     rows = body.get("plannedBarbellRows") or []
@@ -174,6 +204,28 @@ class Handler(SimpleHTTPRequestHandler):
                         "protocol=excluded.protocol,duration_min=excluded.duration_min,avg_hr=excluded.avg_hr,z2_cap_respected=excluded.z2_cap_respected,notes=excluded.notes;"
                     )
                     self._run_sql(sql)
+
+                elif action == "rings_done":
+                    sql = (
+                        "INSERT INTO rings_sessions(session_date,slot,template,completed_as_prescribed,notes) "
+                        "SELECT '" + date + "','PM',"
+                        "COALESCE((SELECT template_code FROM rings_plan_days WHERE weekday=((CAST(strftime('%w','" + date + "') AS INTEGER)+6)%7)+1),'A'),"
+                        "1,'Rings done from dashboard' "
+                        "ON CONFLICT(session_date,slot) DO UPDATE SET template=excluded.template,completed_as_prescribed=excluded.completed_as_prescribed,notes=excluded.notes;"
+                    )
+                    self._run_sql(sql)
+                    self._run_sql(
+                        "DELETE FROM rings_logs WHERE session_id=(SELECT id FROM rings_sessions WHERE session_date='" + date + "' AND slot='PM');"
+                    )
+                    self._run_sql(
+                        "INSERT INTO rings_logs(session_id,item_no,exercise,result_text,completed) "
+                        "SELECT rs.id,rti.item_no,rti.exercise,'completed as prescribed',1 "
+                        "FROM rings_sessions rs "
+                        "JOIN rings_templates rt ON rt.code=rs.template "
+                        "JOIN rings_template_items rti ON rti.template_id=rt.id "
+                        "WHERE rs.session_date='" + date + "' AND rs.slot='PM' "
+                        "ORDER BY rti.item_no;"
+                    )
                 else:
                     self._send_json(400, {"ok": False, "error": "unknown action"})
                     return

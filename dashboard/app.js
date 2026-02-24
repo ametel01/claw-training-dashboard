@@ -712,8 +712,9 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
         </div>
         <div class="status-actions">
           <button type="button" class="status-btn" onclick="window.logSessionAction('main_done')">Main done</button>
-          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_modified')">Supplemental modified</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_done')">Supplemental done</button>
           <button type="button" class="status-btn" onclick="window.logSessionAction('cardio_done')">Cardio done</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('rings_done')">Rings done</button>
         </div>
       `),
       section('Planned vs Completed (Delta)', renderPlannedVsCompleted(planned, { barbell, cardio, rings })),
