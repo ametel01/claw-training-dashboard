@@ -189,9 +189,12 @@ h2 { font-size: 18px; }
   border-radius: 8px;
   background: #0b1430;
 }
-.z2-axis { stroke: rgba(255,255,255,0.2); stroke-width: 1; }
+.z2-axis { stroke: rgba(255,255,255,0.3); stroke-width: 1; }
+.z2-grid { stroke: rgba(255,255,255,0.12); stroke-width: 1; }
 .z2-line { fill: none; stroke: #7fd2ff; stroke-width: 2; }
 .z2-graph circle { fill: #4bd28b; }
+.z2-label { fill: #9fb8ee; font-size: 8px; }
+.z2-point-label { fill: #d8e6ff; font-size: 7px; }
 .cardio-vo2-row:last-child { border-bottom: none; }
 .cardio-vo2-bar {
   height: 8px;

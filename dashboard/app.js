@@ -168,33 +168,54 @@ function renderCardioAnalytics(data = {}) {
   }
   if (recentZ2.length >= 2) {
     const w = 320;
-    const h = 110;
-    const pad = 14;
+    const h = 120;
+    const leftPad = 32;
+    const rightPad = 10;
+    const topPad = 10;
+    const bottomPad = 18;
     const hrs = recentZ2.map((p) => Number(p.avg_hr));
-    const minHr = Math.min(105, ...hrs) - 2;
-    const maxHr = Math.max(130, ...hrs) + 2;
-    const span = Math.max(1, maxHr - minHr);
+    const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5;
+    const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5;
+    const span = Math.max(5, maxHr - minHr);
+
+    const plotW = w - leftPad - rightPad;
+    const plotH = h - topPad - bottomPad;
 
     const pts = recentZ2.map((p, i) => {
-      const x = pad + (i * ((w - pad * 2) / (recentZ2.length - 1)));
-      const y = h - pad - ((Number(p.avg_hr) - minHr) / span) * (h - pad * 2);
-      return { x, y, hr: p.avg_hr, date: p.session_date };
+      const x = leftPad + (i * (plotW / (recentZ2.length - 1)));
+      const y = topPad + (1 - ((Number(p.avg_hr) - minHr) / span)) * plotH;
+      return { x, y, hr: Number(p.avg_hr), date: p.session_date };
+    });
+
+    const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => {
+      const hr = Math.round(minHr + t * span);
+      const y = topPad + (1 - t) * plotH;
+      return { hr, y };
     });
 
     const poly = pts.map((p) => `${p.x},${p.y}`).join(' ');
-    const circles = pts.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="2.8"><title>${p.date}: HR ${p.hr}</title></circle>`).join('');
+    const grid = ticks.map((t) => `<line x1="${leftPad}" y1="${t.y}" x2="${w - rightPad}" y2="${t.y}" class="z2-grid"/>`).join('');
+    const yLabels = ticks.map((t) => `<text x="${leftPad - 6}" y="${t.y + 3}" class="z2-label" text-anchor="end">${t.hr}</text>`).join('');
+    const circles = pts.map((p, idx) => {
+      const dy = idx % 2 === 0 ? -6 : 12;
+      return `<g><circle cx="${p.x}" cy="${p.y}" r="2.8"><title>${p.date}: HR ${p.hr}</title></circle><text x="${p.x}" y="${p.y + dy}" class="z2-point-label" text-anchor="middle">${p.hr}</text></g>`;
+    }).join('');
+
     const latest = pts[pts.length - 1];
     const first = pts[0];
-    const delta = (Number(latest.hr) - Number(first.hr)).toFixed(1);
+    const delta = (latest.hr - first.hr).toFixed(1);
 
     z2Graph = `
       <div class="z2-graph-wrap">
-        <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="Z2 average HR trend">
-          <line x1="${pad}" y1="${h - pad}" x2="${w - pad}" y2="${h - pad}" class="z2-axis"/>
+        <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="Z2 average HR trend with BPM scale">
+          ${grid}
+          ${yLabels}
+          <line x1="${leftPad}" y1="${h - bottomPad}" x2="${w - rightPad}" y2="${h - bottomPad}" class="z2-axis"/>
+          <line x1="${leftPad}" y1="${topPad}" x2="${leftPad}" y2="${h - bottomPad}" class="z2-axis"/>
           <polyline points="${poly}" class="z2-line"/>
           ${circles}
         </svg>
-        <div class="muted">Last ${recentZ2.length} Z2 sessions · HR trend Δ ${delta}</div>
+        <div class="muted">Last ${recentZ2.length} Z2 sessions · HR trend Δ ${delta} bpm</div>
       </div>
     `;
   }
