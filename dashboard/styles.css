@@ -413,6 +413,16 @@ h2 { font-size: 18px; }
   padding: 5px 8px;
   font-size: 12px;
 }
+.status-input {
+  width: 220px;
+  max-width: 100%;
+  background: #0b1430;
+  color: #d7e6ff;
+  border: 1px solid #35589f;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 12px;
+}
 
 .delta-grid {
   display: grid;
