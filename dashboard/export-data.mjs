@@ -89,6 +89,7 @@ SELECT
   CASE WHEN rs.id IS NOT NULL THEN 1 ELSE 0 END AS rings_done
 FROM days d
 LEFT JOIN schedule_overrides so ON so.session_date = d.session_date
+LEFT JOIN rings_schedule_overrides ro ON ro.session_date = d.session_date
 LEFT JOIN recovery_status ps ON ps.session_date = d.session_date
 LEFT JOIN training_days td ON td.weekday = CASE
   WHEN COALESCE(so.force_off,0)=1 THEN NULL
@@ -102,6 +103,8 @@ LEFT JOIN cardio_plan_days cpd ON cpd.weekday = CASE
   ELSE d.weekday
 END
 LEFT JOIN rings_plan_days rpd ON rpd.weekday = CASE
+  WHEN COALESCE(ro.force_off,0)=1 THEN NULL
+  WHEN ro.source_weekday IS NOT NULL THEN ro.source_weekday
   WHEN COALESCE(so.force_off,0)=1 THEN NULL
   WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
   ELSE d.weekday
@@ -149,6 +152,7 @@ SELECT
   rpd.template_code AS planned_rings
 FROM base b
 LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
+LEFT JOIN rings_schedule_overrides ro ON ro.session_date = b.session_date
 LEFT JOIN recovery_status ps ON ps.session_date = b.session_date
 LEFT JOIN barbell_sessions bs ON bs.session_date = b.session_date
 LEFT JOIN training_days td_done ON td_done.id = bs.day_id
@@ -168,6 +172,8 @@ LEFT JOIN cardio_plan_days cpd ON cpd.weekday = CASE
   ELSE b.weekday
 END
 LEFT JOIN rings_plan_days rpd ON rpd.weekday = CASE
+  WHEN COALESCE(ro.force_off,0)=1 THEN NULL
+  WHEN ro.source_weekday IS NOT NULL THEN ro.source_weekday
   WHEN COALESCE(so.force_off,0)=1 THEN NULL
   WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
   ELSE b.weekday
@@ -333,7 +339,10 @@ SELECT
   rti.rest_text
 FROM base b
 LEFT JOIN schedule_overrides so ON so.session_date = b.session_date
+LEFT JOIN rings_schedule_overrides ro ON ro.session_date = b.session_date
 LEFT JOIN rings_plan_days rpd ON rpd.weekday = CASE
+  WHEN COALESCE(ro.force_off,0)=1 THEN NULL
+  WHEN ro.source_weekday IS NOT NULL THEN ro.source_weekday
   WHEN COALESCE(so.force_off,0)=1 THEN NULL
   WHEN so.source_weekday IS NOT NULL THEN so.source_weekday
   ELSE b.weekday
