@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-26T09:12:44.246Z",
+  "generatedAt": "2026-02-26T09:14:55.925Z",
   "totals": {
     "barbell_sessions": 6,
     "cardio_sessions": 8,
@@ -695,7 +695,7 @@
     "z2_in_cap": 3,
     "z2_compliance_pct": 60,
     "z2_points": "[{\"session_date\":\"2026-02-15\",\"duration_min\":30,\"avg_hr\":140,\"max_hr\":140,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-17\",\"duration_min\":30,\"avg_hr\":141,\"max_hr\":141,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-20\",\"duration_min\":30,\"avg_hr\":118,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-24\",\"duration_min\":30,\"avg_hr\":115,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-25\",\"duration_min\":30,\"avg_hr\":117,\"max_hr\":null,\"z2_cap_respected\":1}]",
-    "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":154},{\"session_date\":\"2026-02-26\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":null,\"avg_hr\":160,\"max_speed_kmh\":null,\"max_hr\":160}]"
+    "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":154},{\"session_date\":\"2026-02-26\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":160.0,\"max_speed_kmh\":12.0,\"max_hr\":160}]"
   },
   "auditLog": [],
   "details": {
@@ -1622,12 +1622,12 @@
           "duration_min": 40,
           "max_hr": null,
           "notes": "Cardio done from dashboard (avg HR logged)",
-          "interval_no": null,
+          "interval_no": 1,
           "work_min": null,
           "easy_min": null,
-          "target_speed_kmh": null,
-          "achieved_hr": null,
-          "interval_note": null
+          "target_speed_kmh": 12,
+          "achieved_hr": 160,
+          "interval_note": "Backfill summary interval for VO2 trend"
         }
       ]
     },
