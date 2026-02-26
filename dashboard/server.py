@@ -186,7 +186,15 @@ class Handler(SimpleHTTPRequestHandler):
 
                 elif action == "cardio_done":
                     p = body.get("plannedCardio") or {}
-                    protocol = p.get("session_type") or "Z2"
+                    session_type = p.get("session_type") or "Z2"
+                    if session_type == "Z2_VO2_4x4":
+                        protocol = "VO2_4x4"
+                    elif session_type == "Z2_VO2_1min":
+                        protocol = "VO2_1min"
+                    elif session_type in {"Z2", "VO2_4x4", "VO2_1min"}:
+                        protocol = session_type
+                    else:
+                        protocol = "Z2"
                     duration = int(p.get("duration_min") or 30)
 
                     avg_hr_raw = body.get("avgHr")
