@@ -545,9 +545,9 @@ vo2 AS (
     cs.session_date,
     cs.protocol,
     ROUND(AVG(ci.target_speed_kmh),2) AS avg_speed_kmh,
-    ROUND(AVG(ci.achieved_hr),1) AS avg_hr,
+    COALESCE(ROUND(AVG(ci.achieved_hr),1), cs.avg_hr) AS avg_hr,
     ROUND(MAX(ci.target_speed_kmh),2) AS max_speed_kmh,
-    MAX(cs.max_hr) AS max_hr
+    COALESCE(MAX(cs.max_hr), cs.avg_hr) AS max_hr
   FROM cardio_sessions cs
   LEFT JOIN cardio_intervals ci ON ci.session_id = cs.id
   WHERE cs.protocol IN ('VO2_4x4','VO2_1min')

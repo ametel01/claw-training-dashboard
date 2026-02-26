@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-02-26T09:09:48.105Z",
+  "generatedAt": "2026-02-26T09:12:44.246Z",
   "totals": {
     "barbell_sessions": 6,
-    "cardio_sessions": 7,
+    "cardio_sessions": 8,
     "rings_sessions": 6,
     "total_training_days": 10,
     "active_days_last_14": 10,
@@ -64,7 +64,7 @@
       "cardio_plan": "Z2_VO2_4x4",
       "rings_plan": "B",
       "barbell_done": 0,
-      "cardio_done": 0,
+      "cardio_done": 1,
       "rings_done": 1
     },
     {
@@ -453,10 +453,10 @@
       "pain_level": "green",
       "pain_note": null,
       "has_barbell": 0,
-      "has_cardio": 0,
+      "has_cardio": 1,
       "has_rings": 1,
       "barbell_lift": null,
-      "cardio_protocol": null,
+      "cardio_protocol": "VO2_4x4",
       "rings_template": "C",
       "planned_barbell_main": null,
       "planned_barbell_supp": null,
@@ -695,7 +695,7 @@
     "z2_in_cap": 3,
     "z2_compliance_pct": 60,
     "z2_points": "[{\"session_date\":\"2026-02-15\",\"duration_min\":30,\"avg_hr\":140,\"max_hr\":140,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-17\",\"duration_min\":30,\"avg_hr\":141,\"max_hr\":141,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-20\",\"duration_min\":30,\"avg_hr\":118,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-24\",\"duration_min\":30,\"avg_hr\":115,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-25\",\"duration_min\":30,\"avg_hr\":117,\"max_hr\":null,\"z2_cap_respected\":1}]",
-    "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":null}]"
+    "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":154},{\"session_date\":\"2026-02-26\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":null,\"avg_hr\":160,\"max_speed_kmh\":null,\"max_hr\":160}]"
   },
   "auditLog": [],
   "details": {
@@ -1605,6 +1605,21 @@
           "session_date": "2026-02-25",
           "protocol": "Z2",
           "duration_min": 30,
+          "max_hr": null,
+          "notes": "Cardio done from dashboard (avg HR logged)",
+          "interval_no": null,
+          "work_min": null,
+          "easy_min": null,
+          "target_speed_kmh": null,
+          "achieved_hr": null,
+          "interval_note": null
+        }
+      ],
+      "2026-02-26": [
+        {
+          "session_date": "2026-02-26",
+          "protocol": "VO2_4x4",
+          "duration_min": 40,
           "max_hr": null,
           "notes": "Cardio done from dashboard (avg HR logged)",
           "interval_no": null,
