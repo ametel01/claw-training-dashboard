@@ -195,6 +195,14 @@ h2 { font-size: 18px; }
 .z2-graph circle { fill: #4bd28b; }
 .z2-label { fill: #9fb8ee; font-size: 8px; }
 .z2-point-label { fill: #d8e6ff; font-size: 7px; }
+.vo2-line { fill: none; stroke-width: 2; }
+.vo2-line.line-44 { stroke: #7fd2ff; }
+.vo2-line.line-18 { stroke: #ffb86b; }
+.vo2-pt-44 { fill: #7fd2ff; }
+.vo2-pt-18 { fill: #ffb86b; }
+.vo2-legend { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 11px; }
+.vo2-legend .k44 { color: #7fd2ff; }
+.vo2-legend .k18 { color: #ffb86b; }
 .cardio-vo2-row:last-child { border-bottom: none; }
 .cardio-vo2-bar {
   height: 8px;

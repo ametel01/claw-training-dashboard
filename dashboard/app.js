@@ -220,26 +220,74 @@ function renderCardioAnalytics(data = {}) {
     `;
   }
 
-  const recentVO2 = [...(vo2Points || [])].slice(-8);
-  const maxSpeed = Math.max(15, ...recentVO2.map((p) => Number(p.max_speed_kmh || p.avg_speed_kmh || 0)));
+  const recentVO2 = [...(vo2Points || [])].slice(-12);
+  let vo2Graph = '<p class="muted">No VO2 data in last 12 weeks.</p>';
+  if (recentVO2.length >= 1) {
+    const w = 320;
+    const h = 120;
+    const leftPad = 32;
+    const rightPad = 10;
+    const topPad = 10;
+    const bottomPad = 18;
 
-  const vo2Rows = recentVO2.length
-    ? recentVO2.map((p) => {
-        const speed = Number(p.avg_speed_kmh || p.max_speed_kmh || 0);
-        const hr = p.avg_hr ?? p.max_hr ?? '-';
-        const barPct = Math.max(0, Math.min(100, (speed / maxSpeed) * 100));
-        return `
-          <div class="cardio-vo2-row">
-            <div>${p.session_date}</div>
-            <div>${p.protocol}</div>
-            <div>
-              <div>${speed || '-'} km/h · HR ${hr}</div>
-              <div class="cardio-vo2-bar"><span style="width:${barPct}%"></span></div>
-            </div>
-          </div>
-        `;
-      }).join('')
-    : '<p class="muted">No VO2 data in last 12 weeks.</p>';
+    const rows = recentVO2
+      .map((p) => ({
+        date: p.session_date,
+        protocol: p.protocol,
+        speed: Number(p.avg_speed_kmh || p.max_speed_kmh || 0),
+        hr: Number(p.avg_hr ?? p.max_hr ?? 0)
+      }))
+      .filter((p) => p.hr > 0)
+      .sort((a, b) => (a.date < b.date ? -1 : 1));
+
+    if (rows.length) {
+      const minHr = Math.floor((Math.min(...rows.map((r) => r.hr)) - 3) / 5) * 5;
+      const maxHr = Math.ceil((Math.max(...rows.map((r) => r.hr)) + 3) / 5) * 5;
+      const span = Math.max(5, maxHr - minHr);
+
+      const plotW = w - leftPad - rightPad;
+      const plotH = h - topPad - bottomPad;
+
+      const withXY = rows.map((r, i) => ({
+        ...r,
+        x: rows.length === 1 ? leftPad + plotW / 2 : leftPad + (i * (plotW / (rows.length - 1))),
+        y: topPad + (1 - ((r.hr - minHr) / span)) * plotH
+      }));
+
+      const s44 = withXY.filter((r) => r.protocol === 'VO2_4x4');
+      const s18 = withXY.filter((r) => r.protocol === 'VO2_1min');
+
+      const toPolyline = (arr) => arr.length >= 2 ? `<polyline points="${arr.map((p) => `${p.x},${p.y}`).join(' ')}" class="vo2-line ${arr === s44 ? 'line-44' : 'line-18'}"/>` : '';
+      const toPoints = (arr, cls) => arr.map((p, idx) => {
+        const dy = idx % 2 === 0 ? -6 : 12;
+        return `<g><circle cx="${p.x}" cy="${p.y}" r="2.8" class="${cls}"></circle><text x="${p.x}" y="${p.y + dy}" class="z2-point-label" text-anchor="middle">${p.speed || '-'}k</text><title>${p.date} ${p.protocol}: ${p.speed} km/h · HR ${p.hr}</title></g>`;
+      }).join('');
+
+      const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => {
+        const hr = Math.round(minHr + t * span);
+        const y = topPad + (1 - t) * plotH;
+        return { hr, y };
+      });
+      const grid = ticks.map((t) => `<line x1="${leftPad}" y1="${t.y}" x2="${w - rightPad}" y2="${t.y}" class="z2-grid"/>`).join('');
+      const yLabels = ticks.map((t) => `<text x="${leftPad - 6}" y="${t.y + 3}" class="z2-label" text-anchor="end">${t.hr}</text>`).join('');
+
+      vo2Graph = `
+        <div class="z2-graph-wrap">
+          <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="VO2 HR trend split by protocol">
+            ${grid}
+            ${yLabels}
+            <line x1="${leftPad}" y1="${h - bottomPad}" x2="${w - rightPad}" y2="${h - bottomPad}" class="z2-axis"/>
+            <line x1="${leftPad}" y1="${topPad}" x2="${leftPad}" y2="${h - bottomPad}" class="z2-axis"/>
+            ${toPolyline(s44)}
+            ${toPolyline(s18)}
+            ${toPoints(s44, 'vo2-pt-44')}
+            ${toPoints(s18, 'vo2-pt-18')}
+          </svg>
+          <div class="vo2-legend"><span class="k44">● 4x4</span><span class="k18">● 1x8</span><span class="muted">point label = speed (km/h)</span></div>
+        </div>
+      `;
+    }
+  }
 
   node.innerHTML = `
     <div class="cardio-analytics">
@@ -254,7 +302,7 @@ function renderCardioAnalytics(data = {}) {
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">VO2 speed vs HR trend</div>
-        ${vo2Rows}
+        ${vo2Graph}
       </div>
     </div>
   `;
