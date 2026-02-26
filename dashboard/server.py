@@ -205,6 +205,16 @@ class Handler(SimpleHTTPRequestHandler):
                     if avg_hr <= 0:
                         avg_hr = 120
 
+                    try:
+                        speed_low = float(p.get("speed_low_kmh")) if p.get("speed_low_kmh") is not None else None
+                    except Exception:
+                        speed_low = None
+                    try:
+                        speed_high = float(p.get("speed_high_kmh")) if p.get("speed_high_kmh") is not None else None
+                    except Exception:
+                        speed_high = None
+                    speed_for_trend = speed_high if speed_high is not None else speed_low
+
                     z2_cap = 1 if protocol == "Z2" else "NULL"
                     sql = (
                         "INSERT INTO cardio_sessions(session_date,slot,protocol,duration_min,avg_hr,z2_cap_respected,notes) "
@@ -213,6 +223,16 @@ class Handler(SimpleHTTPRequestHandler):
                         "protocol=excluded.protocol,duration_min=excluded.duration_min,avg_hr=excluded.avg_hr,z2_cap_respected=excluded.z2_cap_respected,notes=excluded.notes;"
                     )
                     self._run_sql(sql)
+
+                    if protocol in {"VO2_4x4", "VO2_1min"} and speed_for_trend is not None:
+                        sid_sql = f"SELECT id FROM cardio_sessions WHERE session_date='{date}' AND slot='CARDIO' LIMIT 1;"
+                        sid = self._run_sql(sid_sql).strip()
+                        if sid:
+                            self._run_sql(f"DELETE FROM cardio_intervals WHERE session_id={sid};")
+                            self._run_sql(
+                                "INSERT INTO cardio_intervals(session_id,interval_no,work_min,easy_min,target_speed_kmh,achieved_hr,note) "
+                                f"VALUES({sid},1,NULL,NULL,{speed_for_trend},{avg_hr},'Auto summary interval from dashboard cardio_done');"
+                            )
 
                 elif action == "rings_done":
                     sql = (
