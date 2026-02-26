@@ -738,7 +738,7 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
           <button type="button" class="status-btn" onclick="window.logSessionAction('rings_done')">Rings done</button>
         </div>
         <div class="status-actions" style="margin-top:6px">
-          <input id="cardioAvgHrInput" class="status-input" type="number" min="1" step="1" placeholder="Cardio avg HR (e.g. 118)" />
+          <input id="cardioAvgHrInput" class="status-input" type="number" min="1" step="1" placeholder="Cardio avg HR (Z2 or VO2)" />
         </div>
       `),
       section('Planned vs Completed (Delta)', renderPlannedVsCompleted(planned, { barbell, cardio, rings })),
@@ -828,7 +828,12 @@ async function renderDashboard() {
       if (action === 'cardio_done') {
         const input = document.getElementById('cardioAvgHrInput');
         let hrTxt = (input?.value || '').trim();
-        if (!hrTxt) hrTxt = prompt('Enter average HR for this cardio session (e.g., 118)') || '';
+        const cardioType = planned?.plannedCardio?.session_type || '';
+        const isVO2 = String(cardioType).includes('VO2');
+        const promptText = isVO2
+          ? 'Enter average HR for this VO2 session (e.g., 154)'
+          : 'Enter average HR for this cardio session (e.g., 118)';
+        if (!hrTxt) hrTxt = prompt(promptText) || '';
         if (!hrTxt) return;
         const avgHr = parseInt(hrTxt, 10);
         if (!Number.isFinite(avgHr) || avgHr <= 0) {

@@ -197,9 +197,10 @@ class Handler(SimpleHTTPRequestHandler):
                     if avg_hr <= 0:
                         avg_hr = 120
 
+                    z2_cap = 1 if protocol == "Z2" else "NULL"
                     sql = (
                         "INSERT INTO cardio_sessions(session_date,slot,protocol,duration_min,avg_hr,z2_cap_respected,notes) "
-                        f"VALUES('{date}','CARDIO','{protocol}',{duration},{avg_hr},1,'Cardio done from dashboard (avg HR logged)') "
+                        f"VALUES('{date}','CARDIO','{protocol}',{duration},{avg_hr},{z2_cap},'Cardio done from dashboard (avg HR logged)') "
                         "ON CONFLICT(session_date,slot) DO UPDATE SET "
                         "protocol=excluded.protocol,duration_min=excluded.duration_min,avg_hr=excluded.avg_hr,z2_cap_respected=excluded.z2_cap_respected,notes=excluded.notes;"
                     )
