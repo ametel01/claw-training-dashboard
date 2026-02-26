@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-02-25T05:21:48.940Z",
+  "generatedAt": "2026-02-26T08:30:05.006Z",
   "totals": {
     "barbell_sessions": 6,
-    "cardio_sessions": 6,
-    "rings_sessions": 5,
-    "total_training_days": 9,
-    "active_days_last_14": 9,
-    "latest_date": "2026-02-25"
+    "cardio_sessions": 7,
+    "rings_sessions": 6,
+    "total_training_days": 10,
+    "active_days_last_14": 10,
+    "latest_date": "2026-02-26"
   },
   "weekHeader": {
     "block_type": "Leader",
@@ -51,7 +51,7 @@
       "cardio_plan": "Z2",
       "rings_plan": null,
       "barbell_done": 1,
-      "cardio_done": 0,
+      "cardio_done": 1,
       "rings_done": 0
     },
     {
@@ -65,7 +65,7 @@
       "rings_plan": "B",
       "barbell_done": 0,
       "cardio_done": 0,
-      "rings_done": 0
+      "rings_done": 1
     },
     {
       "weekday": 5,
@@ -108,23 +108,6 @@
     }
   ],
   "dailyTiles": [
-    {
-      "session_date": "2026-02-05",
-      "pain_level": "green",
-      "pain_note": null,
-      "has_barbell": 0,
-      "has_cardio": 0,
-      "has_rings": 0,
-      "barbell_lift": null,
-      "cardio_protocol": null,
-      "rings_template": null,
-      "planned_barbell_main": "Bench",
-      "planned_barbell_supp": "Squat",
-      "planned_supp_sets": 10,
-      "planned_supp_reps": 5,
-      "planned_cardio": "Z2",
-      "planned_rings": "C"
-    },
     {
       "session_date": "2026-02-06",
       "pain_level": "green",
@@ -453,10 +436,10 @@
       "pain_level": "green",
       "pain_note": null,
       "has_barbell": 1,
-      "has_cardio": 0,
+      "has_cardio": 1,
       "has_rings": 0,
       "barbell_lift": null,
-      "cardio_protocol": null,
+      "cardio_protocol": "Z2",
       "rings_template": null,
       "planned_barbell_main": "Press",
       "planned_barbell_supp": "Deadlift",
@@ -471,10 +454,10 @@
       "pain_note": null,
       "has_barbell": 0,
       "has_cardio": 0,
-      "has_rings": 0,
+      "has_rings": 1,
       "barbell_lift": null,
       "cardio_protocol": null,
-      "rings_template": null,
+      "rings_template": "C",
       "planned_barbell_main": null,
       "planned_barbell_supp": null,
       "planned_supp_sets": null,
@@ -634,6 +617,23 @@
       "planned_supp_reps": null,
       "planned_cardio": "Z2_VO2_1min",
       "planned_rings": null
+    },
+    {
+      "session_date": "2026-03-08",
+      "pain_level": "green",
+      "pain_note": null,
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null,
+      "planned_barbell_main": null,
+      "planned_barbell_supp": null,
+      "planned_supp_sets": null,
+      "planned_supp_reps": null,
+      "planned_cardio": "OFF",
+      "planned_rings": null
     }
   ],
   "est1RM": [
@@ -691,10 +691,10 @@
     }
   ],
   "cardioAnalytics": {
-    "total_z2": 4,
-    "z2_in_cap": 2,
-    "z2_compliance_pct": 50,
-    "z2_points": "[{\"session_date\":\"2026-02-15\",\"duration_min\":30,\"avg_hr\":140,\"max_hr\":140,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-17\",\"duration_min\":30,\"avg_hr\":141,\"max_hr\":141,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-20\",\"duration_min\":30,\"avg_hr\":118,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-24\",\"duration_min\":30,\"avg_hr\":115,\"max_hr\":null,\"z2_cap_respected\":1}]",
+    "total_z2": 5,
+    "z2_in_cap": 3,
+    "z2_compliance_pct": 60,
+    "z2_points": "[{\"session_date\":\"2026-02-15\",\"duration_min\":30,\"avg_hr\":140,\"max_hr\":140,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-17\",\"duration_min\":30,\"avg_hr\":141,\"max_hr\":141,\"z2_cap_respected\":0},{\"session_date\":\"2026-02-20\",\"duration_min\":30,\"avg_hr\":118,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-24\",\"duration_min\":30,\"avg_hr\":115,\"max_hr\":null,\"z2_cap_respected\":1},{\"session_date\":\"2026-02-25\",\"duration_min\":30,\"avg_hr\":117,\"max_hr\":null,\"z2_cap_respected\":1}]",
     "vo2_points": "[{\"session_date\":\"2026-02-19\",\"protocol\":\"VO2_4x4\",\"avg_speed_kmh\":12.0,\"avg_hr\":172.0,\"max_speed_kmh\":12.0,\"max_hr\":172},{\"session_date\":\"2026-02-21\",\"protocol\":\"VO2_1min\",\"avg_speed_kmh\":15.0,\"avg_hr\":154.0,\"max_speed_kmh\":15.0,\"max_hr\":null}]"
   },
   "auditLog": [],
@@ -1599,6 +1599,21 @@
           "achieved_hr": null,
           "interval_note": null
         }
+      ],
+      "2026-02-25": [
+        {
+          "session_date": "2026-02-25",
+          "protocol": "Z2",
+          "duration_min": 30,
+          "max_hr": null,
+          "notes": "Cardio done from dashboard (avg HR logged)",
+          "interval_no": null,
+          "work_min": null,
+          "easy_min": null,
+          "target_speed_kmh": null,
+          "achieved_hr": null,
+          "interval_note": null
+        }
       ]
     },
     "ringsByDate": {
@@ -1789,6 +1804,44 @@
           "notes": "Rings done from dashboard",
           "item_no": 4,
           "exercise": "Hollow Hold",
+          "result_text": "completed as prescribed"
+        }
+      ],
+      "2026-02-26": [
+        {
+          "session_date": "2026-02-26",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Rings done from dashboard",
+          "item_no": 1,
+          "exercise": "Feet-Assisted Pull-Ups",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-26",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Rings done from dashboard",
+          "item_no": 2,
+          "exercise": "High Ring Rows",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-26",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Rings done from dashboard",
+          "item_no": 3,
+          "exercise": "False Grip Hold (feet)",
+          "result_text": "completed as prescribed"
+        },
+        {
+          "session_date": "2026-02-26",
+          "template": "C",
+          "completed_as_prescribed": 1,
+          "notes": "Rings done from dashboard",
+          "item_no": 4,
+          "exercise": "Ring Body Saw",
           "result_text": "completed as prescribed"
         }
       ]
@@ -3277,27 +3330,115 @@
           "prescribed_reps": 5,
           "planned_weight_kg": 82.5
         }
+      ],
+      "2026-03-12": [
+        {
+          "session_date": "2026-03-12",
+          "category": "main",
+          "lift": "Bench",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 57.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "main",
+          "lift": "Bench",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 67.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "main",
+          "lift": "Bench",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 77.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 4,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 5,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 6,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 7,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 8,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 9,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        },
+        {
+          "session_date": "2026-03-12",
+          "category": "supplemental",
+          "lift": "Squat",
+          "set_no": 10,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 72.5
+        }
       ]
     },
     "plannedCardioByDate": {
-      "2025-11-27": [
-        {
-          "session_date": "2025-11-27",
-          "session_type": "Z2",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": 6,
-          "speed_high_kmh": 7.5,
-          "target_hr_min": 110,
-          "target_hr_max": 125,
-          "notes": "Lift AM / 30 min steady treadmill Z2"
-        }
-      ],
       "2025-11-28": [
         {
           "session_date": "2025-11-28",
@@ -3399,8 +3540,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -3525,8 +3666,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -3651,8 +3792,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -3777,8 +3918,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -3903,8 +4044,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4029,8 +4170,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4155,8 +4296,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4281,8 +4422,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4407,8 +4548,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4533,8 +4674,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4659,8 +4800,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4785,8 +4926,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -4929,8 +5070,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -5037,8 +5178,8 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
@@ -5163,57 +5304,33 @@
           "vo2_intervals_max": 4,
           "vo2_work_min": 4,
           "vo2_easy_min": 3,
-          "speed_low_kmh": 10.5,
-          "speed_high_kmh": 11.5,
+          "speed_low_kmh": 12,
+          "speed_high_kmh": 12,
           "target_hr_min": 160,
           "target_hr_max": 170,
           "notes": "10 min Z2 warm-up + 4x4 hard / 3 min easy + 5 min cool down"
         }
+      ],
+      "2026-03-12": [
+        {
+          "session_date": "2026-03-12",
+          "session_type": "Z2",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": 6,
+          "speed_high_kmh": 7.5,
+          "target_hr_min": 110,
+          "target_hr_max": 125,
+          "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
       ]
     },
     "plannedRingsByDate": {
-      "2025-11-27": [
-        {
-          "session_date": "2025-11-27",
-          "template_code": "C",
-          "item_no": 1,
-          "exercise": "Feet-Assisted Pull-Ups",
-          "sets_text": "5",
-          "reps_or_time": "3-5",
-          "tempo": "31X1",
-          "rest_text": "150s"
-        },
-        {
-          "session_date": "2025-11-27",
-          "template_code": "C",
-          "item_no": 2,
-          "exercise": "High Ring Rows",
-          "sets_text": "4",
-          "reps_or_time": "4-6",
-          "tempo": "31X1",
-          "rest_text": "120s"
-        },
-        {
-          "session_date": "2025-11-27",
-          "template_code": "C",
-          "item_no": 3,
-          "exercise": "False Grip Hold (feet)",
-          "sets_text": "4",
-          "reps_or_time": "20-30s",
-          "tempo": null,
-          "rest_text": "60s"
-        },
-        {
-          "session_date": "2025-11-27",
-          "template_code": "C",
-          "item_no": 4,
-          "exercise": "Ring Body Saw",
-          "sets_text": "3",
-          "reps_or_time": "8-12",
-          "tempo": "slow",
-          "rest_text": "60s"
-        }
-      ],
       "2025-11-28": [
         {
           "session_date": "2025-11-28",
@@ -8230,6 +8347,48 @@
           "reps_or_time": null,
           "tempo": null,
           "rest_text": null
+        }
+      ],
+      "2026-03-12": [
+        {
+          "session_date": "2026-03-12",
+          "template_code": "C",
+          "item_no": 1,
+          "exercise": "Feet-Assisted Pull-Ups",
+          "sets_text": "5",
+          "reps_or_time": "3-5",
+          "tempo": "31X1",
+          "rest_text": "150s"
+        },
+        {
+          "session_date": "2026-03-12",
+          "template_code": "C",
+          "item_no": 2,
+          "exercise": "High Ring Rows",
+          "sets_text": "4",
+          "reps_or_time": "4-6",
+          "tempo": "31X1",
+          "rest_text": "120s"
+        },
+        {
+          "session_date": "2026-03-12",
+          "template_code": "C",
+          "item_no": 3,
+          "exercise": "False Grip Hold (feet)",
+          "sets_text": "4",
+          "reps_or_time": "20-30s",
+          "tempo": null,
+          "rest_text": "60s"
+        },
+        {
+          "session_date": "2026-03-12",
+          "template_code": "C",
+          "item_no": 4,
+          "exercise": "Ring Body Saw",
+          "sets_text": "3",
+          "reps_or_time": "8-12",
+          "tempo": "slow",
+          "rest_text": "60s"
         }
       ]
     }
