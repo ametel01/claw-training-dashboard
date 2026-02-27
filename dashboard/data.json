@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-27T00:56:49.992Z",
+  "generatedAt": "2026-02-27T11:44:50.387Z",
   "totals": {
     "barbell_sessions": 7,
     "cardio_sessions": 8,
@@ -75,7 +75,7 @@
       "main_lift": "Bench",
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
-      "rings_plan": "C",
+      "rings_plan": null,
       "barbell_done": 1,
       "cardio_done": 0,
       "rings_done": 0
@@ -101,7 +101,7 @@
       "main_lift": null,
       "supplemental_sets": null,
       "cardio_plan": "Z2_VO2_1min",
-      "rings_plan": null,
+      "rings_plan": "C",
       "barbell_done": 0,
       "cardio_done": 0,
       "rings_done": 0
@@ -344,7 +344,7 @@
       "planned_supp_sets": 10,
       "planned_supp_reps": 5,
       "planned_cardio": "Z2",
-      "planned_rings": "C"
+      "planned_rings": null
     }
   ],
   "est1RM": [
@@ -7865,43 +7865,13 @@
       "2026-02-27": [
         {
           "session_date": "2026-02-27",
-          "template_code": "C",
-          "item_no": 1,
-          "exercise": "Feet-Assisted Pull-Ups",
-          "sets_text": "5",
-          "reps_or_time": "3-5",
-          "tempo": "31X1",
-          "rest_text": "150s"
-        },
-        {
-          "session_date": "2026-02-27",
-          "template_code": "C",
-          "item_no": 2,
-          "exercise": "High Ring Rows",
-          "sets_text": "4",
-          "reps_or_time": "4-6",
-          "tempo": "31X1",
-          "rest_text": "120s"
-        },
-        {
-          "session_date": "2026-02-27",
-          "template_code": "C",
-          "item_no": 3,
-          "exercise": "False Grip Hold (feet)",
-          "sets_text": "4",
-          "reps_or_time": "20-30s",
+          "template_code": null,
+          "item_no": null,
+          "exercise": null,
+          "sets_text": null,
+          "reps_or_time": null,
           "tempo": null,
-          "rest_text": "60s"
-        },
-        {
-          "session_date": "2026-02-27",
-          "template_code": "C",
-          "item_no": 4,
-          "exercise": "Ring Body Saw",
-          "sets_text": "3",
-          "reps_or_time": "8-12",
-          "tempo": "slow",
-          "rest_text": "60s"
+          "rest_text": null
         }
       ],
       "2026-02-28": [
@@ -7949,13 +7919,43 @@
       "2026-03-01": [
         {
           "session_date": "2026-03-01",
-          "template_code": null,
-          "item_no": null,
-          "exercise": null,
-          "sets_text": null,
-          "reps_or_time": null,
+          "template_code": "C",
+          "item_no": 1,
+          "exercise": "Feet-Assisted Pull-Ups",
+          "sets_text": "5",
+          "reps_or_time": "3-5",
+          "tempo": "31X1",
+          "rest_text": "150s"
+        },
+        {
+          "session_date": "2026-03-01",
+          "template_code": "C",
+          "item_no": 2,
+          "exercise": "High Ring Rows",
+          "sets_text": "4",
+          "reps_or_time": "4-6",
+          "tempo": "31X1",
+          "rest_text": "120s"
+        },
+        {
+          "session_date": "2026-03-01",
+          "template_code": "C",
+          "item_no": 3,
+          "exercise": "False Grip Hold (feet)",
+          "sets_text": "4",
+          "reps_or_time": "20-30s",
           "tempo": null,
-          "rest_text": null
+          "rest_text": "60s"
+        },
+        {
+          "session_date": "2026-03-01",
+          "template_code": "C",
+          "item_no": 4,
+          "exercise": "Ring Body Saw",
+          "sets_text": "3",
+          "reps_or_time": "8-12",
+          "tempo": "slow",
+          "rest_text": "60s"
         }
       ],
       "2026-03-02": [
