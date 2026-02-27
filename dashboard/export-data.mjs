@@ -119,8 +119,8 @@ const dailyTiles = sqlJson(`
 WITH RECURSIVE
 bounds AS (
   SELECT
-    date('now','localtime','-20 day') AS start_date,
-    date('now','localtime','+10 day') AS end_date
+    date('now','localtime','-13 day') AS start_date,
+    date('now','localtime') AS end_date
 ),
 dates(day) AS (
   SELECT (SELECT start_date FROM bounds)
