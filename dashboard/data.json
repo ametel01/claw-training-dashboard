@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-26T09:14:55.925Z",
+  "generatedAt": "2026-02-27T00:02:30.152Z",
   "totals": {
     "barbell_sessions": 6,
     "cardio_sessions": 8,
@@ -108,23 +108,6 @@
     }
   ],
   "dailyTiles": [
-    {
-      "session_date": "2026-02-06",
-      "pain_level": "green",
-      "pain_note": null,
-      "has_barbell": 0,
-      "has_cardio": 0,
-      "has_rings": 0,
-      "barbell_lift": null,
-      "cardio_protocol": null,
-      "rings_template": null,
-      "planned_barbell_main": "Deadlift",
-      "planned_barbell_supp": "Press",
-      "planned_supp_sets": 10,
-      "planned_supp_reps": 5,
-      "planned_cardio": "Z2",
-      "planned_rings": "D"
-    },
     {
       "session_date": "2026-02-07",
       "pain_level": "green",
@@ -634,6 +617,23 @@
       "planned_supp_reps": null,
       "planned_cardio": "OFF",
       "planned_rings": null
+    },
+    {
+      "session_date": "2026-03-09",
+      "pain_level": "green",
+      "pain_note": null,
+      "has_barbell": 0,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null,
+      "planned_barbell_main": "Squat",
+      "planned_barbell_supp": "Bench",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "A"
     }
   ],
   "est1RM": [
@@ -3451,27 +3451,115 @@
           "prescribed_reps": 5,
           "planned_weight_kg": 72.5
         }
+      ],
+      "2026-03-13": [
+        {
+          "session_date": "2026-03-13",
+          "category": "main",
+          "lift": "Deadlift",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 82.5
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "main",
+          "lift": "Deadlift",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 95
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "main",
+          "lift": "Deadlift",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 107.5
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 1,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 2,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 3,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 4,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 5,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 6,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 7,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 8,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 9,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        },
+        {
+          "session_date": "2026-03-13",
+          "category": "supplemental",
+          "lift": "Press",
+          "set_no": 10,
+          "prescribed_reps": 5,
+          "planned_weight_kg": 40
+        }
       ]
     },
     "plannedCardioByDate": {
-      "2025-11-28": [
-        {
-          "session_date": "2025-11-28",
-          "session_type": "Z2",
-          "duration_min": 30,
-          "warmup_min": null,
-          "cooldown_min": null,
-          "vo2_intervals_min": null,
-          "vo2_intervals_max": null,
-          "vo2_work_min": null,
-          "vo2_easy_min": null,
-          "speed_low_kmh": 6,
-          "speed_high_kmh": 7.5,
-          "target_hr_min": 110,
-          "target_hr_max": 125,
-          "notes": "Lift AM / 30 min steady treadmill Z2"
-        }
-      ],
       "2025-11-29": [
         {
           "session_date": "2025-11-29",
@@ -5343,51 +5431,27 @@
           "target_hr_max": 125,
           "notes": "Lift AM / 30 min steady treadmill Z2"
         }
+      ],
+      "2026-03-13": [
+        {
+          "session_date": "2026-03-13",
+          "session_type": "Z2",
+          "duration_min": 30,
+          "warmup_min": null,
+          "cooldown_min": null,
+          "vo2_intervals_min": null,
+          "vo2_intervals_max": null,
+          "vo2_work_min": null,
+          "vo2_easy_min": null,
+          "speed_low_kmh": 6,
+          "speed_high_kmh": 7.5,
+          "target_hr_min": 110,
+          "target_hr_max": 125,
+          "notes": "Lift AM / 30 min steady treadmill Z2"
+        }
       ]
     },
     "plannedRingsByDate": {
-      "2025-11-28": [
-        {
-          "session_date": "2025-11-28",
-          "template_code": "D",
-          "item_no": 1,
-          "exercise": "Single-Ring Support",
-          "sets_text": "4",
-          "reps_or_time": "15-25s/side",
-          "tempo": null,
-          "rest_text": "60s"
-        },
-        {
-          "session_date": "2025-11-28",
-          "template_code": "D",
-          "item_no": 2,
-          "exercise": "Archer Ring Rows",
-          "sets_text": "5",
-          "reps_or_time": "3-4/side",
-          "tempo": "31X1",
-          "rest_text": "120s"
-        },
-        {
-          "session_date": "2025-11-28",
-          "template_code": "D",
-          "item_no": 3,
-          "exercise": "Dip Iso (bottom)",
-          "sets_text": "4",
-          "reps_or_time": "10-20s",
-          "tempo": null,
-          "rest_text": "90s"
-        },
-        {
-          "session_date": "2025-11-28",
-          "template_code": "D",
-          "item_no": 4,
-          "exercise": "Knee->Pike Tucks",
-          "sets_text": "3",
-          "reps_or_time": "6-10",
-          "tempo": null,
-          "rest_text": "60s"
-        }
-      ],
       "2025-11-29": [
         {
           "session_date": "2025-11-29",
@@ -8403,6 +8467,48 @@
           "sets_text": "3",
           "reps_or_time": "8-12",
           "tempo": "slow",
+          "rest_text": "60s"
+        }
+      ],
+      "2026-03-13": [
+        {
+          "session_date": "2026-03-13",
+          "template_code": "D",
+          "item_no": 1,
+          "exercise": "Single-Ring Support",
+          "sets_text": "4",
+          "reps_or_time": "15-25s/side",
+          "tempo": null,
+          "rest_text": "60s"
+        },
+        {
+          "session_date": "2026-03-13",
+          "template_code": "D",
+          "item_no": 2,
+          "exercise": "Archer Ring Rows",
+          "sets_text": "5",
+          "reps_or_time": "3-4/side",
+          "tempo": "31X1",
+          "rest_text": "120s"
+        },
+        {
+          "session_date": "2026-03-13",
+          "template_code": "D",
+          "item_no": 3,
+          "exercise": "Dip Iso (bottom)",
+          "sets_text": "4",
+          "reps_or_time": "10-20s",
+          "tempo": null,
+          "rest_text": "90s"
+        },
+        {
+          "session_date": "2026-03-13",
+          "template_code": "D",
+          "item_no": 4,
+          "exercise": "Knee->Pike Tucks",
+          "sets_text": "3",
+          "reps_or_time": "6-10",
+          "tempo": null,
           "rest_text": "60s"
         }
       ]
