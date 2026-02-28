@@ -1,0 +1,194 @@
+{"level":30,"time":"2026-02-28T04:14:45.706Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T04:14:45.709Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T04:14:45.710Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:14:45.714Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:34:42.203Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:34:42.203Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:34:42.203Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:34:42.205Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:34:42.205Z","pid":88430,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T04:34:44.291Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:34:44.293Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:38:23.127Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:38:23.129Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:38:23.129Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:38:23.130Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:38:23.130Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T04:38:23.337Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:38:23.338Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:53:15.849Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:53:15.851Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:53:15.851Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:53:15.852Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:53:15.852Z","pid":88695,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T04:53:17.410Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:53:17.411Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:53:20.317Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:53:20.318Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:53:20.318Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:53:20.319Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:53:20.319Z","pid":5297,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T04:53:31.898Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:53:31.899Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:53:33.634Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:53:33.636Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:53:33.636Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:53:33.637Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:53:33.637Z","pid":5344,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T04:53:42.220Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:53:42.221Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:54:05.502Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:54:05.503Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:54:05.503Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:54:05.504Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:54:05.504Z","pid":5400,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T04:55:44.808Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T04:55:44.809Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T04:56:08.318Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T04:56:08.319Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T04:56:08.319Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T04:56:08.320Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T04:56:08.320Z","pid":6539,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T05:29:58.060Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T05:29:58.060Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T05:29:58.061Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-integ-skill-NiXUzK/skill.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T05:29:58.063Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T05:29:58.063Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"launching browser"}
+{"level":30,"time":"2026-02-28T05:29:58.160Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser launched"}
+{"level":30,"time":"2026-02-28T05:29:58.193Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"5H0wDPj-Ioxv","msg":"session acquired"}
+{"level":40,"time":"2026-02-28T05:29:58.500Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"5H0wDPj-Ioxv","msg":"failed to capture localStorage (page may be on about:blank)"}
+{"level":30,"time":"2026-02-28T05:29:58.500Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"5H0wDPj-Ioxv","msg":"closing session"}
+{"level":30,"time":"2026-02-28T05:29:58.502Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"5H0wDPj-Ioxv","msg":"session released"}
+{"level":30,"time":"2026-02-28T05:29:58.503Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T05:29:58.503Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":40,"time":"2026-02-28T05:29:58.505Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser disconnected"}
+{"level":30,"time":"2026-02-28T05:29:58.514Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T05:29:58.515Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T05:29:58.515Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T05:29:58.518Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T05:29:58.518Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T05:29:58.518Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-artifacts-startup-JqW9VD/startup.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"sess-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"msg":"artifact retention enforced during startup"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T05:29:58.519Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T05:29:58.520Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T05:29:58.520Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T05:29:58.522Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T05:29:58.522Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T05:29:58.522Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-artifacts-shutdown-XSAsJu/shutdown.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T05:29:58.522Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"sess-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"msg":"artifact retention enforced during shutdown"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T05:29:58.523Z","pid":9467,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T05:46:13.902Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T05:46:13.908Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":26,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.380Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T06:17:19.381Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T06:17:19.381Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-integ-skill-PXax5t/skill.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.383Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.383Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"launching browser"}
+{"level":30,"time":"2026-02-28T06:17:19.478Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser launched"}
+{"level":30,"time":"2026-02-28T06:17:19.513Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"cJe-xd1tguJB","msg":"session acquired"}
+{"level":40,"time":"2026-02-28T06:17:19.827Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"cJe-xd1tguJB","msg":"failed to capture localStorage (page may be on about:blank)"}
+{"level":30,"time":"2026-02-28T06:17:19.828Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"cJe-xd1tguJB","msg":"closing session"}
+{"level":30,"time":"2026-02-28T06:17:19.830Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"cJe-xd1tguJB","msg":"session released"}
+{"level":30,"time":"2026-02-28T06:17:19.830Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:17:19.831Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":40,"time":"2026-02-28T06:17:19.832Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser disconnected"}
+{"level":30,"time":"2026-02-28T06:17:19.842Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:17:19.842Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:17:19.842Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:17:19.845Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T06:17:19.845Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T06:17:19.845Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-artifacts-startup-mLgiti/startup.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.845Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"sess-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:17:19.846Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:17:19.846Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"msg":"artifact retention enforced during startup"}
+{"level":30,"time":"2026-02-28T06:17:19.846Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.846Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:17:19.846Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T06:17:19.846Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:17:19.847Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:17:19.847Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:17:19.849Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T06:17:19.849Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T06:17:19.849Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-artifacts-shutdown-F5yKGl/shutdown.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.849Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.1","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"sess-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"msg":"artifact retention enforced during shutdown"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:17:19.850Z","pid":12012,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:18:12.593Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T06:18:12.594Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T06:18:12.594Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-integ-skill-SA9viL/skill.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:18:12.597Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.3","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:18:12.597Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"launching browser"}
+{"level":30,"time":"2026-02-28T06:18:12.697Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser launched"}
+{"level":30,"time":"2026-02-28T06:18:12.731Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"ePjiMP3iLxcP","msg":"session acquired"}
+{"level":40,"time":"2026-02-28T06:18:13.186Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"ePjiMP3iLxcP","msg":"failed to capture localStorage (page may be on about:blank)"}
+{"level":30,"time":"2026-02-28T06:18:13.186Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"ePjiMP3iLxcP","msg":"closing session"}
+{"level":30,"time":"2026-02-28T06:18:13.189Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"ePjiMP3iLxcP","msg":"session released"}
+{"level":30,"time":"2026-02-28T06:18:13.189Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:18:13.189Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":40,"time":"2026-02-28T06:18:13.191Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser disconnected"}
+{"level":30,"time":"2026-02-28T06:18:13.204Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:18:13.205Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:18:13.205Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:18:13.208Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T06:18:13.208Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T06:18:13.208Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-artifacts-startup-dOFdCB/startup.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:18:13.208Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"sess-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:18:13.208Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:18:13.208Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"msg":"artifact retention enforced during startup"}
+{"level":30,"time":"2026-02-28T06:18:13.209Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.3","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:18:13.209Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:18:13.209Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T06:18:13.209Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:18:13.210Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:18:13.210Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:18:13.212Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","from":0,"to":1,"msg":"running database migrations"}
+{"level":30,"time":"2026-02-28T06:18:13.212Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","version":1,"msg":"migration applied"}
+{"level":30,"time":"2026-02-28T06:18:13.212Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/var/folders/pd/5fyv8mtn37b0p3fmf90b243h0000gn/T/claw-artifacts-shutdown-iv1aYF/shutdown.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:18:13.212Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.3","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:18:13.213Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:18:13.213Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","sessionId":"sess-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:18:13.213Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:18:13.213Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","removed":1,"msg":"artifact retention enforced during shutdown"}
+{"level":30,"time":"2026-02-28T06:18:13.213Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T06:18:13.213Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:18:13.214Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:18:13.214Z","pid":12816,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:25:20.187Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:25:20.191Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T06:25:20.191Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:25:20.192Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:25:20.192Z","pid":11426,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:26:24.142Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:26:24.143Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.3","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T06:27:20.563Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T06:27:20.564Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T06:27:20.564Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T06:27:20.564Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T06:27:20.564Z","pid":14156,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T06:28:23.748Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T06:28:23.754Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.3","msg":"browser automation skill initialized"}
+{"level":30,"time":"2026-02-28T07:51:08.503Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser automation skill"}
+{"level":30,"time":"2026-02-28T07:51:08.504Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"shutting down browser pool"}
+{"level":30,"time":"2026-02-28T07:51:08.504Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser pool shut down"}
+{"level":30,"time":"2026-02-28T07:51:08.504Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"store closed"}
+{"level":30,"time":"2026-02-28T07:51:08.504Z","pid":14376,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","msg":"browser automation skill shut down"}
+{"level":30,"time":"2026-02-28T07:52:11.801Z","pid":15853,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","dbPath":"/Users/brunoclaw/.openclaw/browser-automation/store.db","msg":"store initialized"}
+{"level":30,"time":"2026-02-28T07:52:11.803Z","pid":15853,"hostname":"Brunos-MacBook-Air.local","name":"browser-automation","toolCount":28,"version":"0.4.3","msg":"browser automation skill initialized"}

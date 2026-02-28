@@ -1,0 +1,15 @@
+{"level":30,"time":"2026-02-28T05:29:35.783Z","pid":9469,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"sess-del","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T05:29:35.786Z","pid":9469,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"aaa-oldest","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T05:29:35.786Z","pid":9469,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T05:29:35.809Z","pid":9469,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"z-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T05:29:35.810Z","pid":9469,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:17:08.464Z","pid":12520,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"sess-del","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:17:08.467Z","pid":12520,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"aaa-oldest","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:17:08.467Z","pid":12520,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:17:08.520Z","pid":12520,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"z-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:17:08.520Z","pid":12520,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:18:01.286Z","pid":13294,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"sess-del","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:18:01.289Z","pid":13294,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"aaa-oldest","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:18:01.289Z","pid":13294,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","removed":1,"remaining":2,"msg":"artifact retention enforced"}
+{"level":30,"time":"2026-02-28T06:18:01.315Z","pid":13294,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","sessionId":"z-old","msg":"artifacts deleted"}
+{"level":30,"time":"2026-02-28T06:18:01.315Z","pid":13294,"hostname":"Brunos-MacBook-Air.local","name":"artifacts","removed":1,"remaining":2,"msg":"artifact retention enforced"}

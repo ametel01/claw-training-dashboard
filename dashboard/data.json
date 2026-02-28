@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-02-27T11:44:50.387Z",
+  "generatedAt": "2026-02-28T00:42:11.518Z",
   "totals": {
-    "barbell_sessions": 7,
+    "barbell_sessions": 8,
     "cardio_sessions": 8,
     "rings_sessions": 6,
-    "total_training_days": 11,
-    "active_days_last_14": 11,
-    "latest_date": "2026-02-27"
+    "total_training_days": 12,
+    "active_days_last_14": 12,
+    "latest_date": "2026-02-28"
   },
   "weekHeader": {
     "block_type": "Leader",
@@ -89,7 +89,7 @@
       "supplemental_sets": 10,
       "cardio_plan": "Z2",
       "rings_plan": "D",
-      "barbell_done": 0,
+      "barbell_done": 1,
       "cardio_done": 0,
       "rings_done": 0
     },
@@ -108,23 +108,6 @@
     }
   ],
   "dailyTiles": [
-    {
-      "session_date": "2026-02-14",
-      "pain_level": "green",
-      "pain_note": null,
-      "has_barbell": 0,
-      "has_cardio": 0,
-      "has_rings": 0,
-      "barbell_lift": null,
-      "cardio_protocol": null,
-      "rings_template": null,
-      "planned_barbell_main": null,
-      "planned_barbell_supp": null,
-      "planned_supp_sets": null,
-      "planned_supp_reps": null,
-      "planned_cardio": "Z2_VO2_1min",
-      "planned_rings": null
-    },
     {
       "session_date": "2026-02-15",
       "pain_level": "green",
@@ -345,6 +328,23 @@
       "planned_supp_reps": 5,
       "planned_cardio": "Z2",
       "planned_rings": null
+    },
+    {
+      "session_date": "2026-02-28",
+      "pain_level": "green",
+      "pain_note": null,
+      "has_barbell": 1,
+      "has_cardio": 0,
+      "has_rings": 0,
+      "barbell_lift": null,
+      "cardio_protocol": null,
+      "rings_template": null,
+      "planned_barbell_main": "Deadlift",
+      "planned_barbell_supp": "Press",
+      "planned_supp_sets": 10,
+      "planned_supp_reps": 5,
+      "planned_cardio": "Z2",
+      "planned_rings": "D"
     }
   ],
   "est1RM": [
@@ -376,16 +376,16 @@
     },
     {
       "lift": "Deadlift",
-      "est_1rm_kg": 125.4,
-      "source_date": "2026-02-20",
-      "source_weight_kg": 107.5,
+      "est_1rm_kg": 131.3,
+      "source_date": "2026-02-28",
+      "source_weight_kg": 112.5,
       "source_reps": 5,
       "source_set_no": 3,
-      "bw_ratio": 1.48,
+      "bw_ratio": 1.54,
       "bodyweight_kg": 85,
-      "strength_level": "Beginner",
-      "next_level": "Novice",
-      "next_level_kg": 127.5
+      "strength_level": "Novice",
+      "next_level": "Intermediate",
+      "next_level_kg": 170
     },
     {
       "lift": "Press",
@@ -1204,6 +1204,125 @@
           "category": "supplemental",
           "set_no": 10,
           "actual_weight_kg": 77.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        }
+      ],
+      "2026-02-28": [
+        {
+          "session_date": "2026-02-28",
+          "lift": "Deadlift",
+          "category": "main",
+          "set_no": 1,
+          "actual_weight_kg": 87.5,
+          "actual_reps": 5,
+          "note": "Main done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Deadlift",
+          "category": "main",
+          "set_no": 2,
+          "actual_weight_kg": 100,
+          "actual_reps": 5,
+          "note": "Main done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Deadlift",
+          "category": "main",
+          "set_no": 3,
+          "actual_weight_kg": 112.5,
+          "actual_reps": 5,
+          "note": "Main done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 1,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 2,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 3,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 4,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 5,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 6,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 7,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 8,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 9,
+          "actual_weight_kg": 42.5,
+          "actual_reps": 5,
+          "note": "Supplemental done from dashboard"
+        },
+        {
+          "session_date": "2026-02-28",
+          "lift": "Press",
+          "category": "supplemental",
+          "set_no": 10,
+          "actual_weight_kg": 42.5,
           "actual_reps": 5,
           "note": "Supplemental done from dashboard"
         }
@@ -3390,24 +3509,6 @@
       ]
     },
     "plannedCardioByDate": {
-      "2025-11-29": [
-        {
-          "session_date": "2025-11-29",
-          "session_type": "Z2_VO2_1min",
-          "duration_min": 35,
-          "warmup_min": 10,
-          "cooldown_min": 5,
-          "vo2_intervals_min": 6,
-          "vo2_intervals_max": 8,
-          "vo2_work_min": 1,
-          "vo2_easy_min": 1.5,
-          "speed_low_kmh": 15,
-          "speed_high_kmh": 15,
-          "target_hr_min": 165,
-          "target_hr_max": 175,
-          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
-        }
-      ],
       "2025-11-30": [
         {
           "session_date": "2025-11-30",
@@ -5279,21 +5380,27 @@
           "target_hr_max": 125,
           "notes": "Lift AM / 30 min steady treadmill Z2"
         }
+      ],
+      "2026-03-14": [
+        {
+          "session_date": "2026-03-14",
+          "session_type": "Z2_VO2_1min",
+          "duration_min": 35,
+          "warmup_min": 10,
+          "cooldown_min": 5,
+          "vo2_intervals_min": 6,
+          "vo2_intervals_max": 8,
+          "vo2_work_min": 1,
+          "vo2_easy_min": 1.5,
+          "speed_low_kmh": 15,
+          "speed_high_kmh": 15,
+          "target_hr_min": 165,
+          "target_hr_max": 175,
+          "notes": "10 min Z2 warm-up + 6-8x1 min hard / 1.5 min easy + 5 min cool down (hard at 15.0 km/h)"
+        }
       ]
     },
     "plannedRingsByDate": {
-      "2025-11-29": [
-        {
-          "session_date": "2025-11-29",
-          "template_code": null,
-          "item_no": null,
-          "exercise": null,
-          "sets_text": null,
-          "reps_or_time": null,
-          "tempo": null,
-          "rest_text": null
-        }
-      ],
       "2025-11-30": [
         {
           "session_date": "2025-11-30",
@@ -8340,6 +8447,18 @@
           "reps_or_time": "6-10",
           "tempo": null,
           "rest_text": "60s"
+        }
+      ],
+      "2026-03-14": [
+        {
+          "session_date": "2026-03-14",
+          "template_code": null,
+          "item_no": null,
+          "exercise": null,
+          "sets_text": null,
+          "reps_or_time": null,
+          "tempo": null,
+          "rest_text": null
         }
       ]
     }
