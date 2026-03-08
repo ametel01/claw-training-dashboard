@@ -1,0 +1,14 @@
+{
+  "timezone": "Asia/Manila",
+  "sex": "male",
+  "hr_max_default": 190,
+  "hr_max_override": null,
+  "hr_rest_fallback": 55,
+  "source_rank": {
+    "polar_h10": 1,
+    "apple_watch_workout": 2,
+    "manual": 99,
+    "apple_health_xml": 1,
+    "polar_flow": 2
+  }
+}

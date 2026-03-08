@@ -1,0 +1,19 @@
+# Runtime / cache
+__pycache__/
+*.pyc
+
+# Local state/logs
+.openclaw/workspace-state.json
+*.log
+
+# Generated dashboard artifacts
+dashboard/data.json
+dashboard/server.stdout.log
+dashboard/server.stderr.log
+
+# Local databases and imports
+gym531.db
+imports/
+
+# OS
+.DS_Store

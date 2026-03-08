@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gym531 Dashboard</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=layout-20260306-1" />
 </head>
 <body>
   <main class="app">
@@ -15,6 +15,7 @@
       </div>
       <div class="top-actions">
         <button id="refreshBtn" class="btn-primary" type="button">Refresh from DB</button>
+        <button id="refreshHealthBtn" class="btn-primary" type="button">Refresh + Health Import</button>
         <button id="todayBtn" class="btn-primary" type="button">Today</button>
         <span id="weeklyCompletion" class="weekly-pill">Week: --</span>
         <p id="generatedAt" class="muted"></p>
@@ -22,57 +23,113 @@
     </header>
 
     <section id="weekHeaderBanner" class="week-header-banner"></section>
-
     <section id="todayGlance" class="today-glance"></section>
 
-    <section id="totals" class="card-grid"></section>
+    <nav class="tabs" role="tablist" aria-label="Dashboard sections">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-tab="overview" type="button">Overview</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="strength" type="button">Strength</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="cardio" type="button">Cardio</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="uploads" type="button">Uploads</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="logs" type="button">Logs & History</button>
+    </nav>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Estimated 1RM (last 12 weeks)</h2>
-        <span class="muted">Wendler/Epley from best main top set</span>
-      </div>
-      <div id="est1rmRows" class="est1rm-grid"></div>
+    <section class="tab-panel active" data-tab-panel="overview">
+      <section id="totals" class="card-grid"></section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Training Status</h2>
+          <span class="muted">Performance Steering</span>
+        </div>
+        <div id="performanceKpis" class="kpi-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Week Calendar</h2>
+          <span class="muted">Mon → Sun at a glance</span>
+        </div>
+        <div id="weekRows" class="week-rows"></div>
+      </section>
+
+      <section class="panel">
+        <details id="dailyTilesWrap" open>
+          <summary class="panel-head">
+            <h2>Daily Activity Tiles</h2>
+            <span class="muted">Last 14 days (collapsible)</span>
+          </summary>
+          <div id="dailyTiles" class="tiles"></div>
+        </details>
+      </section>
     </section>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Cardio Analytics (last 12 weeks)</h2>
-        <span class="muted">Z2 compliance + VO2 trend</span>
-      </div>
-      <div id="cardioAnalytics"></div>
+    <section class="tab-panel" data-tab-panel="strength">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Cycle Control</h2>
+          <span class="muted">Deload presets + start next cycle</span>
+        </div>
+        <div id="cycleControlPanel"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Estimated 1RM (last 12 weeks)</h2>
+          <span class="muted">Wendler/Epley from best main top set</span>
+        </div>
+        <div id="est1rmRows" class="est1rm-grid"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Current Cycle Planned Sessions</h2>
+          <span class="muted">Main + supplemental with kg × reps</span>
+        </div>
+        <div id="cyclePlanRows" class="week-rows"></div>
+      </section>
     </section>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Audit Log (rules & overrides)</h2>
-        <span class="muted">Recent rule changes with timestamps</span>
-      </div>
-      <div id="auditLogPanel"></div>
+    <section class="tab-panel" data-tab-panel="cardio">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Cardio Analytics (last 12 weeks)</h2>
+          <span class="muted">Z2 compliance + VO2 trend</span>
+        </div>
+        <div id="cardioAnalytics"></div>
+      </section>
     </section>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Week Progress</h2>
-        <span class="muted">Barbell · Cardio · Rings</span>
-      </div>
-      <div id="weekRows" class="week-rows"></div>
+    <section class="tab-panel" data-tab-panel="uploads">
+      <section class="panel" id="uploadPanel">
+        <div class="panel-head">
+          <h2>Health Upload Box</h2>
+          <span class="muted">Drop from phone storage, then run import</span>
+        </div>
+        <div class="upload-grid">
+          <div class="upload-box" id="appleDropBox" data-kind="apple">
+            <p><strong>Apple</strong> (.xml or .zip)</p>
+            <input id="appleFileInput" type="file" accept=".xml,.zip,application/xml,application/zip" />
+            <button id="appleUploadBtn" class="status-btn" type="button">Upload Apple File</button>
+            <p id="appleUploadStatus" class="muted"></p>
+          </div>
+          <div class="upload-box" id="polarDropBox" data-kind="polar">
+            <p><strong>Polar</strong> (.tcx, .csv, .fit)</p>
+            <input id="polarFileInput" type="file" accept=".tcx,.csv,.fit,text/csv,application/octet-stream" />
+            <button id="polarUploadBtn" class="status-btn" type="button">Upload Polar File</button>
+            <p id="polarUploadStatus" class="muted"></p>
+          </div>
+        </div>
+      </section>
     </section>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Daily Activity Tiles</h2>
-        <span class="muted">Last 14 days</span>
-      </div>
-      <div id="dailyTiles" class="tiles"></div>
+    <section class="tab-panel" data-tab-panel="logs">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Audit Log (rules & overrides)</h2>
+          <span class="muted">Recent rule changes with timestamps</span>
+        </div>
+        <div id="auditLogPanel"></div>
+      </section>
     </section>
   </main>
-
-  <div id="statusPicker" class="status-picker" hidden>
-    <button type="button" data-status="green">🟢 Green</button>
-    <button type="button" data-status="yellow">🟡 Yellow</button>
-    <button type="button" data-status="red">🔴 Red</button>
-  </div>
 
   <div id="detailModal" class="modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
@@ -84,6 +141,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=vo2-two-lines-1" defer></script>
+  <script src="app.js?v=cycle-control-5" defer></script>
 </body>
 </html>
