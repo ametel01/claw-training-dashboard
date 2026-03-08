@@ -1,895 +1,102 @@
-const DASHBOARD_TIMEZONE = 'Asia/Manila';
-
-async function loadData() {
-  const res = await fetch('./data.json', { cache: 'no-store' });
-  if (!res.ok) throw new Error('Could not load data.json');
-  return res.json();
-}
-
-function currentDateInDashboardTZ() {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: DASHBOARD_TIMEZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).formatToParts(new Date());
-  const y = parts.find((p) => p.type === 'year')?.value;
-  const m = parts.find((p) => p.type === 'month')?.value;
-  const d = parts.find((p) => p.type === 'day')?.value;
-  return `${y}-${m}-${d}`;
-}
-
-function statCard(label, value) {
-  return `<article class="stat-card"><div class="stat-label">${label}</div><div class="stat-value">${value}</div></article>`;
-}
-
-function yesNoChip(label, done, detail = '') {
-  const cls = done ? 'chip done' : 'chip';
-  return `<span class="${cls}"><i class="dot"></i>${label}${detail ? ` · ${detail}` : ''}</span>`;
-}
-
-function renderTotals(totals) {
-  const node = document.getElementById('totals');
-  node.innerHTML = [
-    statCard('Barbell Sessions', totals.barbell_sessions ?? 0),
-    statCard('Cardio Sessions', totals.cardio_sessions ?? 0),
-    statCard('Rings Sessions', totals.rings_sessions ?? 0),
-    statCard('Total Training Days', totals.total_training_days ?? 0),
-    statCard('Active Days (14d)', totals.active_days_last_14 ?? 0)
-  ].join('');
-}
-
-function renderWeekHeader(weekHeader) {
-  const node = document.getElementById('weekHeaderBanner');
-  if (!node) return;
-  if (!weekHeader) {
-    node.innerHTML = '<div class="week-header-title">Cycle info unavailable</div>';
-    return;
-  }
-  const mainNums = String(weekHeader.main_pct || '').split('/').map((x) => Number(String(x).replace('%', ''))).filter((n) => Number.isFinite(n));
-  const suppNum = Number(String(weekHeader.supp_pct || '').replace('%', ''));
-  const clampPct = (n) => Math.max(0, Math.min(100, Number(n) || 0));
-  const pctHue = (n) => {
-    const p = clampPct(n);
-    const t = Math.max(0, Math.min(1, (p - 60) / 40)); // 60→100 maps 0→1
-    return 120 - (120 * t); // green → red
-  };
-  const barFill = (n) => {
-    const h = pctHue(n);
-    const c1 = `hsl(${h.toFixed(0)} 85% 66%)`;
-    const c2 = `hsl(${h.toFixed(0)} 80% 52%)`;
-    const c3 = `hsl(${h.toFixed(0)} 88% 42%)`;
-    return `linear-gradient(90deg, ${c1} 0%, ${c2} 55%, ${c3} 100%)`;
-  };
-  const bars = mainNums.map((n) => `<div class="pct-bar"><span style="width:${clampPct(n)}%; background:${barFill(n)}"></span><label>${n}%</label></div>`).join('');
-  const deloadBadge = weekHeader.deload_code ? `<span class="chip done">Deload: ${weekHeader.deload_name || weekHeader.deload_code}</span>` : '';
-
-  node.innerHTML = `
-    <div class="week-header-title">5/3/1 · ${weekHeader.block_type} · Week ${weekHeader.week_in_block} ${deloadBadge}</div>
-    <div class="week-header-meta">Main: ${weekHeader.main_pct} · Supplemental: ${weekHeader.supp_pct}</div>
-    <div class="pct-bars">${bars}${Number.isFinite(suppNum) ? `<div class="pct-bar supp"><span style="width:${clampPct(suppNum)}%; background:${barFill(suppNum)}"></span><label>Supp ${suppNum}%</label></div>` : ''}</div>
-  `;
-}
-
-function renderCycleControl(cycleControl = {}) {
-  const node = document.getElementById('cycleControlPanel');
-  if (!node) return;
-  const latest = cycleControl.latestBlock || {};
-  const active = cycleControl.activeDeload || null;
-  const profiles = cycleControl.profiles || [];
-  const options = profiles.map((p) => `<option value="${p.code}" data-days="${p.default_days || 7}">${p.name}</option>`).join('');
-  const events = (cycleControl.recentEvents || []).slice(0, 5).map((e) => `<li>${e.event_date} · ${e.event_type}${e.deload_code ? ` (${e.deload_code})` : ''}</li>`).join('');
-  const tmCards = (cycleControl.currentTM || []).map((r) => `
-    <article class="tm-card">
-      <div class="tm-head">
-        <strong>${r.lift}</strong>
-        <span class="muted">${r.effective_date || '—'}</span>
-      </div>
-      <div class="tm-value">${Number(r.tm_kg || 0).toFixed(1)} kg</div>
-      <div class="tm-actions">
-        <button class="status-btn" data-tm-lift="${r.lift}" data-tm-delta="-2.5" type="button">-2.5</button>
-        <button class="status-btn" data-tm-lift="${r.lift}" data-tm-delta="2.5" type="button">+2.5</button>
-        <button class="status-btn" data-tm-lift="${r.lift}" data-tm-delta="5" type="button">+5</button>
-      </div>
-      <div class="tm-set-row">
-        <input class="status-input tm-set-input" id="tmSet-${r.lift}" type="number" step="0.5" placeholder="Set exact kg" />
-        <button class="status-btn" data-tm-set="${r.lift}" type="button">Set</button>
-      </div>
-    </article>
-  `).join('');
-
-  node.innerHTML = `
-    <section class="cycle-control-grid">
-      <article class="cycle-control-card">
-        <h3 class="cycle-section-title">Cycle</h3>
-        <div class="muted">Current block: <strong>#${latest.block_no || '—'}</strong> · ${latest.block_type || '—'}</div>
-        <div class="muted">Start: <strong>${latest.start_date || '—'}</strong></div>
-        <div class="status-actions compact">
-          <input id="newCycleStartInput" class="status-input" type="date" />
-          <select id="newCycleTypeInput" class="status-input"><option value="Leader">Leader</option><option value="Anchor">Anchor</option></select>
-          <button id="startCycleBtn" class="status-btn" type="button">Start New Cycle</button>
+(()=>{var ve=(t)=>document.getElementById(t),F=(t)=>ve(t)?.value??"",_e=(t)=>Boolean(ve(t)?.checked),fe=(t,d)=>t.target instanceof Element?t.target.closest(d):null;function ee(){let t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Manila",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date),d=t.find((a)=>a.type==="year")?.value,l=t.find((a)=>a.type==="month")?.value,n=t.find((a)=>a.type==="day")?.value;return`${d}-${l}-${n}`}function Ce(t){let d=["green","yellow","red"];async function l(n){let a=n.target instanceof Element?n.target.closest('[data-role="status-dot"]'):null;if(!a)return;n.preventDefault(),n.stopPropagation();let i=a.dataset.date,s=a.dataset.status||"green",r=d[(d.indexOf(s)+1)%d.length];try{let o=await fetch(`/api/set-status?date=${encodeURIComponent(i)}&status=${encodeURIComponent(r)}`,{method:"POST"});if(!o.ok)throw Error(`set-status failed (${o.status})`);await t()}catch(o){console.error(o)}}document.addEventListener("click",l,!0),document.addEventListener("touchend",l,!0)}function He(){let t=document.getElementById("athleteViewBtn"),d=document.getElementById("logViewBtn");if(!t||!d)return;let l=Array.from(document.querySelectorAll(".athlete-only")),n=Array.from(document.querySelectorAll(".log-only")),a=(i)=>{let s=i!=="log";t.classList.toggle("active",s),d.classList.toggle("active",!s),l.forEach((r)=>r.classList.toggle("hidden-view",!s)),n.forEach((r)=>r.classList.toggle("hidden-view",s))};t.addEventListener("click",()=>a("athlete")),d.addEventListener("click",()=>a("log")),a("athlete")}function Pe(){let t=({kind:d,inputId:l,buttonId:n,statusId:a,boxId:i})=>{let s=document.getElementById(l),r=document.getElementById(n),o=document.getElementById(a),m=document.getElementById(i);if(!s||!r||!o||!m)return;let c=async(u)=>{if(!u)return;r.disabled=!0,o.textContent=`Uploading ${u.name}...`;try{let p=new FormData;p.append("kind",d),p.append("file",u);let b=await fetch("/api/upload-health",{method:"POST",body:p}),g=await b.json().catch(()=>({}));if(!b.ok||!g.ok)throw Error(g.error||`upload failed (${b.status})`);o.textContent=`Uploaded: ${g.path}`}catch(p){o.textContent=`Upload failed: ${p.message||p}`}finally{r.disabled=!1}};r.addEventListener("click",async()=>c(s.files?.[0])),s.addEventListener("change",async()=>{if(s.files?.[0])await c(s.files[0])}),m.addEventListener("dragover",(u)=>{u.preventDefault(),m.classList.add("dragging")}),m.addEventListener("dragleave",()=>m.classList.remove("dragging")),m.addEventListener("drop",async(u)=>{u.preventDefault(),m.classList.remove("dragging");let p=u.dataTransfer?.files?.[0];if(p)await c(p)})};t({kind:"apple",inputId:"appleFileInput",buttonId:"appleUploadBtn",statusId:"appleUploadStatus",boxId:"appleDropBox"}),t({kind:"polar",inputId:"polarFileInput",buttonId:"polarUploadBtn",statusId:"polarUploadStatus",boxId:"polarDropBox"})}function Oe(){let t=Array.from(document.querySelectorAll(".tabs .tab-btn[data-tab]")),d=Array.from(document.querySelectorAll(".tab-panel"));if(!t.length||!d.length)return;let l=(i,s=!0)=>{if(t.forEach((r)=>{let o=r.dataset.tab===i;r.classList.toggle("active",o),r.setAttribute("aria-selected",o?"true":"false")}),d.forEach((r)=>{r.classList.toggle("active",r.dataset.tabPanel===i)}),s){let r=`tab-${i}`;if(window.location.hash!==`#${r}`)history.replaceState(null,"",`#${r}`)}};t.forEach((i)=>{i.addEventListener("click",()=>l(i.dataset.tab||"overview"))});let n=(window.location.hash||"").replace("#tab-",""),a=t.some((i)=>i.dataset.tab===n)?n:t[0]?.dataset.tab||"overview";l(a,!1),window.__setActiveTab=(i)=>l(i)}function ze(){return{refreshButton:ve("refreshBtn"),refreshHealthButton:ve("refreshHealthBtn")}}async function je(){let t=await fetch("./data.json",{cache:"no-store"});if(!t.ok)throw Error("Could not load data.json");return t.json()}function We(t=[]){let d=document.getElementById("auditLogPanel");if(!d)return;if(!t.length){d.innerHTML='<p class="muted">No audit events yet.</p>';return}d.innerHTML=`<div class="audit-list">${t.map((l)=>{let n=(l.event_time||"").replace("T"," ").slice(0,19),a=l.old_value||l.new_value?`${l.old_value??"∅"} → ${l.new_value??"∅"}`:"";return`
+      <div class="audit-row">
+        <div class="audit-top">
+          <span>${l.domain} · ${l.action} · ${l.key_name||"-"}</span>
+          <span>${n}</span>
         </div>
-      </article>
-
-      <article class="cycle-control-card">
-        <h3 class="cycle-section-title">Deload</h3>
-        <div class="muted">Active: <strong>${active ? `${active.name || active.deload_code} (${active.start_date} → ${active.end_date})` : 'none'}</strong></div>
-        <div class="status-actions compact">
-          <select id="deloadTypeInput" class="status-input">${options}</select>
-          <input id="deloadStartInput" class="status-input" type="date" />
-          <input id="deloadDaysInput" class="status-input" type="number" min="1" step="1" placeholder="Days" />
-          <button id="applyDeloadBtn" class="status-btn" type="button">Apply Deload</button>
-        </div>
-      </article>
-    </section>
-
-    <section class="cycle-control-card">
-      <h3 class="cycle-section-title">Training Max</h3>
-      <div class="tm-grid">${tmCards || '<p class="muted">No TM data.</p>'}</div>
-    </section>
-
-    <section class="cycle-control-card">
-      <h3 class="cycle-section-title">Recent cycle events</h3>
-      <ul class="detail-list">${events || '<li>No events yet.</li>'}</ul>
-    </section>
-  `;
-}
-
-function renderTodayGlance(days = [], weekRows = [], details = {}) {
-  const node = document.getElementById('todayGlance');
-  if (!node) return;
-
-  const today = currentDateInDashboardTZ();
-  const d = (days || []).find((x) => x.session_date === today);
-  if (!d) {
-    node.innerHTML = '<div class="today-title">TODAY</div><div class="today-meta">No data for today yet.</div>';
-    return;
-  }
-
-  const barbellRows = (details?.barbellByDate?.[today] || []);
-  const hasMain = barbellRows.some((r) => r.category === 'main');
-  const hasSupp = barbellRows.some((r) => r.category === 'supplemental');
-
-  const plannedMain = !!d.planned_barbell_main;
-  const plannedSupp = !!d.planned_barbell_supp;
-  const plannedCardio = !!d.planned_cardio && d.planned_cardio !== 'OFF';
-  const plannedRings = !!d.planned_rings;
-  const plannedCount = [plannedMain, plannedSupp, plannedCardio, plannedRings].filter(Boolean).length;
-  const doneCount = [plannedMain && hasMain, plannedSupp && hasSupp, plannedCardio && d.has_cardio, plannedRings && d.has_rings].filter(Boolean).length;
-  const status = doneCount === 0 ? 'Not Started' : (doneCount === plannedCount ? 'Completed' : 'In Progress');
-  const pct = plannedCount ? Math.round((doneCount / plannedCount) * 100) : 0;
-
-  const line = (emoji, plannedText, done) => {
-    if (!plannedText) return '';
-    return `<div class="today-line"><span class="today-chip ${done ? 'done' : 'pending'}">${done ? 'done' : 'pending'}</span>${emoji} ${plannedText}</div>`;
-  };
-
-  const mainText = plannedMain ? `${d.planned_barbell_main}` : '';
-  const suppText = plannedSupp ? `${d.planned_barbell_supp} ${d.planned_supp_sets || ''}x${d.planned_supp_reps || ''}` : '';
-  const cardioText = plannedCardio ? d.planned_cardio : '';
-  const ringsText = plannedRings ? `Rings ${d.planned_rings}` : '';
-  const estMin = ((plannedMain || plannedSupp) ? 60 : 0) + (plannedCardio ? 30 : 0) + (plannedRings ? 20 : 0);
-
-  node.innerHTML = `
-    <div class="today-title">
-      <span><strong>TODAY</strong> · ${today}</span>
-      <span class="today-progress"><span class="status-dot ${d.pain_level || 'green'}"></span>${doneCount}/${plannedCount || 0} · ${pct}%</span>
-    </div>
-    <div class="today-meta">Status: <strong>${status}</strong> · Planned time: <strong>${Math.floor(estMin/60)}h ${estMin%60}m</strong></div>
-    <div class="today-lines">
-      ${line('🏋', mainText, hasMain)}
-      ${line('🏋+', suppText, hasSupp)}
-      ${line('❤️', cardioText, !!d.has_cardio)}
-      ${line('🤸', ringsText, !!d.has_rings)}
-    </div>
-    ${status === 'Not Started' ? '<div class="today-cta"><button class="btn-primary" type="button" id="startSessionBtn">Start Session</button></div>' : ''}
-  `;
-}
-
-function renderWeeklyCompletion(weekRows = [], details = {}) {
-  let planned = 0;
-  let done = 0;
-
-  weekRows.forEach((r) => {
-    const rows = details?.barbellByDate?.[r.session_date] || [];
-    const hasMain = rows.some((x) => x.category === 'main');
-    const hasSupp = rows.some((x) => x.category === 'supplemental');
-
-    const pMain = !!r.main_lift;
-    const pSupp = !!r.main_lift;
-    const pCardio = !!r.cardio_plan && r.cardio_plan !== 'OFF';
-    const pRings = !!r.rings_plan;
-
-    if (pMain) { planned += 1; if (hasMain) done += 1; }
-    if (pSupp) { planned += 1; if (hasSupp) done += 1; }
-    if (pCardio) { planned += 1; if (r.cardio_done) done += 1; }
-    if (pRings) { planned += 1; if (r.rings_done) done += 1; }
-  });
-
-  const pct = planned ? Math.round((done / planned) * 100) : 0;
-  const pill = document.getElementById('weeklyCompletion');
-  if (pill) pill.textContent = `Week: ${done}/${planned} (${pct}%)`;
-}
-
-function renderPerformanceKpis(weekRows = [], details = {}) {
-  const node = document.getElementById('performanceKpis');
-  if (!node) return;
-
-  const plannedWeek = weekRows.reduce((a, r) => a + (!!r.main_lift) + (!!r.main_lift) + (!!r.cardio_plan && r.cardio_plan !== 'OFF') + (!!r.rings_plan), 0);
-  const doneWeek = weekRows.reduce((a, r) => {
-    const rows = details?.barbellByDate?.[r.session_date] || [];
-    const hasMain = rows.some((x) => x.category === 'main');
-    const hasSupp = rows.some((x) => x.category === 'supplemental');
-    return a + (hasMain ? 1 : 0) + (hasSupp ? 1 : 0) + (!!r.cardio_done ? 1 : 0) + (!!r.rings_done ? 1 : 0);
-  }, 0);
-  const weekPct = plannedWeek ? Math.round((doneWeek / plannedWeek) * 100) : 0;
-
-  const today = currentDateInDashboardTZ();
-  const dayIdx = Math.max(1, Math.min(7, ((new Date(`${today}T00:00:00`).getDay() + 6) % 7) + 1));
-  const expectedByToday = Math.round((plannedWeek * (dayIdx / 7)) || 0);
-  const expectedPct = plannedWeek ? Math.round((expectedByToday / plannedWeek) * 100) : 0;
-  const behind = Math.max(0, expectedByToday - doneWeek);
-
-  const cardioByDate = details?.cardioByDate || {};
-  const cardioRows = Object.values(cardioByDate).flat();
-  const cardioSessions = [];
-  const seenCardio = new Set();
-  for (const r of cardioRows) {
-    const key = `${r.session_date}|${r.protocol}`;
-    if (seenCardio.has(key)) continue;
-    seenCardio.add(key);
-    cardioSessions.push(r);
-  }
-  const z2Sessions = cardioSessions.filter((r) => r.protocol === 'Z2');
-  const vo2Sessions = cardioSessions.filter((r) => String(r.protocol || '').includes('VO2'));
-  const z2Count = z2Sessions.length;
-  const vo2Count = vo2Sessions.length;
-  const totalIntensity = Math.max(1, z2Count + vo2Count);
-  const z2Pct = Math.round((z2Count / totalIntensity) * 100);
-  const vo2Pct = 100 - z2Pct;
-  const cardioMin = cardioSessions.reduce((a, r) => a + Number(r.duration_min || 0), 0);
-
-  const z2WeeklyTarget = 120; // 4 x 30 min weekly
-  const weekStart = (() => {
-    const d = new Date(`${today}T00:00:00`);
-    const day = (d.getDay() + 6) % 7; // Mon=0
-    d.setDate(d.getDate() - day);
-    return d.toISOString().slice(0, 10);
-  })();
-  const weekEnd = (() => {
-    const d = new Date(`${weekStart}T00:00:00`);
-    d.setDate(d.getDate() + 6);
-    return d.toISOString().slice(0, 10);
-  })();
-  const z2WeekMin = z2Sessions
-    .filter((r) => r.session_date >= weekStart && r.session_date <= weekEnd)
-    .reduce((a, r) => a + Number(r.duration_min || 0), 0);
-
-  const barbellByDate = details?.barbellByDate || {};
-  const shiftDate = (iso, deltaDays) => {
-    const d = new Date(`${iso}T12:00:00Z`);
-    d.setUTCDate(d.getUTCDate() + deltaDays);
-    return d.toISOString().slice(0, 10);
-  };
-  const makeDateRange = (startStr, endStr) => {
-    const out = [];
-    let cur = startStr;
-    while (cur <= endStr) {
-      out.push(cur);
-      cur = shiftDate(cur, 1);
-    }
-    return out;
-  };
-  const recentStart = shiftDate(today, -13);
-  const priorStart = shiftDate(today, -27);
-  const priorEnd = shiftDate(today, -14);
-  const recentDates = makeDateRange(recentStart, today);
-  const priorDates = makeDateRange(priorStart, priorEnd);
-  const volSeries = recentDates.map((d) => (barbellByDate[d] || []).reduce((a, r) => a + (Number(r.actual_weight_kg || 0) * Number(r.actual_reps || 0)), 0));
-  const mainSeries = recentDates.map((d) => (barbellByDate[d] || [])
-    .filter((r) => r.category === 'main')
-    .reduce((a, r) => a + (Number(r.actual_weight_kg || 0) * Number(r.actual_reps || 0)), 0));
-  const suppSeries = recentDates.map((d) => (barbellByDate[d] || [])
-    .filter((r) => r.category === 'supplemental')
-    .reduce((a, r) => a + (Number(r.actual_weight_kg || 0) * Number(r.actual_reps || 0)), 0));
-  const cardioSeries = recentDates.map((d) => (cardioByDate[d] || []).reduce((a, r) => a + Number(r.duration_min || 0), 0));
-
-  const weeklyVerdict = weekPct >= expectedPct ? '🟢 On pace' : (behind >= 2 ? `🔴 Behind by ${behind} sessions` : '🟡 Slightly behind');
-  const intensityVerdict = z2Pct >= 75 ? '🟢 Z2-dominant' : (z2Pct >= 65 ? '🟡 Slightly VO2-heavy' : '🔴 Too VO2-heavy');
-  const z2Verdict = z2WeekMin >= z2WeeklyTarget ? `🟢 Target met (+${z2WeekMin-z2WeeklyTarget}m)` : `🔴 Under target (${z2WeeklyTarget-z2WeekMin}m short)`;
-
-  node.innerHTML = `
-    <article class="kpi-card"><div class="muted">Training status · weekly execution</div><div class="kpi-value">${weekPct}%</div><div class="muted">Expected by today: ≥${expectedPct}% (${expectedByToday}/${plannedWeek})</div><div class="muted">${weeklyVerdict}</div></article>
-    <article class="kpi-card"><div class="muted">Intensity distribution (Z2 vs VO2)</div><div class="kpi-value">${z2Pct}% / ${vo2Pct}%</div><div class="muted">Target: 75% / 25%</div><div class="muted">${intensityVerdict}</div></article>
-    <article class="kpi-card"><div class="muted">Z2 volume</div><div class="kpi-value">${z2WeekMin} / ${z2WeeklyTarget} min</div><div class="muted">${z2Verdict}</div></article>
-  `;
-}
-
-function renderEst1RM(rows = []) {
-  const node = document.getElementById('est1rmRows');
-  if (!node) return;
-
-  if (!rows.length) {
-    node.innerHTML = '<p class="muted">No main-set data in the last 12 weeks yet.</p>';
-    return;
-  }
-
-  const spark = (series = []) => {
-    const arr = (Array.isArray(series) ? series : []).slice().reverse();
-    if (arr.length < 2) return '';
-    const vals = arr.map((p) => Number(p.e1rm)).filter((n) => Number.isFinite(n));
-    if (vals.length < 2) return '';
-    const w = 120, h = 26, pad = 2;
-    const min = Math.min(...vals), max = Math.max(...vals);
-    const span = Math.max(1, max - min);
-    const pts = vals.map((v, i) => `${(i*(w/(vals.length-1))).toFixed(1)},${(h-pad-(((v-min)/span)*(h-2*pad))).toFixed(1)}`).join(' ');
-    return `<svg viewBox="0 0 ${w} ${h}" class="spark"><polyline points="${pts}" fill="none" stroke="#9ad0ff" stroke-width="2"/></svg>`;
-  };
-
-  node.innerHTML = rows.map((r) => {
-    let trend = [];
-    if (typeof r.trend_points === 'string') {
-      try { trend = JSON.parse(r.trend_points) || []; } catch { trend = []; }
-    } else if (Array.isArray(r.trend_points)) trend = r.trend_points;
-    const d4 = Number(r.delta_4w_kg || 0);
-    const arrow = d4 > 0 ? '↑' : (d4 < 0 ? '↓' : '→');
-    const pctToNext = Math.max(0, Math.min(100, Number(r.progress_to_next_pct || 0)));
-    return `
-    <article class="est1rm-card">
-      <div class="est1rm-lift">${r.lift}</div>
-      <div class="est1rm-value">${r.est_1rm_kg} kg</div>
-      <div class="est1rm-level">${r.strength_level} · ${r.bw_ratio}x BW</div>
-      <div class="est1rm-meta">4w: ${arrow} ${Math.abs(d4).toFixed(1)} kg · Cycle: ${(Number(r.delta_cycle_kg||0)).toFixed(1)} kg</div>
-      ${spark(trend)}
-      <div class="est1rm-meta">${r.next_level !== '—' ? `Next: ${r.next_level} at ${r.next_level_kg} kg` : 'Top level reached'} · BW ${r.bodyweight_kg} kg</div>
-      <div class="progress-track"><span style="width:${pctToNext}%"></span></div>
-      <div class="est1rm-meta">${pctToNext}% to next level · from ${r.source_weight_kg}×${r.source_reps} (${r.source_date})</div>
-    </article>`;
-  }).join('');
-}
-
-function renderCurrentCyclePlan(rows = []) {
-  const node = document.getElementById('cyclePlanRows');
-  if (!node) return;
-  if (!rows.length) {
-    node.innerHTML = '<p class="muted">No planned sessions found for current cycle.</p>';
-    return;
-  }
-
-  const byDate = new Map();
-  for (const r of rows) {
-    if (!byDate.has(r.session_date)) byDate.set(r.session_date, []);
-    byDate.get(r.session_date).push(r);
-  }
-
-  const weekStart = (iso) => {
-    const d = new Date(`${iso}T12:00:00Z`);
-    const day = (d.getUTCDay() + 6) % 7; // Mon=0
-    d.setUTCDate(d.getUTCDate() - day);
-    return d.toISOString().slice(0, 10);
-  };
-
-  const summarizeTile = (items) => {
-    const mainLifts = [...new Set(items.filter((x) => x.category === 'main').map((x) => x.lift))];
-    const suppLifts = [...new Set(items.filter((x) => x.category === 'supplemental').map((x) => x.lift))];
-    const mainTxt = mainLifts.length ? mainLifts.join(' + ') : 'Rest';
-    const suppTxt = suppLifts.length ? suppLifts.join(' + ') : '—';
-    return { mainTxt, suppTxt };
-  };
-
-  const summarizeModal = (items, category) => {
-    const rows2 = items.filter((x) => x.category === category);
-    if (!rows2.length) return '<p class="muted">—</p>';
-    const byLift = new Map();
-    for (const r of rows2) {
-      if (!byLift.has(r.lift)) byLift.set(r.lift, []);
-      byLift.get(r.lift).push(r);
-    }
-    const lines = [];
-    for (const [lift, arr] of byLift.entries()) {
-      const grouped = new Map();
-      for (const s of arr) {
-        const k = `${s.prescribed_reps}|${s.planned_weight_kg}`;
-        grouped.set(k, (grouped.get(k) || 0) + 1);
-      }
-      const uniq = Array.from(grouped.entries());
-      const detail = uniq.length === 1
-        ? (() => { const [[k, c]] = uniq; const [reps, wt] = k.split('|'); return `${c}×${reps} @ ${wt}kg`; })()
-        : arr.map((s) => `${s.planned_weight_kg}×${s.prescribed_reps}`).join(' · ');
-      lines.push(`<li><strong>${lift}</strong>: ${detail}</li>`);
-    }
-    return `<ul class="detail-list">${lines.join('')}</ul>`;
-  };
-
-  const allDates = Array.from(byDate.keys()).sort();
-  const shiftDate = (iso, delta) => {
-    const d = new Date(`${iso}T12:00:00Z`);
-    d.setUTCDate(d.getUTCDate() + delta);
-    return d.toISOString().slice(0, 10);
-  };
-  const start = weekStart(allDates[0]);
-  const end = weekStart(allDates[allDates.length - 1]);
-
-  const weekStarts = [];
-  for (let d = start; d <= end; d = shiftDate(d, 7)) weekStarts.push(d);
-
-  const dow = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  node.innerHTML = weekStarts.map((ws, idx) => {
-    const cells = [];
-    for (let i = 0; i < 7; i++) {
-      const date = shiftDate(ws, i);
-      const items = byDate.get(date) || [];
-      if (!items.length) continue; // show training days only
-      const { mainTxt, suppTxt } = summarizeTile(items);
-      cells.push(`<article class="cycle-day-tile" data-cycle-date="${date}" tabindex="0"><div class="tile-date">${dow[i]} · ${date}</div><div class="tile-main">${mainTxt}</div><div class="muted">Supp: ${suppTxt}</div></article>`);
-    }
-    return `
-      <section class="cycle-week-block">
-        <div class="panel-head"><h3>Week ${idx + 1} <span class="muted">· ${ws}</span></h3></div>
-        <div class="cycle-calendar-grid">
-          ${cells.join('')}
-        </div>
-      </section>`;
-  }).join('');
-
-  let modal = document.getElementById('cyclePlanModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'cyclePlanModal';
-    modal.className = 'modal';
-    modal.innerHTML = `<div class="modal-card" role="dialog" aria-modal="true"><div class="modal-head"><h3 id="cyclePlanTitle">Planned session</h3><button type="button" class="modal-close" id="cyclePlanClose">×</button></div><div id="cyclePlanBody" class="modal-body"></div></div>`;
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
-    modal.querySelector('#cyclePlanClose')?.addEventListener('click', () => modal.classList.remove('open'));
-  }
-
-  const openCycleModal = (date) => {
-    const items = byDate.get(date) || [];
-    const title = document.getElementById('cyclePlanTitle');
-    const body = document.getElementById('cyclePlanBody');
-    if (!title || !body) return;
-    title.textContent = `Planned session · ${date}`;
-    body.innerHTML = `
-      <section class="detail-section"><h4>Main</h4>${summarizeModal(items, 'main')}</section>
-      <section class="detail-section"><h4>Supplemental</h4>${summarizeModal(items, 'supplemental')}</section>
-    `;
-    modal.classList.add('open');
-  };
-
-  node.querySelectorAll('.cycle-day-tile').forEach((el) => {
-    const open = () => openCycleModal(el.getAttribute('data-cycle-date'));
-    el.addEventListener('click', open);
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-    });
-  });
-}
-
-function renderCardioAnalytics(data = {}) {
-  const node = document.getElementById('cardioAnalytics');
-  if (!node) return;
-
-  const totalZ2 = data.total_z2 || 0;
-  const inCap = data.z2_in_cap || 0;
-  const pct = data.z2_compliance_pct ?? 0;
-
-  const parseJsonArray = (v) => {
-    if (Array.isArray(v)) return v;
-    if (typeof v === 'string') {
-      try { return JSON.parse(v); } catch { return []; }
-    }
-    return [];
-  };
-
-  const z2Points = parseJsonArray(data.z2_points);
-  const z2TrendPoints = z2Points
-    .map((p) => {
-      const avg = Number(p.avg_hr);
-      const max = Number(p.max_hr);
-      if (Number.isFinite(avg) && avg > 0) return { date: p.session_date, hr: avg, estimated: false };
-      if (Number.isFinite(max) && max > 0) return { date: p.session_date, hr: max, estimated: true };
-      return null;
-    })
-    .filter((p) => p && Number.isFinite(p.hr) && p.hr > 0)
-    .sort((a, b) => (a.date < b.date ? -1 : 1));
-  const z2Scatter = parseJsonArray(data.z2_scatter_points)
-    .map((p) => ({ date: p.session_date, hr: Number(p.avg_hr), speed: Number(p.speed_kmh) }))
-    .filter((p) => p.hr > 0 && p.speed > 0)
-    .sort((a, b) => (a.date < b.date ? -1 : 1))
-    .slice(-8);
-
-  const z2Efficiency = parseJsonArray(data.z2_efficiency_points)
-    .map((p) => ({
-      date: p.session_date,
-      efficiency: Number(p.efficiency),
-      speedAt120: Number(p.speed_at_120),
-      speedAt140: Number(p.speed_at_140)
-    }))
-    .filter((p) => p.efficiency > 0)
-    .sort((a, b) => (a.date < b.date ? -1 : 1));
-
-  const z2Decoupling = parseJsonArray(data.z2_decoupling_points)
-    .map((p) => ({ date: p.session_date, decoupling: Number(p.decoupling_pct) }))
-    .filter((p) => Number.isFinite(p.decoupling))
-    .sort((a, b) => (a.date < b.date ? -1 : 1));
-
-  const vo2Points = parseJsonArray(data.vo2_points);
-  const aerobicTests = (window.__dashboardData?.aerobicTests || []).map((r) => ({ ...r }));
-
-  let z2HrTrend = '<p class="muted">No Z2 HR data in last 12 weeks.</p>';
-  const recentZ2 = z2TrendPoints.slice(-8);
-  if (recentZ2.length >= 2) {
-    const w = 320, h = 120, left = 32, right = 10, top = 10, bottom = 18;
-    const hrs = recentZ2.map((p) => Number(p.hr));
-    const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5;
-    const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5;
-    const span = Math.max(5, maxHr - minHr);
-    const plotW = w - left - right, plotH = h - top - bottom;
-    const pts = recentZ2.map((p, i) => ({
-      x: left + (i * (plotW / (recentZ2.length - 1))),
-      y: top + (1 - ((Number(p.hr) - minHr) / span)) * plotH,
-      hr: Number(p.hr),
-      date: p.date,
-      estimated: !!p.estimated
-    }));
-    const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => ({ hr: Math.round(minHr + t * span), y: top + (1 - t) * plotH }));
-    const z2Cap = 125;
-    const z2CapY = top + (1 - ((z2Cap - minHr) / span)) * plotH;
-    const poly = pts.map((p) => `${p.x},${p.y}`).join(' ');
-    const grid = ticks.map((t) => `<line x1="${left}" y1="${t.y}" x2="${w-right}" y2="${t.y}" class="z2-grid"/>`).join('');
-    const yLabels = ticks.map((t) => `<text x="${left-6}" y="${t.y+3}" class="z2-label" text-anchor="end">${t.hr}</text>`).join('');
-    const circles = pts.map((p) => `<g><circle cx="${p.x}" cy="${p.y}" r="2.8" style="opacity:${p.estimated ? '0.65' : '1'}"></circle><title>${p.date}: HR ${p.hr}${p.estimated ? ' (from max HR)' : ''}</title></g>`).join('');
-
-    const speedByDate = new Map(z2Points.map((r) => [r.session_date, Number(r.speed_kmh)]));
-    const effRaw = pts
-      .map((p) => {
-        const sp = speedByDate.get(p.date);
-        return (Number.isFinite(sp) && sp > 0 && p.hr > 0) ? { x: p.x, eff: sp / p.hr } : null;
-      })
-      .filter(Boolean);
-    let effPolyline = '';
-    let effLegend = 'efficiency line: need speed+HR logs';
-    if (effRaw.length >= 2) {
-      const minE = Math.min(...effRaw.map((e) => e.eff));
-      const maxE = Math.max(...effRaw.map((e) => e.eff));
-      const spanE = Math.max(0.0001, maxE - minE);
-      const effPts = effRaw.map((e) => ({ x: e.x, y: top + (1 - ((e.eff - minE) / spanE)) * plotH }));
-      effPolyline = `<polyline points="${effPts.map((p) => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="#ff8cc6" stroke-width="2" stroke-dasharray="4 2"/>`;
-      const firstE = effRaw[0].eff, lastE = effRaw[effRaw.length - 1].eff;
-      const d = ((lastE - firstE) / firstE) * 100;
-      effLegend = `efficiency Δ ${d >= 0 ? '+' : ''}${d.toFixed(1)}%`;
-    }
-    const delta = (pts[pts.length - 1].hr - pts[0].hr).toFixed(1);
-    const estCount = recentZ2.filter((p) => p.estimated).length;
-    z2HrTrend = `
+        ${a?`<div class="audit-meta">${a}</div>`:""}
+        ${l.note?`<div class="audit-meta">${l.note}</div>`:""}
+      </div>
+    `}).join("")}</div>`}function Ze(t={}){let d=document.getElementById("cardioAnalytics");if(!d)return;let l=t.total_z2||0,n=t.z2_in_cap||0,a=t.z2_compliance_pct??0,i=(e)=>{if(Array.isArray(e))return e;if(typeof e==="string")try{return JSON.parse(e)}catch{return[]}return[]},s=i(t.z2_points),r=s.map((e)=>{let h=Number(e.avg_hr),x=Number(e.max_hr);if(Number.isFinite(h)&&h>0)return{date:e.session_date,hr:h,estimated:!1};if(Number.isFinite(x)&&x>0)return{date:e.session_date,hr:x,estimated:!0};return null}).filter((e)=>e&&Number.isFinite(e.hr)&&e.hr>0).sort((e,h)=>e.date<h.date?-1:1),o=i(t.z2_scatter_points).map((e)=>({date:e.session_date,hr:Number(e.avg_hr),speed:Number(e.speed_kmh)})).filter((e)=>e.hr>0&&e.speed>0).sort((e,h)=>e.date<h.date?-1:1).slice(-8),m=i(t.z2_efficiency_points).map((e)=>({date:e.session_date,efficiency:Number(e.efficiency),speedAt120:Number(e.speed_at_120),speedAt140:Number(e.speed_at_140)})).filter((e)=>e.efficiency>0).sort((e,h)=>e.date<h.date?-1:1),c=i(t.z2_decoupling_points).map((e)=>({date:e.session_date,decoupling:Number(e.decoupling_pct)})).filter((e)=>Number.isFinite(e.decoupling)).sort((e,h)=>e.date<h.date?-1:1),u=i(t.vo2_points),p=(window.__dashboardData?.aerobicTests||[]).map((e)=>({...e})),b='<p class="muted">No Z2 HR data in last 12 weeks.</p>',g=r.slice(-8);if(g.length>=2){let P=g.map((v)=>Number(v.hr)),V=Math.floor((Math.min(...P)-3)/5)*5,q=Math.ceil((Math.max(...P)+3)/5)*5,k=Math.max(5,q-V),Y=278,ce=92,O=g.map((v,f)=>({x:32+f*(278/(g.length-1)),y:10+(1-(Number(v.hr)-V)/k)*92,hr:Number(v.hr),date:v.date,estimated:!!v.estimated})),U=[0,0.25,0.5,0.75,1].map((v)=>({hr:Math.round(V+v*k),y:10+(1-v)*92})),J=125,G=10+(1-(125-V)/k)*92,oe=O.map((v)=>`${v.x},${v.y}`).join(" "),j=U.map((v)=>`<line x1="32" y1="${v.y}" x2="310" y2="${v.y}" class="z2-grid"/>`).join(""),N=U.map((v)=>`<text x="26" y="${v.y+3}" class="z2-label" text-anchor="end">${v.hr}</text>`).join(""),K=O.map((v)=>`<g><circle cx="${v.x}" cy="${v.y}" r="2.8" style="opacity:${v.estimated?"0.65":"1"}"></circle><title>${v.date}: HR ${v.hr}${v.estimated?" (from max HR)":""}</title></g>`).join(""),he=new Map(s.map((v)=>[v.session_date,Number(v.speed_kmh)])),Q=O.map((v)=>{let f=Number(he.get(v.date));return Number.isFinite(f)&&f>0&&v.hr>0?{x:v.x,eff:f/v.hr}:null}).filter(Boolean),re="",ue="efficiency line: need speed+HR logs";if(Q.length>=2){let v=Math.min(...Q.map((de)=>de.eff)),f=Math.max(...Q.map((de)=>de.eff)),I=Math.max(0.0001,f-v);re=`<polyline points="${Q.map((de)=>({x:de.x,y:10+(1-(de.eff-v)/I)*92})).map((de)=>`${de.x},${de.y}`).join(" ")}" fill="none" stroke="#ff8cc6" stroke-width="2" stroke-dasharray="4 2"/>`;let me=Q[0].eff,Ae=(Q[Q.length-1].eff-me)/me*100;ue=`efficiency Δ ${Ae>=0?"+":""}${Ae.toFixed(1)}%`}let ye=(O[O.length-1].hr-O[0].hr).toFixed(1),se=g.filter((v)=>v.estimated).length;b=`
       <div class="z2-graph-wrap">
-        <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="Z2 average HR trend">
-          ${grid}${yLabels}
-          <line x1="${left}" y1="${h-bottom}" x2="${w-right}" y2="${h-bottom}" class="z2-axis"/>
-          <line x1="${left}" y1="${top}" x2="${left}" y2="${h-bottom}" class="z2-axis"/>
-          <line x1="${left}" y1="${z2CapY}" x2="${w-right}" y2="${z2CapY}" stroke="#ffc15a" stroke-dasharray="3 2" stroke-width="1.2"/>
-          <text x="${w-right}" y="${Math.max(8, z2CapY - 3)}" class="z2-label" text-anchor="end">Z2 cap ${z2Cap}</text>
-          <polyline points="${poly}" class="z2-line"/>
-          ${effPolyline}
-          ${circles}
-          <text x="${left}" y="${h-3}" class="z2-label">${pts[0]?.date || ''}</text>
-          <text x="${w-right}" y="${h-3}" class="z2-label" text-anchor="end">${pts[pts.length-1]?.date || ''}</text>
+        <svg viewBox="0 0 320 120" class="z2-graph" role="img" aria-label="Z2 average HR trend">
+          ${j}${N}
+          <line x1="32" y1="102" x2="310" y2="102" class="z2-axis"/>
+          <line x1="32" y1="10" x2="32" y2="102" class="z2-axis"/>
+          <line x1="32" y1="${G}" x2="310" y2="${G}" stroke="#ffc15a" stroke-dasharray="3 2" stroke-width="1.2"/>
+          <text x="310" y="${Math.max(8,G-3)}" class="z2-label" text-anchor="end">Z2 cap 125</text>
+          <polyline points="${oe}" class="z2-line"/>
+          ${re}
+          ${K}
+          <text x="32" y="117" class="z2-label">${O[0]?.date||""}</text>
+          <text x="310" y="117" class="z2-label" text-anchor="end">${O[O.length-1]?.date||""}</text>
         </svg>
-        <div class="muted">Last ${recentZ2.length} Z2 sessions · HR trend Δ ${delta} bpm${estCount ? ` · ${estCount} points estimated from max HR` : ''} · ${effLegend}</div>
-      </div>`;
-  }
-
-  let z2ScatterGraph = '<div class="cardio-empty"><div><strong>Unlock this chart</strong></div><div class="muted">Log speed in notes as: <code>@ 6.2 km/h</code></div></div>';
-  if (z2Scatter.length >= 2) {
-    const w = 320, h = 180, left = 36, right = 12, top = 12, bottom = 24;
-    const minX = Math.min(...z2Scatter.map((p) => p.speed)) - 0.2;
-    const maxX = Math.max(...z2Scatter.map((p) => p.speed)) + 0.2;
-    const minY = Math.floor((Math.min(...z2Scatter.map((p) => p.hr)) - 3) / 5) * 5;
-    const maxY = Math.ceil((Math.max(...z2Scatter.map((p) => p.hr)) + 3) / 5) * 5;
-    const xSpan = Math.max(0.5, maxX - minX);
-    const ySpan = Math.max(5, maxY - minY);
-    const plotW = w - left - right, plotH = h - top - bottom;
-    const withXY = z2Scatter.map((p, i) => ({
-      ...p,
-      i,
-      x: left + ((p.speed - minX) / xSpan) * plotW,
-      y: top + (1 - ((p.hr - minY) / ySpan)) * plotH,
-      opacity: (0.35 + (0.65 * (i + 1) / z2Scatter.length)).toFixed(2)
-    }));
-    const circles = withXY.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="3.2" style="fill:#59a8ff;opacity:${p.opacity}"><title>${p.date}: ${p.speed.toFixed(1)} km/h · HR ${p.hr}</title></circle>`).join('');
-
-    let trendline = '';
-    let trendlineNote = 'Need ≥4 sessions for a stable trendline';
-    if (z2Scatter.length >= 4) {
-      const mx = z2Scatter.reduce((a, p) => a + p.speed, 0) / z2Scatter.length;
-      const my = z2Scatter.reduce((a, p) => a + p.hr, 0) / z2Scatter.length;
-      const cov = z2Scatter.reduce((a, p) => a + ((p.speed - mx) * (p.hr - my)), 0);
-      const varX = z2Scatter.reduce((a, p) => a + ((p.speed - mx) ** 2), 0) || 1;
-      const slope = cov / varX;
-      const intercept = my - (slope * mx);
-      const y1 = slope * minX + intercept;
-      const y2 = slope * maxX + intercept;
-      const toY = (val) => top + (1 - ((val - minY) / ySpan)) * plotH;
-      trendline = `<line x1="${left}" y1="${toY(y1)}" x2="${w-right}" y2="${toY(y2)}" class="vo2-line line-44"/>`;
-      trendlineNote = 'Trendline shown (≥4 sessions)';
-    }
-
-    z2ScatterGraph = `
+        <div class="muted">Last ${g.length} Z2 sessions · HR trend Δ ${ye} bpm${se?` · ${se} points estimated from max HR`:""} · ${ue}</div>
+      </div>`}let y='<div class="cardio-empty"><div><strong>Unlock this chart</strong></div><div class="muted">Log speed in notes as: <code>@ 6.2 km/h</code></div></div>';if(o.length>=2){let P=Math.min(...o.map((N)=>N.speed))-0.2,V=Math.max(...o.map((N)=>N.speed))+0.2,q=Math.floor((Math.min(...o.map((N)=>N.hr))-3)/5)*5,k=Math.ceil((Math.max(...o.map((N)=>N.hr))+3)/5)*5,Y=Math.max(0.5,V-P),ce=Math.max(5,k-q),O=272,U=144,G=o.map((N,K)=>({...N,x:36+(N.speed-P)/Y*272,y:12+(1-(N.hr-q)/ce)*144,opacity:(0.35+0.65*(K+1)/o.length).toFixed(2)})).map((N)=>`<circle cx="${N.x}" cy="${N.y}" r="3.2" style="fill:#59a8ff;opacity:${N.opacity}"><title>${N.date}: ${N.speed.toFixed(1)} km/h · HR ${N.hr}</title></circle>`).join(""),oe="",j="Need ≥4 sessions for a stable trendline";if(o.length>=4){let N=o.reduce((f,I)=>f+I.speed,0)/o.length,K=o.reduce((f,I)=>f+I.hr,0)/o.length,he=o.reduce((f,I)=>f+(I.speed-N)*(I.hr-K),0),Q=o.reduce((f,I)=>f+(I.speed-N)**2,0)||1,re=he/Q,ue=K-re*N,ye=re*P+ue,se=re*V+ue,v=(f)=>12+(1-(f-q)/ce)*144;oe=`<line x1="36" y1="${v(ye)}" x2="308" y2="${v(se)}" class="vo2-line line-44"/>`,j="Trendline shown (≥4 sessions)"}y=`
       <div class="z2-graph-wrap">
-        <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="Z2 speed vs HR scatter">
-          <line x1="${left}" y1="${h-bottom}" x2="${w-right}" y2="${h-bottom}" class="z2-axis"/>
-          <line x1="${left}" y1="${top}" x2="${left}" y2="${h-bottom}" class="z2-axis"/>
-          ${trendline}
-          ${circles}
-          <text x="${w/2}" y="${h-4}" class="z2-label" text-anchor="middle">Speed (km/h)</text>
-          <text x="12" y="${h/2}" class="z2-label" text-anchor="middle" transform="rotate(-90 12 ${h/2})">Avg HR</text>
+        <svg viewBox="0 0 320 180" class="z2-graph" role="img" aria-label="Z2 speed vs HR scatter">
+          <line x1="36" y1="156" x2="308" y2="156" class="z2-axis"/>
+          <line x1="36" y1="12" x2="36" y2="156" class="z2-axis"/>
+          ${oe}
+          ${G}
+          <text x="160" y="176" class="z2-label" text-anchor="middle">Speed (km/h)</text>
+          <text x="12" y="90" class="z2-label" text-anchor="middle" transform="rotate(-90 12 ${"90"})">Avg HR</text>
         </svg>
-        <div class="muted">Older = lighter dot · newer = darker dot · ${trendlineNote}</div>
-      </div>`;
-  }
-
-  let adaptBlock = '<p class="muted">Adaptation status unavailable.</p>';
-  let z2KpiBlock = '<p class="muted">No Z2 KPI data yet.</p>';
-  let efficiencyBlock = '<p class="muted">No Z2 efficiency points yet.</p>';
-  let aerobicSnapshot = '<p class="muted">Aerobic status unavailable.</p>';
-  if (z2Efficiency.length >= 1) {
-    const recent = z2Efficiency.slice(-8);
-    const last = recent[recent.length - 1];
-    const first = recent[0];
-    const baseline = z2Efficiency[0];
-    const rolling4 = z2Efficiency.slice(-4);
-    const rolling4Avg = rolling4.reduce((a, p) => a + p.efficiency, 0) / rolling4.length;
-    const deltaRecent = first ? (((last.efficiency - first.efficiency) / first.efficiency) * 100) : 0;
-    const deltaBaseline = baseline ? (((last.efficiency - baseline.efficiency) / baseline.efficiency) * 100) : 0;
-    const status = deltaRecent > 1 ? 'Improving' : (deltaRecent < -1 ? 'Regressing' : 'Flat');
-    const verdict = deltaRecent > 1 && pct >= 70 ? '🟢 On track' : (pct < 60 ? '🟡 Needs consistency' : '🟡 Stable but no gain');
-    const recommendation = deltaRecent > 1 ? 'Keep current Z2 structure.' : 'Increase Z2 volume by +20 min/week or progress treadmill speed slightly.';
-
-    const vo2Recent = [...vo2Points].slice(-6).filter((p) => Number(p.avg_speed_kmh || p.max_speed_kmh || 0) > 0);
-    const vo2Stimulus = vo2Recent.length >= 2 ? 'Adequate' : 'Low';
-    const adaptState = (deltaRecent > 1 && pct >= 70 && vo2Stimulus === 'Adequate') ? '🟢 Adapting' : ((pct < 60 || deltaRecent < -1) ? '🔴 Off track' : '🟡 In progress');
-
-    adaptBlock = `
+        <div class="muted">Older = lighter dot · newer = darker dot · ${j}</div>
+      </div>`}let _='<p class="muted">Adaptation status unavailable.</p>',$='<p class="muted">No Z2 KPI data yet.</p>',W='<p class="muted">No Z2 efficiency points yet.</p>',T='<p class="muted">Aerobic status unavailable.</p>';if(m.length>=1){let e=m.slice(-8),h=e[e.length-1],x=e[0],M=m[0],R=m.slice(-4),Z=R.reduce((J,G)=>J+G.efficiency,0)/R.length,P=x?(h.efficiency-x.efficiency)/x.efficiency*100:0,V=M?(h.efficiency-M.efficiency)/M.efficiency*100:0,q=P>1?"Improving":P<-1?"Regressing":"Flat",k=P>1&&a>=70?"\uD83D\uDFE2 On track":a<60?"\uD83D\uDFE1 Needs consistency":"\uD83D\uDFE1 Stable but no gain",Y=P>1?"Keep current Z2 structure.":"Increase Z2 volume by +20 min/week or progress treadmill speed slightly.",O=[...u].slice(-6).filter((J)=>Number(J.avg_speed_kmh||J.max_speed_kmh||0)>0).length>=2?"Adequate":"Low";_=`
       <div class="cardio-z2-card" style="grid-column:1 / -1">
         <div class="muted">Am I adapting?</div>
-        <div class="cardio-z2-big">${adaptState}</div>
-        <div class="muted">Efficiency ${status} · Compliance ${pct}% · VO2 stimulus ${vo2Stimulus} · Drift data ${z2Decoupling.length ? 'present' : 'missing'}</div>
-      </div>`;
-
-    z2KpiBlock = `
+        <div class="cardio-z2-big">${P>1&&a>=70&&O==="Adequate"?"\uD83D\uDFE2 Adapting":a<60||P<-1?"\uD83D\uDD34 Off track":"\uD83D\uDFE1 In progress"}</div>
+        <div class="muted">Efficiency ${q} · Compliance ${a}% · VO2 stimulus ${O} · Drift data ${c.length?"present":"missing"}</div>
+      </div>`,$=`
       <div class="cardio-z2-card">
         <div class="muted">Z2 KPI status</div>
-        <div class="cardio-z2-big">${status}</div>
-        <div class="muted">${verdict}</div>
-        <div class="muted">Baseline: ${baseline.efficiency.toFixed(3)} (${baseline.date})</div>
-        <div class="muted">Current: ${last.efficiency.toFixed(3)} (${last.date})</div>
-        <div class="muted">${rolling4.length}-session avg: ${rolling4Avg.toFixed(3)} · MoM proxy Δ ${deltaRecent.toFixed(1)}%</div>
-      </div>`;
-
-    efficiencyBlock = `
+        <div class="cardio-z2-big">${q}</div>
+        <div class="muted">${k}</div>
+        <div class="muted">Baseline: ${M.efficiency.toFixed(3)} (${M.date})</div>
+        <div class="muted">Current: ${h.efficiency.toFixed(3)} (${h.date})</div>
+        <div class="muted">${R.length}-session avg: ${Z.toFixed(3)} · MoM proxy Δ ${P.toFixed(1)}%</div>
+      </div>`,W=`
       <div class="cardio-z2-card">
         <div class="muted">Fixed-HR benchmark (primary)</div>
-        <div class="cardio-z2-big">${Number.isFinite(last.speedAt120) ? last.speedAt120.toFixed(2) : '—'} km/h</div>
-        <div class="muted">at 120 bpm · Efficiency ${last.efficiency.toFixed(3)}</div>
-        <div class="muted">Example: ${(Number.isFinite(last.speedAt120) ? last.speedAt120.toFixed(1) : '6.1')} km/h @ 120 bpm</div>
-        <div class="muted">Δ ${deltaBaseline.toFixed(1)}% vs baseline · Alt @140: ${Number.isFinite(last.speedAt140) ? last.speedAt140.toFixed(2) : '—'} km/h</div>
-      </div>`;
-
-    aerobicSnapshot = `
+        <div class="cardio-z2-big">${Number.isFinite(h.speedAt120)?h.speedAt120.toFixed(2):"—"} km/h</div>
+        <div class="muted">at 120 bpm · Efficiency ${h.efficiency.toFixed(3)}</div>
+        <div class="muted">Example: ${Number.isFinite(h.speedAt120)?h.speedAt120.toFixed(1):"6.1"} km/h @ 120 bpm</div>
+        <div class="muted">Δ ${V.toFixed(1)}% vs baseline · Alt @140: ${Number.isFinite(h.speedAt140)?h.speedAt140.toFixed(2):"—"} km/h</div>
+      </div>`,T=`
       <div class="cardio-z2-card" style="grid-column:1 / -1">
         <div class="muted">Aerobic Status</div>
-        <div class="muted">Efficiency: ${status} · Compliance: ${pct}% · Drift data: ${z2Decoupling.length ? 'Available' : 'Missing'} </div>
-        <div class="muted"><strong>Recommendation:</strong> ${recommendation}</div>
-      </div>`;
-  }
-
-  let decouplingBlock = '<p class="muted">No decoupling data yet (requires end HR in notes, e.g. "end BPM 141").</p>';
-  if (z2Decoupling.length) {
-    const recent = z2Decoupling.slice(-5);
-    const rows = recent.map((r) => {
-      const tag = r.decoupling < 5 ? 'good' : (r.decoupling <= 7 ? 'watch' : 'high');
-      return `<div class="muted">${r.date}: ${r.decoupling.toFixed(1)}% (${tag})</div>`;
-    }).join('');
-    decouplingBlock = `
+        <div class="muted">Efficiency: ${q} · Compliance: ${a}% · Drift data: ${c.length?"Available":"Missing"} </div>
+        <div class="muted"><strong>Recommendation:</strong> ${Y}</div>
+      </div>`}let A='<p class="muted">No decoupling data yet (requires end HR in notes, e.g. "end BPM 141").</p>';if(c.length)A=`
       <div class="cardio-z2-card">
         <div class="muted">Aerobic decoupling (quarterly check)</div>
-        ${rows}
+        ${c.slice(-5).map((x)=>{let M=x.decoupling<5?"good":x.decoupling<=7?"watch":"high";return`<div class="muted">${x.date}: ${x.decoupling.toFixed(1)}% (${M})</div>`}).join("")}
         <div class="muted">Guide: &lt;5% good · 5–7% watch · &gt;7% high drift</div>
-      </div>`;
-  }
-
-  const drawMiniSeries = (rows, getY, yFmt = (v) => v) => {
-    if ((rows || []).length < 2) return '<p class="muted">Need at least 2 tests.</p>';
-    const w = 320, h = 120, left = 30, right = 8, top = 10, bottom = 18;
-    const vals = rows.map(getY).map(Number).filter((v) => Number.isFinite(v));
-    if (vals.length < 2) return '<p class="muted">Insufficient numeric data.</p>';
-    const min = Math.min(...vals), max = Math.max(...vals), span = Math.max(1, max - min);
-    const plotW = w - left - right, plotH = h - top - bottom;
-    const pts = rows.map((r, i) => {
-      const v = Number(getY(r));
-      return { x: left + (i * (plotW / (rows.length - 1))), y: top + (1 - ((v - min) / span)) * plotH, v, d: r.date };
-    });
-    const poly = pts.map((p) => `${p.x},${p.y}`).join(' ');
-    return `<svg viewBox="0 0 ${w} ${h}" class="z2-graph"><line x1="${left}" y1="${h-bottom}" x2="${w-right}" y2="${h-bottom}" class="z2-axis"/><line x1="${left}" y1="${top}" x2="${left}" y2="${h-bottom}" class="z2-axis"/><polyline points="${poly}" class="z2-line"/>${pts.map((p)=>`<circle cx="${p.x}" cy="${p.y}" r="2.6"><title>${p.d}: ${yFmt(p.v)}</title></circle>`).join('')}</svg>`;
-  };
-
-  const fs = aerobicTests.filter((t) => t.test_type === 'FIXED_SPEED' && Number(t.avg_hr) > 0);
-  const fh = aerobicTests.filter((t) => t.test_type === 'FIXED_HR' && Number(t.avg_speed) > 0);
-  const dz = aerobicTests.filter((t) => t.test_type === 'ZONE2_SESSION' && Number(t.decoupling_percent) >= 0);
-
-  const fsLast = fs[fs.length - 1];
-  const fhLast = fh[fh.length - 1];
-  const dzLast = dz[dz.length - 1];
-
-  const clamp = (x, a, b) => Math.max(a, Math.min(x, b));
-  const scoreEff = (hr) => clamp(100 * (170 - Number(hr)) / 30, 0, 100);
-  const scoreCap = (spd) => clamp(100 * (Number(spd) - 5) / 4, 0, 100);
-  const scoreDur = (dec) => clamp(100 * (10 - Number(dec)) / 10, 0, 100);
-  const afsLabel = (v) => (v >= 80 ? 'excellent' : v >= 65 ? 'strong' : v >= 50 ? 'average' : v >= 35 ? 'developing' : 'weak base');
-
-  const byMonth = new Map();
-  for (const t of aerobicTests) {
-    const m = String(t.date || '').slice(0, 7);
-    if (!m) continue;
-    if (!byMonth.has(m)) byMonth.set(m, {});
-    const slot = byMonth.get(m);
-    slot[t.test_type] = t;
-  }
-  const afsSeries = Array.from(byMonth.entries())
-    .sort((a, b) => a[0] < b[0] ? -1 : 1)
-    .map(([month, v]) => {
-      if (!v.FIXED_SPEED || !v.FIXED_HR || !v.ZONE2_SESSION) return null;
-      const eff = scoreEff(v.FIXED_SPEED.avg_hr);
-      const cap = scoreCap(v.FIXED_HR.avg_speed);
-      const dur = scoreDur(v.ZONE2_SESSION.decoupling_percent);
-      const afs = 0.40 * cap + 0.35 * eff + 0.25 * dur;
-      return { date: `${month}-01`, afs: Number(afs.toFixed(1)), eff, cap, dur };
-    })
-    .filter(Boolean);
-  const afsLast = afsSeries[afsSeries.length - 1] || null;
-  const afsPrev = afsSeries.length > 1 ? afsSeries[afsSeries.length - 2] : null;
-  const afsDelta = afsLast && afsPrev ? (afsLast.afs - afsPrev.afs) : null;
-
-  const daysSince = (d) => {
-    if (!d) return 999;
-    const ms = (new Date(`${currentDateInDashboardTZ()}T00:00:00`) - new Date(`${d}T00:00:00`));
-    return Math.floor(ms / 86400000);
-  };
-  const dueLine = (name, dt) => {
-    const ds = daysSince(dt);
-    if (ds > 35) return `${name}: overdue (${ds}d)`;
-    if (ds > 27) return `${name}: due soon (${ds}d)`;
-    return `${name}: ok (${ds}d)`;
-  };
-
-  const afsBand = (v) => {
-    if (v == null || !Number.isFinite(v)) return 'afs-none';
-    if (v >= 80) return 'afs-elite';
-    if (v >= 65) return 'afs-green';
-    if (v >= 50) return 'afs-yellow';
-    if (v >= 35) return 'afs-orange';
-    return 'afs-red';
-  };
-
-  const aerobicCards = `
-    <div class="cardio-z2-card ${afsBand(afsLast?.afs)}"><div class="muted">Aerobic Fitness Score (AFS)</div><div class="cardio-z2-big">${afsLast ? afsLast.afs.toFixed(1) : '—'}</div><div class="muted">${afsLast ? afsLabel(afsLast.afs) : 'need all 3 monthly tests'}${afsDelta == null ? '' : ` · ${afsDelta >= 0 ? '↑' : '↓'} ${Math.abs(afsDelta).toFixed(1)}`}</div></div>
-    <div class="cardio-z2-card"><div class="muted">Cardio Efficiency (HR @ 11 km/h)</div><div class="cardio-z2-big">${fsLast ? Number(fsLast.avg_hr).toFixed(0) : '—'}</div><div class="muted">Trend target: ↓</div></div>
-    <div class="cardio-z2-card"><div class="muted">Aerobic Capacity (speed @ 120 bpm)</div><div class="cardio-z2-big">${fhLast ? Number(fhLast.avg_speed).toFixed(2) : '—'} km/h</div><div class="muted">Trend target: ↑</div></div>
-    <div class="cardio-z2-card"><div class="muted">Aerobic Durability (Pa:Hr)</div><div class="cardio-z2-big">${dzLast ? Number(dzLast.decoupling_percent).toFixed(1) : '—'}%</div><div class="muted">Trend target: ↓</div></div>
-    <div class="cardio-z2-card"><div class="muted">Monthly test scheduler</div><div class="muted">${dueLine('Fixed-speed', fsLast?.date)}<br/>${dueLine('Fixed-HR', fhLast?.date)}<br/>${dueLine('Decoupling', dzLast?.date)}</div></div>
-  `;
-
-  const recentVO2 = [...(vo2Points || [])].slice(-16);
-  let vo2Graph = '<p class="muted">No VO2 data in last 12 weeks.</p>';
-  if (recentVO2.length >= 1) {
-    const w = 320;
-    const h = 120;
-    const leftPad = 32;
-    const rightPad = 22;
-    const topPad = 10;
-    const bottomPad = 18;
-
-    const defaultRestByProtocol = {
-      VO2_4x4: 3,
-      VO2_1min: 1
-    };
-
-    const rows = recentVO2
-      .map((p) => ({
-        date: p.session_date,
-        protocol: p.protocol,
-        speed: Number(p.avg_speed_kmh || p.max_speed_kmh || 0),
-        hr: Number(p.avg_hr ?? p.max_hr ?? 0),
-        workMin: Number(p.work_min || (p.protocol === 'VO2_4x4' ? 4 : (p.protocol === 'VO2_1min' ? 1 : 0))),
-        restMin: Number(p.easy_min || p.rest_min || defaultRestByProtocol[p.protocol] || 0)
-      }))
-      .filter((p) => p.hr > 0 && (p.protocol === 'VO2_4x4' || p.protocol === 'VO2_1min'))
-      .sort((a, b) => (a.date < b.date ? -1 : 1));
-
-    const makeProtocolChart = (protocol, pointCls, lineCls, label) => {
-      const series = rows.filter((r) => r.protocol === protocol);
-      if (!series.length) {
-        return `<div class="z2-graph-wrap"><p class="muted">${label}: no data.</p></div>`;
-      }
-
-      const minHr = Math.floor((Math.min(...series.map((r) => r.hr)) - 3) / 5) * 5;
-      const maxHr = Math.ceil((Math.max(...series.map((r) => r.hr)) + 3) / 5) * 5;
-      const span = Math.max(5, maxHr - minHr);
-      const plotW = w - leftPad - rightPad;
-      const plotH = h - topPad - bottomPad;
-
-      const withXY = series.map((r, i) => ({
-        ...r,
-        x: series.length === 1 ? leftPad + plotW / 2 : leftPad + (i * (plotW / (series.length - 1))),
-        y: topPad + (1 - ((r.hr - minHr) / span)) * plotH
-      }));
-
-      const polyline = withXY.length >= 2 ? `<polyline points="${withXY.map((p) => `${p.x},${p.y}`).join(' ')}" class="vo2-line ${lineCls}"/>` : '';
-      const points = withXY.map((p, idx) => {
-        const dy = idx % 2 === 0 ? -6 : 12;
-        const speedLabel = (Number.isFinite(p.speed) && p.speed > 0) ? `${p.speed}k` : '';
-        const wr = p.workMin > 0 ? `${p.workMin}/${p.restMin || 0}m` : 'n/a';
-        return `<g><circle cx="${p.x}" cy="${p.y}" r="2.8" class="${pointCls}"></circle>${speedLabel ? `<text x="${p.x}" y="${p.y + dy}" class="z2-point-label" text-anchor="middle">${speedLabel}</text>` : ''}<title>${p.date} ${protocol}: ${Number.isFinite(p.speed) && p.speed > 0 ? `${p.speed} km/h` : 'no speed logged'} · HR ${p.hr} · work/rest ${wr}</title></g>`;
-      }).join('');
-
-      const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => {
-        const hrTick = Math.round(minHr + t * span);
-        const y = topPad + (1 - t) * plotH;
-        return { hrTick, y };
-      });
-      const grid = ticks.map((t) => `<line x1="${leftPad}" y1="${t.y}" x2="${w - rightPad}" y2="${t.y}" class="z2-grid"/>`).join('');
-      const yLabels = ticks.map((t) => `<text x="${leftPad - 6}" y="${t.y + 3}" class="z2-label" text-anchor="end">${t.hrTick}</text>`).join('');
-
-      const effRows = series.filter((r) => Number.isFinite(r.speed) && r.speed > 0 && Number.isFinite(r.hr) && r.hr > 0)
-        .map((r) => {
-          const work = Math.max(0, r.workMin || 0);
-          const rest = Math.max(0, r.restMin || 0);
-          const restFactor = (work > 0 && rest > 0) ? (work / rest) : (work > 0 ? 1 : 0);
-          return { ...r, eff: (r.speed / r.hr) * restFactor };
-        });
-
-      let trendText = `${label}: need ≥2 sessions with speed + HR logged`;
-      if (effRows.length >= 2) {
-        const first = effRows[0];
-        const last = effRows[effRows.length - 1];
-        const effDelta = (((last.eff - first.eff) / first.eff) * 100);
-        trendText = `${label} efficiency Δ ${effDelta >= 0 ? '+' : ''}${effDelta.toFixed(1)}% (${first.eff.toFixed(4)} → ${last.eff.toFixed(4)}, ${effRows.length} sessions, rest-adjusted)`;
-      }
-
-      return `
+      </div>`;let z=(e,h,x=(M)=>M)=>{if((e||[]).length<2)return'<p class="muted">Need at least 2 tests.</p>';let M=320,R=120,Z=30,P=8,V=10,q=18,k=e.map(h).map(Number).filter((j)=>Number.isFinite(j));if(k.length<2)return'<p class="muted">Insufficient numeric data.</p>';let Y=Math.min(...k),ce=Math.max(...k),O=Math.max(1,ce-Y),U=M-Z-P,J=R-V-q,G=e.map((j,N)=>{let K=Number(h(j));return{x:Z+N*(U/(e.length-1)),y:V+(1-(K-Y)/O)*J,value:K,date:j.date}}),oe=G.map((j)=>`${j.x},${j.y}`).join(" ");return`<svg viewBox="0 0 ${M} ${R}" class="z2-graph"><line x1="${Z}" y1="${R-q}" x2="${M-P}" y2="${R-q}" class="z2-axis"/><line x1="${Z}" y1="${V}" x2="${Z}" y2="${R-q}" class="z2-axis"/><polyline points="${oe}" class="z2-line"/>${G.map((j)=>`<circle cx="${j.x}" cy="${j.y}" r="2.6"><title>${j.date}: ${x(j.value)}</title></circle>`).join("")}</svg>`},L=p.filter((e)=>e.test_type==="FIXED_SPEED"&&Number(e.avg_hr)>0),w=p.filter((e)=>e.test_type==="FIXED_HR"&&Number(e.avg_speed)>0),E=p.filter((e)=>e.test_type==="ZONE2_SESSION"&&Number(e.decoupling_percent)>=0),B=L[L.length-1],H=w[w.length-1],X=E[E.length-1],te=(e,h,x)=>Math.max(h,Math.min(e,x)),S=(e)=>te(100*(170-Number(e))/30,0,100),C=(e)=>te(100*(Number(e)-5)/4,0,100),D=(e)=>te(100*(10-Number(e))/10,0,100),xe=(e)=>e>=80?"excellent":e>=65?"strong":e>=50?"average":e>=35?"developing":"weak base",ge=new Map;for(let e of p){let h=String(e.date||"").slice(0,7);if(!h)continue;if(!ge.has(h))ge.set(h,{});let x=ge.get(h);x[e.test_type]=e}let ne=Array.from(ge.entries()).sort((e,h)=>e[0]<h[0]?-1:1).map(([e,h])=>{if(!h.FIXED_SPEED||!h.FIXED_HR||!h.ZONE2_SESSION)return null;let x=S(h.FIXED_SPEED.avg_hr),M=C(h.FIXED_HR.avg_speed),R=D(h.ZONE2_SESSION.decoupling_percent),Z=0.4*M+0.35*x+0.25*R;return{date:`${e}-01`,afs:Number(Z.toFixed(1)),efficiency:x,capacity:M,durability:R}}).filter(Boolean),pe=ne[ne.length-1]||null,Be=ne.length>1?ne[ne.length-2]:null,we=pe&&Be?pe.afs-Be.afs:null,at=(e)=>{if(!e)return 999;let h=new Date(`${ee()}T00:00:00`).getTime()-new Date(`${e}T00:00:00`).getTime();return Math.floor(h/86400000)},ke=(e,h)=>{let x=at(h);if(x>35)return`${e}: overdue (${x}d)`;if(x>27)return`${e}: due soon (${x}d)`;return`${e}: ok (${x}d)`},it=`
+    <div class="cardio-z2-card ${((e)=>{if(e==null||!Number.isFinite(e))return"afs-none";if(e>=80)return"afs-elite";if(e>=65)return"afs-green";if(e>=50)return"afs-yellow";if(e>=35)return"afs-orange";return"afs-red"})(pe?.afs)}"><div class="muted">Aerobic Fitness Score (AFS)</div><div class="cardio-z2-big">${pe?pe.afs.toFixed(1):"—"}</div><div class="muted">${pe?xe(pe.afs):"need all 3 monthly tests"}${we==null?"":` · ${we>=0?"↑":"↓"} ${Math.abs(we).toFixed(1)}`}</div></div>
+    <div class="cardio-z2-card"><div class="muted">Cardio Efficiency (HR @ 11 km/h)</div><div class="cardio-z2-big">${B?Number(B.avg_hr).toFixed(0):"—"}</div><div class="muted">Trend target: ↓</div></div>
+    <div class="cardio-z2-card"><div class="muted">Aerobic Capacity (speed @ 120 bpm)</div><div class="cardio-z2-big">${H?Number(H.avg_speed).toFixed(2):"—"} km/h</div><div class="muted">Trend target: ↑</div></div>
+    <div class="cardio-z2-card"><div class="muted">Aerobic Durability (Pa:Hr)</div><div class="cardio-z2-big">${X?Number(X.decoupling_percent).toFixed(1):"—"}%</div><div class="muted">Trend target: ↓</div></div>
+    <div class="cardio-z2-card"><div class="muted">Monthly test scheduler</div><div class="muted">${ke("Fixed-speed",B?.date)}<br/>${ke("Fixed-HR",H?.date)}<br/>${ke("Decoupling",X?.date)}</div></div>
+  `,Ne=[...u||[]].slice(-16),Fe='<p class="muted">No VO2 data in last 12 weeks.</p>';if(Ne.length>=1){let P={VO2_4x4:3,VO2_1min:1},V=Ne.map((k)=>({date:k.session_date,protocol:k.protocol,speed:Number(k.avg_speed_kmh||k.max_speed_kmh||0),hr:Number(k.avg_hr??k.max_hr??0),workMin:Number(k.work_min||(k.protocol==="VO2_4x4"?4:k.protocol==="VO2_1min"?1:0)),restMin:Number(k.easy_min||k.rest_min||P[k.protocol]||0)})).filter((k)=>k.hr>0&&(k.protocol==="VO2_4x4"||k.protocol==="VO2_1min")).sort((k,Y)=>k.date<Y.date?-1:1),q=(k,Y,ce,O)=>{let U=V.filter((f)=>f.protocol===k);if(!U.length)return`<div class="z2-graph-wrap"><p class="muted">${O}: no data.</p></div>`;let J=Math.floor((Math.min(...U.map((f)=>f.hr))-3)/5)*5,G=Math.ceil((Math.max(...U.map((f)=>f.hr))+3)/5)*5,oe=Math.max(5,G-J),j=266,N=92,K=U.map((f,I)=>({...f,x:U.length===1?32+j/2:32+I*(j/(U.length-1)),y:10+(1-(f.hr-J)/oe)*N})),he=K.length>=2?`<polyline points="${K.map((f)=>`${f.x},${f.y}`).join(" ")}" class="vo2-line ${ce}"/>`:"",Q=K.map((f,I)=>{let ae=I%2===0?-6:12,me=Number.isFinite(f.speed)&&f.speed>0?`${f.speed}k`:"",Ie=f.workMin>0?`${f.workMin}/${f.restMin||0}m`:"n/a";return`<g><circle cx="${f.x}" cy="${f.y}" r="2.8" class="${Y}"></circle>${me?`<text x="${f.x}" y="${f.y+ae}" class="z2-point-label" text-anchor="middle">${me}</text>`:""}<title>${f.date} ${k}: ${Number.isFinite(f.speed)&&f.speed>0?`${f.speed} km/h`:"no speed logged"} · HR ${f.hr} · work/rest ${Ie}</title></g>`}).join(""),re=[0,0.25,0.5,0.75,1].map((f)=>{let I=Math.round(J+f*oe),ae=10+(1-f)*N;return{hrTick:I,y:ae}}),ue=re.map((f)=>`<line x1="32" y1="${f.y}" x2="298" y2="${f.y}" class="z2-grid"/>`).join(""),ye=re.map((f)=>`<text x="26" y="${f.y+3}" class="z2-label" text-anchor="end">${f.hrTick}</text>`).join(""),se=U.filter((f)=>Number.isFinite(f.speed)&&f.speed>0&&Number.isFinite(f.hr)&&f.hr>0).map((f)=>{let I=Math.max(0,f.workMin||0),ae=Math.max(0,f.restMin||0),me=I>0&&ae>0?I/ae:I>0?1:0;return{...f,eff:f.speed/f.hr*me}}),v=`${O}: need ≥2 sessions with speed + HR logged`;if(se.length>=2){let f=se[0],I=se[se.length-1],ae=(I.eff-f.eff)/f.eff*100;v=`${O} efficiency Δ ${ae>=0?"+":""}${ae.toFixed(1)}% (${f.eff.toFixed(4)} → ${I.eff.toFixed(4)}, ${se.length} sessions, rest-adjusted)`}return`
         <div class="z2-graph-wrap" style="margin-bottom:10px">
-          <div class="muted" style="margin-bottom:4px">${label}</div>
-          <svg viewBox="0 0 ${w} ${h}" class="z2-graph" role="img" aria-label="${label} HR efficiency trend">
-            ${grid}
-            ${yLabels}
-            <line x1="${leftPad}" y1="${h - bottomPad}" x2="${w - rightPad}" y2="${h - bottomPad}" class="z2-axis"/>
-            <line x1="${leftPad}" y1="${topPad}" x2="${leftPad}" y2="${h - bottomPad}" class="z2-axis"/>
-            ${polyline}
-            ${points}
+          <div class="muted" style="margin-bottom:4px">${O}</div>
+          <svg viewBox="0 0 320 120" class="z2-graph" role="img" aria-label="${O} HR efficiency trend">
+            ${ue}
+            ${ye}
+            <line x1="32" y1="102" x2="298" y2="102" class="z2-axis"/>
+            <line x1="32" y1="10" x2="32" y2="102" class="z2-axis"/>
+            ${he}
+            ${Q}
           </svg>
-          <div class="vo2-legend"><span class="muted">${trendText}</span></div>
+          <div class="vo2-legend"><span class="muted">${v}</span></div>
         </div>
-      `;
-    };
-
-    vo2Graph = `${makeProtocolChart('VO2_4x4', 'vo2-pt-44', 'line-44', 'VO2 4x4')} ${makeProtocolChart('VO2_1min', 'vo2-pt-18', 'line-18', 'VO2 1min')}`;
-  }
-
-  node.innerHTML = `
+      `};Fe=`${q("VO2_4x4","vo2-pt-44","line-44","VO2 4x4")} ${q("VO2_1min","vo2-pt-18","line-18","VO2 1min")}`}d.innerHTML=`
     <div class="cardio-analytics">
-      ${adaptBlock}
+      ${_}
       <div class="cardio-z2-card">
         <div class="muted">Z2 compliance</div>
-        <div class="cardio-z2-big">${pct}%</div>
-        <div class="muted">${inCap}/${totalZ2} sessions in cap</div>
+        <div class="cardio-z2-big">${a}%</div>
+        <div class="muted">${n}/${l} sessions in cap</div>
       </div>
-      ${z2KpiBlock}
-      ${efficiencyBlock}
-      ${decouplingBlock}
-      ${aerobicSnapshot}
+      ${$}
+      ${W}
+      ${A}
+      ${T}
       <div class="cardio-vo2-list" style="grid-column:1 / -1">
         <div class="muted" style="margin-bottom:6px">Aerobic Fitness (monthly tests)</div>
-        <div class="cardio-analytics">${aerobicCards}</div>
+        <div class="cardio-analytics">${it}</div>
         <div class="test-specs">
           <div><strong>Fixed-Speed Cardiovascular Efficiency</strong> · Run at <strong>11.0 km/h</strong>, <strong>0% incline</strong>, <strong>2.4 km</strong> (~13:05). Log avg/max HR. Lower HR over time = better.</div>
           <div><strong>Fixed-HR Aerobic Capacity</strong> · <strong>30 min</strong> treadmill at <strong>0% incline</strong>, hold <strong>120 bpm</strong>. Log avg speed. Higher speed over time = better.</div>
@@ -903,635 +110,57 @@ function renderCardioAnalytics(data = {}) {
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">Aerobic Fitness Score (AFS)</div>
-        ${drawMiniSeries(afsSeries, (r) => r.afs, (v) => `${Number(v).toFixed(1)}`)}
+        ${z(ne,(e)=>e.afs,(e)=>`${Number(e).toFixed(1)}`)}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">HR at 11 km/h</div>
-        ${drawMiniSeries(fs, (r) => r.avg_hr, (v) => `${v} bpm`)}
+        ${z(L,(e)=>e.avg_hr,(e)=>`${e} bpm`)}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">Speed at 120 bpm</div>
-        ${drawMiniSeries(fh, (r) => r.avg_speed, (v) => `${Number(v).toFixed(2)} km/h`)}
+        ${z(w,(e)=>e.avg_speed,(e)=>`${Number(e).toFixed(2)} km/h`)}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">Aerobic Decoupling %</div>
-        ${drawMiniSeries(dz, (r) => r.decoupling_percent, (v) => `${Number(v).toFixed(1)}%`)}
+        ${z(E,(e)=>e.decoupling_percent,(e)=>`${Number(e).toFixed(1)}%`)}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">Z2 HR variation trend</div>
-        ${z2HrTrend}
+        ${b}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">Z2 speed vs HR (scatter + trendline)</div>
-        ${z2ScatterGraph}
+        ${y}
       </div>
       <div class="cardio-vo2-list">
         <div class="muted" style="margin-bottom:6px">VO2 HR efficiency trends (by protocol)</div>
-        ${vo2Graph}
+        ${Fe}
       </div>
     </div>
-  `;
-
-  const postAerobic = async (payload) => {
-    const res = await fetch('/api/log-aerobic-test', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      let msg = `failed (${res.status})`;
-      try { const j = await res.json(); if (j?.error) msg = j.error; } catch {}
-      throw new Error(msg);
-    }
-  };
-
-  const today = currentDateInDashboardTZ();
-
-  const ensureAerobicModal = () => {
-    let modal = document.getElementById('aerobicEntryModal');
-    if (modal) return modal;
-    modal = document.createElement('div');
-    modal.id = 'aerobicEntryModal';
-    modal.className = 'modal';
-    modal.innerHTML = `
+  `;let Se=async(e)=>{let h=await fetch("/api/log-aerobic-test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)});if(!h.ok){let x=`failed (${h.status})`;try{let M=await h.json();if(M?.error)x=M.error}catch{}throw Error(x)}},Me=ee(),ot=()=>{let e=document.getElementById("aerobicEntryModal");if(e)return e;return e=document.createElement("div"),e.id="aerobicEntryModal",e.className="modal",e.innerHTML=`
       <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="aeroTitle">
         <div class="modal-head">
           <h3 id="aeroTitle">Log aerobic test</h3>
           <button type="button" class="modal-close" id="aeroCloseBtn">×</button>
         </div>
         <div id="aeroBody" class="modal-body"></div>
-      </div>`;
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
-    modal.querySelector('#aeroCloseBtn')?.addEventListener('click', () => modal.classList.remove('open'));
-    return modal;
-  };
-
-  const num = (id) => {
-    const v = parseFloat(document.getElementById(id)?.value || '');
-    return Number.isFinite(v) ? v : null;
-  };
-
-  const openAerobicForm = (kind) => {
-    const modal = ensureAerobicModal();
-    const title = modal.querySelector('#aeroTitle');
-    const body = modal.querySelector('#aeroBody');
-    if (!title || !body) return;
-
-    if (kind === 'FIXED_SPEED') {
-      title.textContent = 'Log Fixed-Speed Test (11.0 km/h, 0% incline, 2.4 km)';
-      body.innerHTML = `
+      </div>`,document.body.appendChild(e),e.addEventListener("click",(h)=>{if(h.target===e)e.classList.remove("open")}),e.querySelector("#aeroCloseBtn")?.addEventListener("click",()=>e?.classList.remove("open")),e},le=(e)=>{let h=Number.parseFloat(F(e));return Number.isFinite(h)?h:null},Te=(e)=>{let h=ot(),x=h.querySelector("#aeroTitle"),M=h.querySelector("#aeroBody");if(!x||!M)return;if(e==="FIXED_SPEED")x.textContent="Log Fixed-Speed Test (11.0 km/h, 0% incline, 2.4 km)",M.innerHTML=`
         <div class="status-actions"><input id="aeroAvgHr" class="status-input" type="number" step="1" placeholder="Average HR" /><input id="aeroMaxHr" class="status-input" type="number" step="1" placeholder="Max HR (optional)" /></div>
-        <div class="status-actions"><button type="button" class="status-btn" id="aeroSaveBtn">Save Test</button></div>`;
-      body.querySelector('#aeroSaveBtn')?.addEventListener('click', async () => {
-        const avgHr = num('aeroAvgHr');
-        const maxHr = num('aeroMaxHr');
-        if (!avgHr || avgHr <= 0) return alert('Enter average HR');
-        await postAerobic({ testType:'FIXED_SPEED', date: today, speed:11, distance:2.4, duration:13, avgHr, maxHr, notes:'Monthly fixed-speed test' });
-        modal.classList.remove('open');
-        await window.__renderDashboard();
-      });
-    }
-
-    if (kind === 'FIXED_HR') {
-      title.textContent = 'Log Fixed-HR Test (120 bpm, 30 min, 0% incline)';
-      body.innerHTML = `
+        <div class="status-actions"><button type="button" class="status-btn" id="aeroSaveBtn">Save Test</button></div>`,M.querySelector("#aeroSaveBtn")?.addEventListener("click",async()=>{let R=le("aeroAvgHr"),Z=le("aeroMaxHr");if(!R||R<=0)return alert("Enter average HR");await Se({testType:"FIXED_SPEED",date:Me,speed:11,distance:2.4,duration:13,avgHr:R,maxHr:Z,notes:"Monthly fixed-speed test"}),h.classList.remove("open"),await window.__renderDashboard?.()});if(e==="FIXED_HR")x.textContent="Log Fixed-HR Test (120 bpm, 30 min, 0% incline)",M.innerHTML=`
         <div class="status-actions"><input id="aeroAvgSpeed" class="status-input" type="number" step="0.1" placeholder="Average speed (km/h)" /><input id="aeroAvgHr" class="status-input" type="number" step="1" placeholder="Average HR (default 120)" value="120" /></div>
-        <div class="status-actions"><button type="button" class="status-btn" id="aeroSaveBtn">Save Test</button></div>`;
-      body.querySelector('#aeroSaveBtn')?.addEventListener('click', async () => {
-        const avgSpeed = num('aeroAvgSpeed');
-        const avgHr = num('aeroAvgHr') || 120;
-        if (!avgSpeed || avgSpeed <= 0) return alert('Enter average speed');
-        await postAerobic({ testType:'FIXED_HR', date: today, duration:30, avgSpeed, avgHr, notes:'Monthly fixed-HR test' });
-        modal.classList.remove('open');
-        await window.__renderDashboard();
-      });
-    }
-
-    if (kind === 'ZONE2_SESSION') {
-      title.textContent = 'Log Decoupling Test (steady Z2)';
-      body.innerHTML = `
+        <div class="status-actions"><button type="button" class="status-btn" id="aeroSaveBtn">Save Test</button></div>`,M.querySelector("#aeroSaveBtn")?.addEventListener("click",async()=>{let R=le("aeroAvgSpeed"),Z=le("aeroAvgHr")||120;if(!R||R<=0)return alert("Enter average speed");await Se({testType:"FIXED_HR",date:Me,duration:30,avgSpeed:R,avgHr:Z,notes:"Monthly fixed-HR test"}),h.classList.remove("open"),await window.__renderDashboard?.()});if(e==="ZONE2_SESSION")x.textContent="Log Decoupling Test (steady Z2)",M.innerHTML=`
         <div class="status-actions"><input id="aeroHr1" class="status-input" type="number" step="1" placeholder="HR first half" /><input id="aeroHr2" class="status-input" type="number" step="1" placeholder="HR second half" /></div>
         <div class="status-actions"><input id="aeroS1" class="status-input" type="number" step="0.1" placeholder="Speed first half (optional)" /><input id="aeroS2" class="status-input" type="number" step="0.1" placeholder="Speed second half (optional)" /></div>
-        <div class="status-actions"><button type="button" class="status-btn" id="aeroSaveBtn">Save Test</button></div>`;
-      body.querySelector('#aeroSaveBtn')?.addEventListener('click', async () => {
-        const hr1 = num('aeroHr1');
-        const hr2 = num('aeroHr2');
-        const s1 = num('aeroS1');
-        const s2 = num('aeroS2');
-        if (!hr1 || !hr2 || hr1 <= 0) return alert('Enter first and second half HR');
-        await postAerobic({ testType:'ZONE2_SESSION', date: today, duration:40, hrFirstHalf:hr1, hrSecondHalf:hr2, speedFirstHalf:s1, speedSecondHalf:s2, notes:'Monthly decoupling test' });
-        modal.classList.remove('open');
-        await window.__renderDashboard();
-      });
-    }
-
-    modal.classList.add('open');
-  };
-
-  const fsBtn = document.getElementById('logFixedSpeedBtn');
-  if (fsBtn) fsBtn.onclick = () => openAerobicForm('FIXED_SPEED');
-  const fhBtn = document.getElementById('logFixedHrBtn');
-  if (fhBtn) fhBtn.onclick = () => openAerobicForm('FIXED_HR');
-  const dzBtn = document.getElementById('logDecouplingBtn');
-  if (dzBtn) dzBtn.onclick = () => openAerobicForm('ZONE2_SESSION');
-}
-
-function renderAuditLog(rows = []) {
-  const node = document.getElementById('auditLogPanel');
-  if (!node) return;
-  if (!rows.length) {
-    node.innerHTML = '<p class="muted">No audit events yet.</p>';
-    return;
-  }
-
-  node.innerHTML = `<div class="audit-list">${rows.map((r) => {
-    const ts = (r.event_time || '').replace('T', ' ').slice(0, 19);
-    const change = r.old_value || r.new_value
-      ? `${r.old_value ?? '∅'} → ${r.new_value ?? '∅'}`
-      : '';
-    return `
-      <div class="audit-row">
-        <div class="audit-top">
-          <span>${r.domain} · ${r.action} · ${r.key_name || '-'}</span>
-          <span>${ts}</span>
-        </div>
-        ${change ? `<div class="audit-meta">${change}</div>` : ''}
-        ${r.note ? `<div class="audit-meta">${r.note}</div>` : ''}
-      </div>
-    `;
-  }).join('')}</div>`;
-}
-
-function renderWeekProgress(rows) {
-  const node = document.getElementById('weekRows');
-  const today = currentDateInDashboardTZ();
-  node.innerHTML = rows.map((r) => {
-    const planned = [!!r.main_lift, !!r.cardio_plan && r.cardio_plan !== 'OFF', !!r.rings_plan].filter(Boolean).length;
-    const done = [!!r.barbell_done, !!r.cardio_done, !!r.rings_done].filter(Boolean).length;
-    const cls = done === planned && planned > 0 ? 'done-all' : (done > 0 ? 'partial' : (r.session_date >= today ? 'upcoming' : ''));
-    return `
-    <article class="week-row ${cls}" role="button" tabindex="0" data-date="${r.session_date}">
-      <div class="week-meta">
-        <div class="week-day">${r.day_name.slice(0,3)}</div>
-        <div class="muted">${r.session_date.slice(5)}</div>
-      </div>
-      <div class="week-chips">
-        ${yesNoChip('🏋', r.barbell_done, r.main_lift || '—')}
-        ${yesNoChip('❤️', r.cardio_done, r.cardio_plan || 'OFF')}
-        ${yesNoChip('🤸', r.rings_done, r.rings_plan || '—')}
-      </div>
-    </article>`;
-  }).join('');
-}
-
-function renderDailyTiles(days, details = {}) {
-  const node = document.getElementById('dailyTiles');
-  const today = currentDateInDashboardTZ();
-
-  const badgeFor = ({ icon, planned, done, detail, isPast }) => {
-    if (!planned) return '';
-    let cls = 'badge planned';
-    if (done) cls = 'badge done';
-    else if (!done && isPast) cls = 'badge missed';
-    return `<span class="${cls}">${icon} ${detail || ''}</span>`;
-  };
-
-  const orderedDays = [...days].reverse();
-
-  node.innerHTML = orderedDays.map((d) => {
-    const isPast = d.session_date < today;
-    const rows = details?.barbellByDate?.[d.session_date] || [];
-    const hasMain = rows.some((x) => x.category === 'main');
-    const hasSupp = rows.some((x) => x.category === 'supplemental');
-
-    const plannedMain = !!d.planned_barbell_main;
-    const plannedSupp = !!d.planned_barbell_supp;
-    const plannedCardio = !!d.planned_cardio && d.planned_cardio !== 'OFF';
-    const plannedRings = !!d.planned_rings;
-
-    const mainDetail = plannedMain ? `${d.planned_barbell_main}`.trim() : d.barbell_lift;
-    const suppDetail = plannedSupp ? `${d.planned_barbell_supp} ${d.planned_supp_sets || ''}x${d.planned_supp_reps || ''}`.trim() : '';
-    const cardioDetail = d.planned_cardio || d.cardio_protocol;
-    const ringsDetail = d.planned_rings || d.rings_template;
-
-    const pain = d.pain_level || 'green';
-    const painBadge = `<span class="status-dot clickable ${pain}" data-date="${d.session_date}" data-status="${pain}" data-role="status-dot" title="Recovery status: ${pain} (tap to change)"></span>`;
-
-    const badges = [
-      painBadge,
-      badgeFor({ icon: '🏋', planned: plannedMain, done: hasMain, detail: mainDetail, isPast }),
-      badgeFor({ icon: '🏋+', planned: plannedSupp, done: hasSupp, detail: suppDetail, isPast }),
-      badgeFor({ icon: '❤️', planned: plannedCardio, done: !!d.has_cardio, detail: cardioDetail, isPast }),
-      badgeFor({ icon: '🤸', planned: plannedRings, done: !!d.has_rings, detail: ringsDetail, isPast })
-    ].filter(Boolean).join('');
-
-    const completionCount = [plannedMain && hasMain, plannedSupp && hasSupp, plannedCardio && d.has_cardio, plannedRings && d.has_rings].filter(Boolean).length;
-    const plannedCount = [plannedMain, plannedSupp, plannedCardio, plannedRings].filter(Boolean).length;
-    const title = plannedCount === 0 ? 'Rest day' : `${completionCount}/${plannedCount} complete`;
-
-    const dow = new Date(`${d.session_date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short' });
-    return `
-      <article class="tile" role="button" tabindex="0" data-date="${d.session_date}">
-        <div class="tile-date">${dow} · ${d.session_date}</div>
-        <div class="tile-main">${title}</div>
-        <div class="tile-flags">${badges}</div>
-      </article>
-    `;
-  }).join('');
-}
-
-function section(title, content) {
-  return `<section class="detail-section"><h4>${title}</h4>${content}</section>`;
-}
-
-function summarizePlannedBarbell(plannedRows = []) {
-  const main = plannedRows.filter((r) => r.category === 'main');
-  const supp = plannedRows.filter((r) => r.category === 'supplemental');
-
-  const mainText = main.length
-    ? `${main[0].lift}: ${main.map((r) => `${r.planned_weight_kg}×${r.prescribed_reps}`).join(' · ')}`
-    : 'None';
-
-  let suppText = 'None';
-  if (supp.length) {
-    const s = supp[0];
-    suppText = `${s.lift}: ${supp.length}×${s.prescribed_reps} @ ${s.planned_weight_kg} kg`;
-  }
-
-  return { mainText, suppText };
-}
-
-function summarizeActualBarbell(actualRows = []) {
-  const main = actualRows.filter((r) => r.category === 'main');
-  const supp = actualRows.filter((r) => r.category === 'supplemental');
-
-  const mainText = main.length
-    ? `${main[0].lift}: ${main.map((r) => `${r.actual_weight_kg ?? '-'}×${r.actual_reps ?? '-'}`).join(' · ')}`
-    : 'None';
-
-  let suppText = 'None';
-  if (supp.length) {
-    const byLift = new Map();
-    for (const r of supp) {
-      if (!byLift.has(r.lift)) byLift.set(r.lift, []);
-      byLift.get(r.lift).push(r);
-    }
-    const parts = [];
-    for (const [lift, arr] of byLift.entries()) {
-      const reps = [...new Set(arr.map((x) => x.actual_reps).filter((v) => v != null))];
-      const weights = [...new Set(arr.map((x) => x.actual_weight_kg).filter((v) => v != null))];
-      const repText = reps.length === 1 ? reps[0] : arr.map((x) => x.actual_reps ?? '-').join('/');
-      const wtText = weights.length === 1 ? ` @ ${weights[0]} kg` : '';
-      parts.push(`${lift}: ${arr.length}×${repText}${wtText}`);
-    }
-    suppText = parts.join(' | ');
-  }
-
-  return { mainText, suppText };
-}
-
-function renderNextSessionSuggestion(planned = {}, actual = {}) {
-  const pain = planned?.pain_level || 'green';
-  const painNote = (planned?.pain_note || '').toLowerCase();
-  const barbell = actual?.barbell || [];
-
-  const date = planned?.session_date;
-  let nextDate = '';
-  if (date) {
-    const d = new Date(`${date}T00:00:00`);
-    d.setDate(d.getDate() + 1);
-    nextDate = d.toISOString().slice(0, 10);
-  }
-
-  let suggestion = 'Proceed as planned next session.';
-
-  const plannedSupp = (planned?.plannedBarbellRows || []).filter((r) => r.category === 'supplemental');
-  const actualSupp = barbell.filter((r) => r.category === 'supplemental');
-  const substitutedSupplemental = plannedSupp.length && actualSupp.length && (
-    plannedSupp[0].lift !== actualSupp[0].lift ||
-    plannedSupp.length !== actualSupp.length ||
-    plannedSupp[0].prescribed_reps !== actualSupp[0].actual_reps ||
-    plannedSupp[0].planned_weight_kg !== actualSupp[0].actual_weight_kg
-  );
-
-  if (pain === 'red') {
-    suggestion = 'Recovery day next: no heavy barbell/rings; easy walk + mobility only.';
-  } else if (pain === 'yellow' || painNote.includes('pain') || painNote.includes('stiff')) {
-    suggestion = 'Keep main lift, reduce supplemental ~20%, and swap VO2 to Z2 if needed.';
-  } else if (substitutedSupplemental) {
-    suggestion = 'Keep the same modified supplemental pattern for one more session, then re-test planned loading.';
-  } else if (barbell.length) {
-    suggestion = 'Session looked stable — continue the planned progression next session.';
-  }
-
-  return `<p><strong>Next session${nextDate ? ` (${nextDate})` : ''}:</strong> ${suggestion}</p>`;
-}
-
-function renderPlannedVsCompleted(planned = {}, actual = {}) {
-  const plannedBarbellRows = planned?.plannedBarbellRows || [];
-  const actualBarbellRows = actual?.barbell || [];
-
-  const p = summarizePlannedBarbell(plannedBarbellRows);
-  const a = summarizeActualBarbell(actualBarbellRows);
-
-  const deltas = [];
-  if (plannedBarbellRows.length && actualBarbellRows.length) {
-    const pSupp = plannedBarbellRows.filter((r) => r.category === 'supplemental');
-    const aSupp = actualBarbellRows.filter((r) => r.category === 'supplemental');
-
-    if (pSupp.length && aSupp.length) {
-      const pLift = pSupp[0].lift;
-      const pSets = pSupp.length;
-      const pReps = pSupp[0].prescribed_reps;
-      const pWt = pSupp[0].planned_weight_kg;
-
-      const aLift = aSupp[0].lift;
-      const aSets = aSupp.length;
-      const aReps = aSupp[0].actual_reps;
-      const aWt = aSupp[0].actual_weight_kg;
-
-      if (pLift !== aLift || pSets !== aSets || pReps !== aReps || pWt !== aWt) {
-        deltas.push(`Substitution detected: planned ${pLift} ${pSets}×${pReps} @ ${pWt} → completed ${aLift} ${aSets}×${aReps} @ ${aWt}`);
-      }
-    }
-  }
-
-  if (!deltas.length) deltas.push('No major substitution detected.');
-
-  return `
-    <div class="delta-grid">
-      <div class="delta-col">
-        <div class="delta-title">Prescribed</div>
-        <div class="delta-line"><strong>Main:</strong> ${p.mainText}</div>
-        <div class="delta-line"><strong>Supplemental:</strong> ${p.suppText}</div>
-      </div>
-      <div class="delta-col">
-        <div class="delta-title">Completed</div>
-        <div class="delta-line"><strong>Main:</strong> ${a.mainText}</div>
-        <div class="delta-line"><strong>Supplemental:</strong> ${a.suppText}</div>
-      </div>
-    </div>
-    <ul class="detail-list delta-list">${deltas.map((d) => `<li>${d}</li>`).join('')}</ul>
-  `;
-}
-
-function renderBarbellDetails(rows = [], planned = {}) {
-  const pain = planned?.pain_level || 'green';
-  if (!rows.length) {
-    const pRows = planned?.plannedBarbellRows || [];
-    if (!pRows.length) return '<p class="muted">Not expected today.</p>';
-
-    const main = pRows.filter((r) => r.category === 'main');
-    const supp = pRows.filter((r) => r.category === 'supplemental');
-
-    const mainText = main.map((r) => `${r.planned_weight_kg}×${r.prescribed_reps}`).join(' · ');
-    let suppText = '';
-    if (supp.length) {
-      const s = supp[0];
-      suppText = `${s.lift}: ${supp.length}×${s.prescribed_reps} @ ${s.planned_weight_kg} kg`;
-    }
-
-    const adjust = pain === 'yellow'
-      ? `<p><strong>Auto-adjust (YELLOW):</strong> keep main, reduce supplemental volume/load.</p>`
-      : (pain === 'red' ? `<p><strong>Auto-adjust (RED):</strong> skip heavy barbell today.</p>` : '');
-
-    return `
-      <p class="muted">No barbell session logged.</p>
-      <div class="planned-block">
-        <div class="planned-title">Planned (not completed yet)</div>
-        <p><strong>Main ${main[0]?.lift || ''}:</strong> ${mainText || '-'}</p>
-        ${suppText ? `<p><strong>Supplemental:</strong> ${suppText}</p>` : ''}
-        ${adjust}
-      </div>
-    `;
-  }
-
-  const mainRows = rows.filter((r) => r.category === 'main');
-  const suppRows = rows.filter((r) => r.category === 'supplemental');
-
-  const mainList = mainRows.map((r) => {
-    const note = r.note ? `<div class="detail-note">${r.note}</div>` : '';
-    return `<li><strong>${r.lift}</strong> · main set ${r.set_no}: ${r.actual_weight_kg ?? '-'} × ${r.actual_reps ?? '-'}${note}</li>`;
-  }).join('');
-
-  let supplementalHtml = '<p class="muted">No supplemental work logged.</p>';
-  if (suppRows.length) {
-    const byLift = new Map();
-    for (const r of suppRows) {
-      const key = r.lift || 'Supplemental';
-      if (!byLift.has(key)) byLift.set(key, []);
-      byLift.get(key).push(r);
-    }
-
-    const items = [];
-    for (const [lift, arr] of byLift.entries()) {
-      const setCount = arr.length;
-      const repsSet = [...new Set(arr.map((x) => x.actual_reps).filter((v) => v != null))];
-      const weightSet = [...new Set(arr.map((x) => x.actual_weight_kg).filter((v) => v != null))];
-      const noteSet = [...new Set(arr.map((x) => x.note).filter(Boolean))];
-
-      const repsText = repsSet.length === 1 ? repsSet[0] : arr.map((x) => x.actual_reps ?? '-').join('/');
-      const weightText = weightSet.length === 1 ? ` @ ${weightSet[0]} kg` : '';
-      const noteText = noteSet.length ? `<div class="detail-note">${noteSet.join(' · ')}</div>` : '';
-
-      items.push(`<li><strong>${lift}</strong> · supplemental: ${setCount}×${repsText}${weightText}${noteText}</li>`);
-    }
-
-    supplementalHtml = `<ul class="detail-list">${items.join('')}</ul>`;
-  }
-
-  return `
-    ${mainList ? `<h5 class="detail-subtitle">Main</h5><ul class="detail-list">${mainList}</ul>` : '<p class="muted">No main work logged.</p>'}
-    <h5 class="detail-subtitle">Supplemental (compressed)</h5>
-    ${supplementalHtml}
-  `;
-}
-
-function renderCardioDetails(rows = [], planned = {}) {
-  const pain = planned?.pain_level || 'green';
-  if (!rows.length) {
-    const p = planned?.plannedCardio || null;
-    if (!p || !p.session_type || p.session_type === 'OFF') return '<p class="muted">Not expected today (rest / off day).</p>';
-
-    const intervalText = p.vo2_intervals_min
-      ? `${p.vo2_intervals_min}${p.vo2_intervals_max && p.vo2_intervals_max !== p.vo2_intervals_min ? `-${p.vo2_intervals_max}` : ''} × ${p.vo2_work_min}m hard / ${p.vo2_easy_min}m easy`
-      : '';
-
-    const adjust = pain === 'yellow'
-      ? `<p><strong>Auto-adjust (YELLOW):</strong> if VO2, swap to 30 min Z2.</p>`
-      : (pain === 'red' ? `<p><strong>Auto-adjust (RED):</strong> recovery walk only.</p>` : '');
-
-    return `
-      <p class="muted">No cardio session logged.</p>
-      <div class="planned-block">
-        <div class="planned-title">Planned (not completed yet)</div>
-        <p><strong>${p.session_type}</strong> · ${p.duration_min || '-'} min</p>
-        ${intervalText ? `<p>${intervalText}</p>` : ''}
-        ${p.speed_low_kmh ? `<p>Speed: ${p.speed_low_kmh}${p.speed_high_kmh ? `-${p.speed_high_kmh}` : ''} km/h</p>` : ''}
-        ${p.target_hr_min ? `<p>Target HR: ${p.target_hr_min}${p.target_hr_max ? `-${p.target_hr_max}` : ''} bpm</p>` : ''}
-        ${adjust}
-      </div>
-    `;
-  }
-
-  const head = rows[0];
-  const intervals = rows.filter((r) => r.interval_no != null);
-
-  let intervalSummary = '<p class="muted">No interval breakdown stored.</p>';
-  if (intervals.length) {
-    const workSet = [...new Set(intervals.map((r) => r.work_min))];
-    const easySet = [...new Set(intervals.map((r) => r.easy_min))];
-    const speedSet = [...new Set(intervals.map((r) => r.target_speed_kmh).filter((v) => v != null))];
-    const hrSet = [...new Set(intervals.map((r) => r.achieved_hr).filter((v) => v != null))];
-
-    const allSame = workSet.length === 1 && easySet.length === 1 && speedSet.length <= 1 && hrSet.length <= 1;
-
-    if (allSame) {
-      intervalSummary = `<p><strong>Intervals:</strong> ${intervals.length}× (${workSet[0]}m hard / ${easySet[0]}m easy)${speedSet.length ? ` @ ${speedSet[0]} km/h` : ''}${hrSet.length ? ` · HR ${hrSet[0]}` : ''}</p>`;
-    } else {
-      intervalSummary = `<ul class="detail-list">${intervals.map((r) => `<li>#${r.interval_no}: ${r.work_min}m / ${r.easy_min}m${r.target_speed_kmh ? ` @ ${r.target_speed_kmh} km/h` : ''}${r.achieved_hr ? ` · HR ${r.achieved_hr}` : ''}</li>`).join('')}</ul>`;
-    }
-  }
-
-  return `
-    <p><strong>${head.protocol}</strong> · ${head.duration_min ?? '-'} min${head.max_hr ? ` · max HR ${head.max_hr}` : ''}</p>
-    ${intervalSummary}
-  `;
-}
-
-function renderRingsDetails(rows = [], planned = {}) {
-  const pain = planned?.pain_level || 'green';
-  if (!rows.length) {
-    const pRows = planned?.plannedRingsRows || [];
-    if (!pRows.length || !pRows[0]?.template_code) return '<p class="muted">Not expected today.</p>';
-
-    const tpl = pRows[0].template_code;
-    const list = pRows
-      .filter((r) => r.item_no != null)
-      .map((r) => `<li>${r.item_no}. ${r.exercise} · ${r.sets_text}×${r.reps_or_time}${r.tempo ? ` @ ${r.tempo}` : ''}${r.rest_text ? ` · rest ${r.rest_text}` : ''}</li>`)
-      .join('');
-
-    const adjust = pain === 'red'
-      ? `<p><strong>Auto-adjust (RED):</strong> skip rings today.</p>`
-      : (pain === 'yellow' ? `<p><strong>Auto-adjust (YELLOW):</strong> keep technique easy, stop if pain rises.</p>` : '');
-
-    return `
-      <p class="muted">No rings session logged.</p>
-      <div class="planned-block">
-        <div class="planned-title">Planned (not completed yet)</div>
-        <p><strong>Template ${tpl}</strong></p>
-        <ul class="detail-list">${list}</ul>
-        ${adjust}
-      </div>
-    `;
-  }
-  const tpl = rows[0].template || '-';
-  const list = rows.filter((r) => r.item_no != null).map((r) => `<li>${r.item_no}. ${r.exercise}${r.result_text ? ` · ${r.result_text}` : ''}</li>`).join('');
-  return `
-    <p><strong>Template ${tpl}</strong></p>
-    ${list ? `<ul class="detail-list">${list}</ul>` : '<p class="muted">No exercise logs stored.</p>'}
-  `;
-}
-
-function bindStatusPicker(renderDashboardFn) {
-  const order = ['green', 'yellow', 'red'];
-
-  async function handleStatusTap(e) {
-    const dot = e.target.closest('[data-role="status-dot"]');
-    if (!dot) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const date = dot.dataset.date;
-    const current = dot.dataset.status || 'green';
-    const next = order[(order.indexOf(current) + 1) % order.length];
-
-    try {
-      const res = await fetch(`/api/set-status?date=${encodeURIComponent(date)}&status=${encodeURIComponent(next)}`, { method: 'POST' });
-      if (!res.ok) throw new Error(`set-status failed (${res.status})`);
-      await renderDashboardFn();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  document.addEventListener('click', handleStatusTap, true);
-  document.addEventListener('touchend', handleStatusTap, true);
-}
-
-function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
-  const modal = document.getElementById('detailModal');
-  const title = document.getElementById('detailTitle');
-  const body = document.getElementById('detailBody');
-  const closeBtn = document.getElementById('detailClose');
-
-  function close() {
-    modal.classList.remove('open');
-  }
-
-  const planByDate = Object.fromEntries((dailyTiles || []).map((d) => [d.session_date, d]));
-  for (const w of (weekProgress || [])) {
-    if (!planByDate[w.session_date]) {
-      planByDate[w.session_date] = {
-        session_date: w.session_date,
-        pain_level: w.pain_level || 'green',
-        planned_barbell_main: w.main_lift,
-        planned_cardio: w.cardio_plan,
-        planned_rings: w.rings_plan
-      };
-    }
-  }
-
-  function openForDate(date) {
-    window.__activeDetailDate = date;
-    title.textContent = `Training details · ${date}`;
-
-    const barbell = details?.barbellByDate?.[date] || [];
-    const cardio = details?.cardioByDate?.[date] || [];
-    const rings = details?.ringsByDate?.[date] || [];
-    const basePlanned = planByDate?.[date] || {};
-    const planned = {
-      ...basePlanned,
-      plannedBarbellRows: details?.plannedBarbellByDate?.[date] || [],
-      plannedCardio: (details?.plannedCardioByDate?.[date] || [])[0] || null,
-      plannedRingsRows: details?.plannedRingsByDate?.[date] || []
-    };
-    window.__activePlanned = planned;
-
-    const mainRows = (planned.plannedBarbellRows || []).filter((r) => r.category === 'main');
-    const mainTop = mainRows.length ? mainRows[mainRows.length - 1] : null;
-    const mainPrescription = mainRows.length ? mainRows.map((r) => `${r.planned_weight_kg}×${r.prescribed_reps}`).join(' · ') : '—';
-    const suppRows = (planned.plannedBarbellRows || []).filter((r) => r.category === 'supplemental');
-    const supp = suppRows[0] || null;
-    const suppPrescription = suppRows.length ? `${suppRows.length}×${supp?.prescribed_reps ?? '-'} @ ${supp?.planned_weight_kg ?? '-'} kg` : '—';
-    const cardioPlan = planned.plannedCardio || null;
-    const ringsRows = planned.plannedRingsRows || [];
-    const uniqueRingTemplates = [...new Set(ringsRows.map((r) => r.template_code).filter(Boolean))];
-    const ringsTemplate = uniqueRingTemplates.length
-      ? uniqueRingTemplates.join('+')
-      : (planned.planned_rings ? String(planned.planned_rings) : null);
-    const ringsPlanText = ringsRows
-      .filter((r) => r.item_no != null)
-      .map((r) => `[${r.template_code}] ${r.item_no}. ${r.exercise} ${r.sets_text || ''}x${r.reps_or_time || ''}`)
-      .join('<br/>') || 'Not scheduled';
-
-    const hasMainLogged = (barbell || []).some((r) => r.category === 'main');
-    const hasSuppLogged = (barbell || []).some((r) => r.category === 'supplemental');
-    const hasCardioLogged = (cardio || []).length > 0;
-    const hasRingsLogged = (rings || []).length > 0;
-
-    body.innerHTML = [
-      section('Main Lift', `
-        <p><strong>Main – ${mainTop?.lift || '—'}</strong><br/>Working sets prescribed: ${mainPrescription}<br/>Top set prescribed: ${mainTop?.planned_weight_kg || '—'} × ${mainTop?.prescribed_reps || '—'}</p>
+        <div class="status-actions"><button type="button" class="status-btn" id="aeroSaveBtn">Save Test</button></div>`,M.querySelector("#aeroSaveBtn")?.addEventListener("click",async()=>{let R=le("aeroHr1"),Z=le("aeroHr2"),P=le("aeroS1"),V=le("aeroS2");if(!R||!Z||R<=0)return alert("Enter first and second half HR");await Se({testType:"ZONE2_SESSION",date:Me,duration:40,hrFirstHalf:R,hrSecondHalf:Z,speedFirstHalf:P,speedSecondHalf:V,notes:"Monthly decoupling test"}),h.classList.remove("open"),await window.__renderDashboard?.()});h.classList.add("open")},Re=document.getElementById("logFixedSpeedBtn");if(Re)Re.onclick=()=>Te("FIXED_SPEED");let De=document.getElementById("logFixedHrBtn");if(De)De.onclick=()=>Te("FIXED_HR");let Le=document.getElementById("logDecouplingBtn");if(Le)Le.onclick=()=>Te("ZONE2_SESSION")}function be(t,d){return`<section class="detail-section"><h4>${t}</h4>${d}</section>`}function Ve(t,d=[],l=[]){let n=document.getElementById("detailModal"),a=document.getElementById("detailTitle"),i=document.getElementById("detailBody"),s=document.getElementById("detailClose");if(!n||!a||!i||!s)return;function r(){n.classList.remove("open")}let o=Object.fromEntries((d||[]).map((c)=>[c.session_date,c]));for(let c of l||[])if(!o[c.session_date])o[c.session_date]={session_date:c.session_date,pain_level:c.pain_level||"green",planned_barbell_main:c.main_lift,planned_cardio:c.cardio_plan,planned_rings:c.rings_plan};function m(c){window.__activeDetailDate=c,a.textContent=`Training details · ${c}`;let u=t?.barbellByDate?.[c]||[],p=t?.cardioByDate?.[c]||[],b=t?.ringsByDate?.[c]||[],y={...o?.[c]||{},plannedBarbellRows:t?.plannedBarbellByDate?.[c]||[],plannedCardio:(t?.plannedCardioByDate?.[c]||[])[0]||null,plannedRingsRows:t?.plannedRingsByDate?.[c]||[]};window.__activePlanned=y;let _=(y.plannedBarbellRows||[]).filter((D)=>D.category==="main"),$=_.length?_[_.length-1]:null,W=_.length?_.map((D)=>`${D.planned_weight_kg}×${D.prescribed_reps}`).join(" · "):"—",T=(y.plannedBarbellRows||[]).filter((D)=>D.category==="supplemental"),A=T[0]||null,z=T.length?`${T.length}×${A?.prescribed_reps??"-"} @ ${A?.planned_weight_kg??"-"} kg`:"—",L=y.plannedCardio||null,w=y.plannedRingsRows||[],E=[...new Set(w.map((D)=>D.template_code).filter(Boolean))],B=E.length?E.join("+"):y.planned_rings?String(y.planned_rings):null,H=w.filter((D)=>D.item_no!=null).map((D)=>`[${D.template_code}] ${D.item_no}. ${D.exercise} ${D.sets_text||""}x${D.reps_or_time||""}`).join("<br/>")||"Not scheduled",X=(u||[]).some((D)=>D.category==="main"),te=(u||[]).some((D)=>D.category==="supplemental"),S=(p||[]).length>0,C=(b||[]).length>0;i.innerHTML=[be("Main Lift",`
+        <p><strong>Main – ${$?.lift||"—"}</strong><br/>Working sets prescribed: ${W}<br/>Top set prescribed: ${$?.planned_weight_kg||"—"} × ${$?.prescribed_reps||"—"}</p>
         <div class="status-actions">
           <input id="mainWeightInput" class="status-input" type="number" step="0.5" placeholder="Top set weight" />
           <input id="mainRepsInput" class="status-input" type="number" step="1" placeholder="Top set reps" />
           <input id="mainRpeInput" class="status-input" type="number" step="0.5" placeholder="RPE (optional)" />
-          <button type="button" class="status-btn" onclick="window.logSessionAction('main_done')" ${hasMainLogged ? 'disabled' : ''}>${hasMainLogged ? 'Main Recorded ✓' : 'Mark Main Complete'}</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('main_done')" ${X?"disabled":""}>${X?"Main Recorded ✓":"Mark Main Complete"}</button>
         </div>
-      `),
-      section('Supplemental', `
-        <p><strong>${supp?.lift || '—'}</strong><br/>Prescribed: ${suppPrescription}</p>
+      `),be("Supplemental",`
+        <p><strong>${A?.lift||"—"}</strong><br/>Prescribed: ${z}</p>
         <div class="status-actions">
           <label><input id="suppCompletedInput" type="checkbox" checked /> Completed as prescribed</label>
           <label><input id="suppModifiedInput" type="checkbox" /> Modified</label>
@@ -1539,582 +168,143 @@ function bindDetailClicks(details, dailyTiles = [], weekProgress = []) {
         <div class="status-actions">
           <input id="suppWeightInput" class="status-input" type="number" step="0.5" placeholder="Modified weight" />
           <input id="suppSetsInput" class="status-input" type="number" step="1" placeholder="Sets completed" />
-          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_done')" ${hasSuppLogged ? 'disabled' : ''}>${hasSuppLogged ? 'Supp Recorded ✓' : 'Mark Supp Complete'}</button>
-          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_modified')" ${hasSuppLogged ? 'disabled' : ''}>${hasSuppLogged ? 'Supp Recorded ✓' : 'Save Supp Modified'}</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_done')" ${te?"disabled":""}>${te?"Supp Recorded ✓":"Mark Supp Complete"}</button>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('supp_modified')" ${te?"disabled":""}>${te?"Supp Recorded ✓":"Save Supp Modified"}</button>
         </div>
-      `),
-      section('Cardio', `
-        <p><strong>${cardioPlan?.session_type || 'Z2'}</strong></p>
+      `),be("Cardio",`
+        <p><strong>${L?.session_type||"Z2"}</strong></p>
         <div class="status-actions">
-          <input id="cardioDurationInput" class="status-input" type="number" step="1" placeholder="Duration (min)" value="${cardioPlan?.duration_min || ''}" />
+          <input id="cardioDurationInput" class="status-input" type="number" step="1" placeholder="Duration (min)" value="${L?.duration_min||""}" />
           <input id="cardioAvgHrInput" class="status-input" type="number" step="1" placeholder="Avg HR" />
           <input id="cardioSpeedInput" class="status-input" type="number" step="0.1" placeholder="Speed (optional)" />
         </div>
         <div class="status-actions">
-          <input id="cardioWorkMinInput" class="status-input" type="number" step="0.5" placeholder="Work interval (min)" value="${cardioPlan?.vo2_work_min || ''}" />
-          <input id="cardioRestMinInput" class="status-input" type="number" step="0.5" placeholder="Rest interval (min)" value="${cardioPlan?.vo2_easy_min || ''}" />
-          <button type="button" class="status-btn" onclick="window.logSessionAction('cardio_done')" ${hasCardioLogged ? 'disabled' : ''}>${hasCardioLogged ? 'Cardio Recorded ✓' : 'Mark Cardio Complete'}</button>
+          <input id="cardioWorkMinInput" class="status-input" type="number" step="0.5" placeholder="Work interval (min)" value="${L?.vo2_work_min||""}" />
+          <input id="cardioRestMinInput" class="status-input" type="number" step="0.5" placeholder="Rest interval (min)" value="${L?.vo2_easy_min||""}" />
+          <button type="button" class="status-btn" onclick="window.logSessionAction('cardio_done')" ${S?"disabled":""}>${S?"Cardio Recorded ✓":"Mark Cardio Complete"}</button>
         </div>
-      `),
-      section('Rings', `
-        <p><strong>Template ${ringsTemplate || '—'}</strong></p>
-        <p class="muted">${ringsPlanText}</p>
+      `),be("Rings",`
+        <p><strong>Template ${B||"—"}</strong></p>
+        <p class="muted">${H}</p>
         <div class="status-actions">
-          <label><input id="ringsCompletedInput" type="checkbox" ${hasRingsLogged ? 'checked disabled' : ''}/> Completed as prescribed</label>
-          <button type="button" class="status-btn" onclick="window.logSessionAction('rings_done')" ${hasRingsLogged ? 'disabled' : ''}>${hasRingsLogged ? 'Rings Recorded ✓' : 'Mark Rings Complete'}</button>
+          <label><input id="ringsCompletedInput" type="checkbox" ${C?"checked disabled":""}/> Completed as prescribed</label>
+          <button type="button" class="status-btn" onclick="window.logSessionAction('rings_done')" ${C?"disabled":""}>${C?"Rings Recorded ✓":"Mark Rings Complete"}</button>
         </div>
-      `),
-      section('Finish Session', `
+      `),be("Finish Session",`
         <div class="status-actions">
           <button type="button" class="status-btn" onclick="window.logSessionAction('finish_session')">Finish Session</button>
         </div>
-      `)
-    ].join('');
+      `)].join(""),n.classList.add("open")}window.__openDetailForDate=m,s.addEventListener("click",r),n.addEventListener("click",(c)=>{if(c.target===n)r()}),window.addEventListener("keydown",(c)=>{if(c.key==="Escape")r()});for(let c of document.querySelectorAll(".tile, .week-row")){let u=(p)=>{if(p?.target?.closest?.('[data-role="status-dot"]'))return;m(c.dataset.date||"")};c.addEventListener("click",u),c.addEventListener("keydown",(p)=>{if(p.key==="Enter"||p.key===" ")p.preventDefault(),u(p)})}}function $e(t,d){return`<article class="stat-card"><div class="stat-label">${t}</div><div class="stat-value">${d}</div></article>`}function Ee(t,d,l=""){return`<span class="${d?"chip done":"chip"}"><i class="dot"></i>${t}${l?` · ${l}`:""}</span>`}function qe(t){let d=document.getElementById("totals");if(!d)return;d.innerHTML=[$e("Barbell Sessions",t.barbell_sessions??0),$e("Cardio Sessions",t.cardio_sessions??0),$e("Rings Sessions",t.rings_sessions??0),$e("Total Training Days",t.total_training_days??0),$e("Active Days (14d)",t.active_days_last_14??0)].join("")}function Ue(t){let d=document.getElementById("weekHeaderBanner");if(!d)return;if(!t){d.innerHTML='<div class="week-header-title">Cycle info unavailable</div>';return}let l=String(t.main_pct||"").split("/").map((m)=>Number(String(m).replace("%",""))).filter((m)=>Number.isFinite(m)),n=Number(String(t.supp_pct||"").replace("%","")),a=(m)=>Math.max(0,Math.min(100,Number(m)||0)),i=(m)=>{let c=a(m);return 120-120*Math.max(0,Math.min(1,(c-60)/40))},s=(m)=>{let c=i(m),u=`hsl(${c.toFixed(0)} 85% 66%)`,p=`hsl(${c.toFixed(0)} 80% 52%)`,b=`hsl(${c.toFixed(0)} 88% 42%)`;return`linear-gradient(90deg, ${u} 0%, ${p} 55%, ${b} 100%)`},r=l.map((m)=>`<div class="pct-bar"><span style="width:${a(m)}%; background:${s(m)}"></span><label>${m}%</label></div>`).join(""),o=t.deload_code?`<span class="chip done">Deload: ${t.deload_name||t.deload_code}</span>`:"";d.innerHTML=`
+    <div class="week-header-title">5/3/1 · ${t.block_type} · Week ${t.week_in_block} ${o}</div>
+    <div class="week-header-meta">Main: ${t.main_pct} · Supplemental: ${t.supp_pct}</div>
+    <div class="pct-bars">${r}${Number.isFinite(n)?`<div class="pct-bar supp"><span style="width:${a(n)}%; background:${s(n)}"></span><label>Supp ${n}%</label></div>`:""}</div>
+  `}function Xe(t=[],d=[],l={}){let n=document.getElementById("todayGlance");if(!n)return;let a=ee(),i=(t||[]).find((w)=>w.session_date===a);if(!i){n.innerHTML='<div class="today-title">TODAY</div><div class="today-meta">No data for today yet.</div>';return}let s=l?.barbellByDate?.[a]||[],r=s.some((w)=>w.category==="main"),o=s.some((w)=>w.category==="supplemental"),m=!!i.planned_barbell_main,c=!!i.planned_barbell_supp,u=!!i.planned_cardio&&i.planned_cardio!=="OFF",p=!!i.planned_rings,b=[m,c,u,p].filter(Boolean).length,g=[m&&r,c&&o,u&&i.has_cardio,p&&i.has_rings].filter(Boolean).length,y=g===0?"Not Started":g===b?"Completed":"In Progress",_=b?Math.round(g/b*100):0,$=(w,E,B)=>{if(!E)return"";return`<div class="today-line"><span class="today-chip ${B?"done":"pending"}">${B?"done":"pending"}</span>${w} ${E}</div>`},W=m?`${i.planned_barbell_main}`:"",T=c?`${i.planned_barbell_supp} ${i.planned_supp_sets||""}x${i.planned_supp_reps||""}`:"",A=u?i.planned_cardio:"",z=p?`Rings ${i.planned_rings}`:"",L=(m||c?60:0)+(u?30:0)+(p?20:0);n.innerHTML=`
+    <div class="today-title">
+      <span><strong>TODAY</strong> · ${a}</span>
+      <span class="today-progress"><span class="status-dot ${i.pain_level||"green"}"></span>${g}/${b||0} · ${_}%</span>
+    </div>
+    <div class="today-meta">Status: <strong>${y}</strong> · Planned time: <strong>${Math.floor(L/60)}h ${L%60}m</strong></div>
+    <div class="today-lines">
+      ${$("\uD83C\uDFCB",W,r)}
+      ${$("\uD83C\uDFCB+",T,o)}
+      ${$("❤️",A,!!i.has_cardio)}
+      ${$("\uD83E\uDD38",z,!!i.has_rings)}
+    </div>
+    ${y==="Not Started"?'<div class="today-cta"><button class="btn-primary" type="button" id="startSessionBtn">Start Session</button></div>':""}
+  `}function Ke(t=[],d={}){let l=0,n=0;for(let s of t){let r=d?.barbellByDate?.[s.session_date]||[],o=r.some((g)=>g.category==="main"),m=r.some((g)=>g.category==="supplemental"),c=!!s.main_lift,u=!!s.main_lift,p=!!s.cardio_plan&&s.cardio_plan!=="OFF",b=!!s.rings_plan;if(c){if(l+=1,o)n+=1}if(u){if(l+=1,m)n+=1}if(p){if(l+=1,s.cardio_done)n+=1}if(b){if(l+=1,s.rings_done)n+=1}}let a=l?Math.round(n/l*100):0,i=document.getElementById("weeklyCompletion");if(i)i.textContent=`Week: ${n}/${l} (${a}%)`}function Je(t=[],d={}){let l=document.getElementById("performanceKpis");if(!l)return;let n=t.reduce((S,C)=>S+!!C.main_lift+!!C.main_lift+(!!C.cardio_plan&&C.cardio_plan!=="OFF")+!!C.rings_plan,0),a=t.reduce((S,C)=>{let D=d?.barbellByDate?.[C.session_date]||[],xe=D.some((ne)=>ne.category==="main"),ge=D.some((ne)=>ne.category==="supplemental");return S+(xe?1:0)+(ge?1:0)+(C.cardio_done?1:0)+(C.rings_done?1:0)},0),i=n?Math.round(a/n*100):0,s=ee(),r=Math.max(1,Math.min(7,(new Date(`${s}T00:00:00`).getDay()+6)%7+1)),o=Math.round(n*(r/7)||0),m=n?Math.round(o/n*100):0,c=Math.max(0,o-a),u=d?.cardioByDate||{},p=Object.values(u).flat(),b=[],g=new Set;for(let S of p){let C=`${S.session_date}|${S.protocol}`;if(g.has(C))continue;g.add(C),b.push(S)}let y=b.filter((S)=>S.protocol==="Z2"),_=b.filter((S)=>String(S.protocol||"").includes("VO2")),$=y.length,W=_.length,T=Math.max(1,$+W),A=Math.round($/T*100),z=100-A,L=120,w=(()=>{let S=new Date(`${s}T00:00:00`),C=(S.getDay()+6)%7;return S.setDate(S.getDate()-C),S.toISOString().slice(0,10)})(),E=(()=>{let S=new Date(`${w}T00:00:00`);return S.setDate(S.getDate()+6),S.toISOString().slice(0,10)})(),B=y.filter((S)=>S.session_date>=w&&S.session_date<=E).reduce((S,C)=>S+Number(C.duration_min||0),0),H=i>=m?"\uD83D\uDFE2 On pace":c>=2?`\uD83D\uDD34 Behind by ${c} sessions`:"\uD83D\uDFE1 Slightly behind",X=A>=75?"\uD83D\uDFE2 Z2-dominant":A>=65?"\uD83D\uDFE1 Slightly VO2-heavy":"\uD83D\uDD34 Too VO2-heavy",te=B>=L?`\uD83D\uDFE2 Target met (+${B-L}m)`:`\uD83D\uDD34 Under target (${L-B}m short)`;l.innerHTML=`
+    <article class="kpi-card"><div class="muted">Training status · weekly execution</div><div class="kpi-value">${i}%</div><div class="muted">Expected by today: ≥${m}% (${o}/${n})</div><div class="muted">${H}</div></article>
+    <article class="kpi-card"><div class="muted">Intensity distribution (Z2 vs VO2)</div><div class="kpi-value">${A}% / ${z}%</div><div class="muted">Target: 75% / 25%</div><div class="muted">${X}</div></article>
+    <article class="kpi-card"><div class="muted">Z2 volume</div><div class="kpi-value">${B} / ${L} min</div><div class="muted">${te}</div></article>
+  `}function Ge(t){let d=document.getElementById("weekRows");if(!d)return;let l=ee();d.innerHTML=t.map((n)=>{let a=[!!n.main_lift,!!n.cardio_plan&&n.cardio_plan!=="OFF",!!n.rings_plan].filter(Boolean).length,i=[!!n.barbell_done,!!n.cardio_done,!!n.rings_done].filter(Boolean).length;return`
+    <article class="week-row ${i===a&&a>0?"done-all":i>0?"partial":n.session_date>=l?"upcoming":""}" role="button" tabindex="0" data-date="${n.session_date}">
+      <div class="week-meta">
+        <div class="week-day">${n.day_name.slice(0,3)}</div>
+        <div class="muted">${n.session_date.slice(5)}</div>
+      </div>
+      <div class="week-chips">
+        ${Ee("\uD83C\uDFCB",n.barbell_done,n.main_lift||"—")}
+        ${Ee("❤️",n.cardio_done,n.cardio_plan||"OFF")}
+        ${Ee("\uD83E\uDD38",n.rings_done,n.rings_plan||"—")}
+      </div>
+    </article>`}).join("")}function Ye(t,d={}){let l=document.getElementById("dailyTiles");if(!l)return;let n=ee(),a=({icon:s,planned:r,done:o,detail:m,isPast:c})=>{if(!r)return"";let u="badge planned";if(o)u="badge done";else if(!o&&c)u="badge missed";return`<span class="${u}">${s} ${m||""}</span>`},i=[...t].reverse();l.innerHTML=i.map((s)=>{let r=s.session_date<n,o=d?.barbellByDate?.[s.session_date]||[],m=o.some((H)=>H.category==="main"),c=o.some((H)=>H.category==="supplemental"),u=!!s.planned_barbell_main,p=!!s.planned_barbell_supp,b=!!s.planned_cardio&&s.planned_cardio!=="OFF",g=!!s.planned_rings,y=u?`${s.planned_barbell_main}`.trim():s.barbell_lift,_=p?`${s.planned_barbell_supp} ${s.planned_supp_sets||""}x${s.planned_supp_reps||""}`.trim():"",$=s.planned_cardio||s.cardio_protocol,W=s.planned_rings||s.rings_template,T=s.pain_level||"green",z=[`<span class="status-dot clickable ${T}" data-date="${s.session_date}" data-status="${T}" data-role="status-dot" title="Recovery status: ${T} (tap to change)"></span>`,a({icon:"\uD83C\uDFCB",planned:u,done:m,detail:y,isPast:r}),a({icon:"\uD83C\uDFCB+",planned:p,done:c,detail:_,isPast:r}),a({icon:"❤️",planned:b,done:!!s.has_cardio,detail:$,isPast:r}),a({icon:"\uD83E\uDD38",planned:g,done:!!s.has_rings,detail:W,isPast:r})].filter(Boolean).join(""),L=[u&&m,p&&c,b&&s.has_cardio,g&&s.has_rings].filter(Boolean).length,w=[u,p,b,g].filter(Boolean).length,E=w===0?"Rest day":`${L}/${w} complete`,B=new Date(`${s.session_date}T00:00:00`).toLocaleDateString(void 0,{weekday:"short"});return`
+      <article class="tile" role="button" tabindex="0" data-date="${s.session_date}">
+        <div class="tile-date">${B} · ${s.session_date}</div>
+        <div class="tile-main">${E}</div>
+        <div class="tile-flags">${z}</div>
+      </article>
+    `}).join("")}function Qe(t={}){let d=document.getElementById("cycleControlPanel");if(!d)return;let l=t.latestBlock||{},n=t.activeDeload||null,i=(t.profiles||[]).map((o)=>`<option value="${o.code}" data-days="${o.default_days||7}">${o.name}</option>`).join(""),s=(t.recentEvents||[]).slice(0,5).map((o)=>`<li>${o.event_date} · ${o.event_type}${o.deload_code?` (${o.deload_code})`:""}</li>`).join(""),r=(t.currentTM||[]).map((o)=>`
+    <article class="tm-card">
+      <div class="tm-head">
+        <strong>${o.lift}</strong>
+        <span class="muted">${o.effective_date||"—"}</span>
+      </div>
+      <div class="tm-value">${Number(o.tm_kg||0).toFixed(1)} kg</div>
+      <div class="tm-actions">
+        <button class="status-btn" data-tm-lift="${o.lift}" data-tm-delta="-2.5" type="button">-2.5</button>
+        <button class="status-btn" data-tm-lift="${o.lift}" data-tm-delta="2.5" type="button">+2.5</button>
+        <button class="status-btn" data-tm-lift="${o.lift}" data-tm-delta="5" type="button">+5</button>
+      </div>
+      <div class="tm-set-row">
+        <input class="status-input tm-set-input" id="tmSet-${o.lift}" type="number" step="0.5" placeholder="Set exact kg" />
+        <button class="status-btn" data-tm-set="${o.lift}" type="button">Set</button>
+      </div>
+    </article>
+  `).join("");d.innerHTML=`
+    <section class="cycle-control-grid">
+      <article class="cycle-control-card">
+        <h3 class="cycle-section-title">Cycle</h3>
+        <div class="muted">Current block: <strong>#${l.block_no||"—"}</strong> · ${l.block_type||"—"}</div>
+        <div class="muted">Start: <strong>${l.start_date||"—"}</strong></div>
+        <div class="status-actions compact">
+          <input id="newCycleStartInput" class="status-input" type="date" />
+          <select id="newCycleTypeInput" class="status-input"><option value="Leader">Leader</option><option value="Anchor">Anchor</option></select>
+          <button id="startCycleBtn" class="status-btn" type="button">Start New Cycle</button>
+        </div>
+      </article>
 
-    modal.classList.add('open');
-  }
+      <article class="cycle-control-card">
+        <h3 class="cycle-section-title">Deload</h3>
+        <div class="muted">Active: <strong>${n?`${n.name||n.deload_code} (${n.start_date} → ${n.end_date})`:"none"}</strong></div>
+        <div class="status-actions compact">
+          <select id="deloadTypeInput" class="status-input">${i}</select>
+          <input id="deloadStartInput" class="status-input" type="date" />
+          <input id="deloadDaysInput" class="status-input" type="number" min="1" step="1" placeholder="Days" />
+          <button id="applyDeloadBtn" class="status-btn" type="button">Apply Deload</button>
+        </div>
+      </article>
+    </section>
 
-  window.__openDetailForDate = openForDate;
+    <section class="cycle-control-card">
+      <h3 class="cycle-section-title">Training Max</h3>
+      <div class="tm-grid">${r||'<p class="muted">No TM data.</p>'}</div>
+    </section>
 
-  closeBtn.addEventListener('click', close);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) close();
-  });
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
-  });
+    <section class="cycle-control-card">
+      <h3 class="cycle-section-title">Recent cycle events</h3>
+      <ul class="detail-list">${s||"<li>No events yet.</li>"}</ul>
+    </section>
+  `}function et(t=[]){let d=document.getElementById("est1rmRows");if(!d)return;if(!t.length){d.innerHTML='<p class="muted">No main-set data in the last 12 weeks yet.</p>';return}let l=(n=[])=>{let a=(Array.isArray(n)?n:[]).slice().reverse();if(a.length<2)return"";let i=a.map((b)=>Number(b.e1rm)).filter((b)=>Number.isFinite(b));if(i.length<2)return"";let s=120,r=26,o=2,m=Math.min(...i),c=Math.max(...i),u=Math.max(1,c-m),p=i.map((b,g)=>`${(g*(s/(i.length-1))).toFixed(1)},${(r-o-(b-m)/u*(r-2*o)).toFixed(1)}`).join(" ");return`<svg viewBox="0 0 ${s} ${r}" class="spark"><polyline points="${p}" fill="none" stroke="#9ad0ff" stroke-width="2"/></svg>`};d.innerHTML=t.map((n)=>{let a=[];if(typeof n.trend_points==="string")try{a=JSON.parse(n.trend_points)||[]}catch{a=[]}else if(Array.isArray(n.trend_points))a=n.trend_points;let i=Number(n.delta_4w_kg||0),s=i>0?"↑":i<0?"↓":"→",r=Math.max(0,Math.min(100,Number(n.progress_to_next_pct||0)));return`
+    <article class="est1rm-card">
+      <div class="est1rm-lift">${n.lift}</div>
+      <div class="est1rm-value">${n.est_1rm_kg} kg</div>
+      <div class="est1rm-level">${n.strength_level} · ${n.bw_ratio}x BW</div>
+      <div class="est1rm-meta">4w: ${s} ${Math.abs(i).toFixed(1)} kg · Cycle: ${Number(n.delta_cycle_kg||0).toFixed(1)} kg</div>
+      ${l(a)}
+      <div class="est1rm-meta">${n.next_level!=="—"?`Next: ${n.next_level} at ${n.next_level_kg} kg`:"Top level reached"} · BW ${n.bodyweight_kg} kg</div>
+      <div class="progress-track"><span style="width:${r}%"></span></div>
+      <div class="est1rm-meta">${r}% to next level · from ${n.source_weight_kg}×${n.source_reps} (${n.source_date})</div>
+    </article>`}).join("")}function tt(t=[]){let d=document.getElementById("cyclePlanRows");if(!d)return;if(!t.length){d.innerHTML='<p class="muted">No planned sessions found for current cycle.</p>';return}let l=new Map;for(let g of t){if(!l.has(g.session_date))l.set(g.session_date,[]);l.get(g.session_date).push(g)}let n=(g)=>{let y=new Date(`${g}T12:00:00Z`),_=(y.getUTCDay()+6)%7;return y.setUTCDate(y.getUTCDate()-_),y.toISOString().slice(0,10)},a=(g)=>{let y=[...new Set(g.filter(($)=>$.category==="main").map(($)=>$.lift))],_=[...new Set(g.filter(($)=>$.category==="supplemental").map(($)=>$.lift))];return{mainTxt:y.length?y.join(" + "):"Rest",suppTxt:_.length?_.join(" + "):"—"}},i=(g,y)=>{let _=g.filter((T)=>T.category===y);if(!_.length)return'<p class="muted">—</p>';let $=new Map;for(let T of _){if(!$.has(T.lift))$.set(T.lift,[]);$.get(T.lift).push(T)}let W=[];for(let[T,A]of $.entries()){let z=new Map;for(let E of A){let B=`${E.prescribed_reps}|${E.planned_weight_kg}`;z.set(B,(z.get(B)||0)+1)}let L=Array.from(z.entries()),w=L.length===1?(()=>{let[[E,B]]=L,[H,X]=E.split("|");return`${B}×${H} @ ${X}kg`})():A.map((E)=>`${E.planned_weight_kg}×${E.prescribed_reps}`).join(" · ");W.push(`<li><strong>${T}</strong>: ${w}</li>`)}return`<ul class="detail-list">${W.join("")}</ul>`},s=Array.from(l.keys()).sort(),r=(g,y)=>{let _=new Date(`${g}T12:00:00Z`);return _.setUTCDate(_.getUTCDate()+y),_.toISOString().slice(0,10)},o=n(s[0]),m=n(s[s.length-1]),c=[];for(let g=o;g<=m;g=r(g,7))c.push(g);let u=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];d.innerHTML=c.map((g,y)=>{let _=[];for(let $=0;$<7;$+=1){let W=r(g,$),T=l.get(W)||[];if(!T.length)continue;let{mainTxt:A,suppTxt:z}=a(T);_.push(`<article class="cycle-day-tile" data-cycle-date="${W}" tabindex="0"><div class="tile-date">${u[$]} · ${W}</div><div class="tile-main">${A}</div><div class="muted">Supp: ${z}</div></article>`)}return`
+      <section class="cycle-week-block">
+        <div class="panel-head"><h3>Week ${y+1} <span class="muted">· ${g}</span></h3></div>
+        <div class="cycle-calendar-grid">
+          ${_.join("")}
+        </div>
+      </section>`}).join("");let p=document.getElementById("cyclePlanModal");if(!p)p=document.createElement("div"),p.id="cyclePlanModal",p.className="modal",p.innerHTML='<div class="modal-card" role="dialog" aria-modal="true"><div class="modal-head"><h3 id="cyclePlanTitle">Planned session</h3><button type="button" class="modal-close" id="cyclePlanClose">×</button></div><div id="cyclePlanBody" class="modal-body"></div></div>',document.body.appendChild(p),p.addEventListener("click",(g)=>{if(g.target===p)p.classList.remove("open")}),p.querySelector("#cyclePlanClose")?.addEventListener("click",()=>p?.classList.remove("open"));let b=(g)=>{let y=l.get(g)||[],_=document.getElementById("cyclePlanTitle"),$=document.getElementById("cyclePlanBody");if(!_||!$||!p)return;_.textContent=`Planned session · ${g}`,$.innerHTML=`
+      <section class="detail-section"><h4>Main</h4>${i(y,"main")}</section>
+      <section class="detail-section"><h4>Supplemental</h4>${i(y,"supplemental")}</section>
+    `,p.classList.add("open")};for(let g of d.querySelectorAll(".cycle-day-tile")){let y=()=>b(g.getAttribute("data-cycle-date"));g.addEventListener("click",y),g.addEventListener("keydown",(_)=>{if(_.key==="Enter"||_.key===" ")_.preventDefault(),y()})}}async function ie(){let t=await je();window.__dashboardData=t,Ue(t.weekHeader||null),Xe(t.dailyTiles||[],t.weekProgress||[],t.details||{}),qe(t.totals||{}),Je(t.weekProgress||[],t.details||{}),Qe(t.cycleControl||{}),et(t.est1RM||[]),tt(t.currentCyclePlan||[]),Ze(t.cardioAnalytics||{}),We(t.auditLog||[]),Ge(t.weekProgress||[]),Ye(t.dailyTiles||[],t.details||{}),Ve(t.details||{},t.dailyTiles||[],t.weekProgress||[]),Ke(t.weekProgress||[],t.details||{});let d=document.getElementById("generatedAt");if(d)d.textContent=`Data generated: ${new Date(t.generatedAt).toLocaleString()}`}function nt(t){window.setRecoveryStatus=async(d,l)=>{let n=d||window.__activeDetailDate;if(!n)return;try{let a=await fetch(`/api/set-status?date=${encodeURIComponent(n)}&status=${encodeURIComponent(l)}`,{method:"POST"});if(!a.ok)throw Error(`set-status failed (${a.status})`);await t(),window.__openDetailForDate?.(n)}catch(a){console.error(a)}},window.logSessionAction=async(d)=>{let l=window.__activeDetailDate,n=window.__activePlanned||{};if(!l)return;let a={action:d,date:l,plannedBarbellRows:n.plannedBarbellRows||[],plannedCardio:n.plannedCardio||null},i=async(s)=>{let r=await fetch("/api/log-action",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(s)});if(!r.ok){let o=`log-action failed (${r.status})`;try{let m=await r.json();if(m?.error)o=m.error}catch{}throw Error(o)}};if(d==="finish_session"){let s=Number.parseFloat(F("mainWeightInput")),r=Number.parseInt(F("mainRepsInput"),10),o=Number.parseFloat(F("mainRpeInput")),m=_e("suppCompletedInput"),c=_e("suppModifiedInput"),u=Number.parseFloat(F("suppWeightInput")),p=Number.parseInt(F("suppSetsInput"),10),b=Number.parseInt(F("cardioDurationInput"),10),g=Number.parseInt(F("cardioAvgHrInput"),10),y=Number.parseFloat(F("cardioSpeedInput")),_=Number.parseFloat(F("cardioWorkMinInput")),$=Number.parseFloat(F("cardioRestMinInput")),W=_e("ringsCompletedInput");if(Number.isFinite(s)&&Number.isFinite(r)&&s>0&&r>0)await i({action:"main_done",date:l,plannedBarbellRows:(n.plannedBarbellRows||[]).map((w)=>w.category==="main"?{...w,planned_weight_kg:s,prescribed_reps:r,note:Number.isFinite(o)?`RPE ${o}`:w.note}:w),plannedCardio:n.plannedCardio||null});if(c&&Number.isFinite(u)&&u>0){let w=(n.plannedBarbellRows||[]).find((B)=>B.category==="supplemental")?.prescribed_reps||5,E=Number.isFinite(p)&&p>0?p:10;await i({action:"supp_modified",date:l,plannedBarbellRows:n.plannedBarbellRows||[],plannedCardio:n.plannedCardio||null,suppModifiedText:`${E}x${w}@${u}`})}else if(m)await i({action:"supp_done",date:l,plannedBarbellRows:n.plannedBarbellRows||[],plannedCardio:n.plannedCardio||null});if(Number.isFinite(b)&&b>0&&Number.isFinite(g)&&g>0){let w={...n.plannedCardio||{},duration_min:b};await i({action:"cardio_done",date:l,plannedBarbellRows:n.plannedBarbellRows||[],plannedCardio:w,avgHr:g,speedKmh:Number.isFinite(y)&&y>0?y:void 0,workMin:Number.isFinite(_)&&_>0?_:void 0,restMin:Number.isFinite($)&&$>=0?$:void 0})}if(W)await i({action:"rings_done",date:l,plannedBarbellRows:n.plannedBarbellRows||[],plannedCardio:n.plannedCardio||null});let T="—",A="—";if(Number.isFinite(s)&&Number.isFinite(r)&&s>0&&r>0){let w=s*(1+r/30);T=`${w.toFixed(1)} kg`;let E=(window.__dashboardData?.details?.barbellByDate?.[l]||[]).filter((H)=>H.category==="main"),B=E.length?E[E.length-1]:null;if(B?.actual_weight_kg&&B?.actual_reps){let H=Number(B.actual_weight_kg)*(1+Number(B.actual_reps)/30),X=w-H;A=`${X>=0?"+":""}${X.toFixed(1)} kg vs previous logged main`}}let z=Number.isFinite(g)?g<=125?"Yes":"No":"—",L=(()=>{let w=Number.isFinite(s)&&Number.isFinite(r)&&s>0&&r>0,E=Number.isFinite(b)&&Number.isFinite(g)&&b>0&&g>0,B=m||c&&Number.isFinite(u)&&u>0,H=[w,B,E].filter(Boolean).length;if(H===3)return"A (full session)";if(H===2)return"B (mostly complete)";if(H===1)return"C (partial)";return"D (logged but incomplete)"})();await t(),window.__openDetailForDate?.(l),alert(`Session finished
 
-  document.querySelectorAll('.tile, .week-row').forEach((el) => {
-    const open = (evt) => {
-      if (evt?.target?.closest?.('[data-role="status-dot"]')) return;
-      openForDate(el.dataset.date);
-    };
-    el.addEventListener('click', open);
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        open(e);
-      }
-    });
-  });
-}
-
-function initOverviewMode() {
-  const aBtn = document.getElementById('athleteViewBtn');
-  const lBtn = document.getElementById('logViewBtn');
-  if (!aBtn || !lBtn) return;
-  const athleteOnly = Array.from(document.querySelectorAll('.athlete-only'));
-  const logOnly = Array.from(document.querySelectorAll('.log-only'));
-
-  const setMode = (mode) => {
-    const athlete = mode !== 'log';
-    aBtn.classList.toggle('active', athlete);
-    lBtn.classList.toggle('active', !athlete);
-    athleteOnly.forEach((el) => el.classList.toggle('hidden-view', !athlete));
-    logOnly.forEach((el) => el.classList.toggle('hidden-view', athlete));
-  };
-
-  aBtn.addEventListener('click', () => setMode('athlete'));
-  lBtn.addEventListener('click', () => setMode('log'));
-  setMode('athlete');
-}
-
-function initUploadBox() {
-  const wire = ({ kind, inputId, btnId, statusId, boxId }) => {
-    const input = document.getElementById(inputId);
-    const btn = document.getElementById(btnId);
-    const status = document.getElementById(statusId);
-    const box = document.getElementById(boxId);
-    if (!input || !btn || !status || !box) return;
-
-    const upload = async (file) => {
-      if (!file) return;
-      btn.disabled = true;
-      status.textContent = `Uploading ${file.name}...`;
-      try {
-        const fd = new FormData();
-        fd.append('kind', kind);
-        fd.append('file', file);
-        const res = await fetch('/api/upload-health', { method: 'POST', body: fd });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || !data.ok) throw new Error(data.error || `upload failed (${res.status})`);
-        status.textContent = `Uploaded: ${data.path}`;
-      } catch (e) {
-        status.textContent = `Upload failed: ${e.message || e}`;
-      } finally {
-        btn.disabled = false;
-      }
-    };
-
-    btn.addEventListener('click', async () => upload(input.files?.[0]));
-    input.addEventListener('change', async () => {
-      if (input.files?.[0]) await upload(input.files[0]);
-    });
-
-    box.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      box.classList.add('dragging');
-    });
-    box.addEventListener('dragleave', () => box.classList.remove('dragging'));
-    box.addEventListener('drop', async (e) => {
-      e.preventDefault();
-      box.classList.remove('dragging');
-      const file = e.dataTransfer?.files?.[0];
-      if (file) await upload(file);
-    });
-  };
-
-  wire({ kind: 'apple', inputId: 'appleFileInput', btnId: 'appleUploadBtn', statusId: 'appleUploadStatus', boxId: 'appleDropBox' });
-  wire({ kind: 'polar', inputId: 'polarFileInput', btnId: 'polarUploadBtn', statusId: 'polarUploadStatus', boxId: 'polarDropBox' });
-}
-
-function initTabs() {
-  const tabButtons = Array.from(document.querySelectorAll('.tabs .tab-btn[data-tab]'));
-  const panels = Array.from(document.querySelectorAll('.tab-panel'));
-  if (!tabButtons.length || !panels.length) return;
-
-  const activate = (tab, updateHash = true) => {
-    tabButtons.forEach((btn) => {
-      const isActive = btn.dataset.tab === tab;
-      btn.classList.toggle('active', isActive);
-      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-    });
-    panels.forEach((panel) => {
-      panel.classList.toggle('active', panel.dataset.tabPanel === tab);
-    });
-    if (updateHash) {
-      const newHash = `tab-${tab}`;
-      if (window.location.hash !== `#${newHash}`) {
-        history.replaceState(null, '', `#${newHash}`);
-      }
-    }
-  };
-
-  tabButtons.forEach((btn) => {
-    btn.addEventListener('click', () => activate(btn.dataset.tab));
-  });
-
-  const fromHash = (window.location.hash || '').replace('#tab-', '');
-  const initialTab = tabButtons.some((b) => b.dataset.tab === fromHash) ? fromHash : (tabButtons[0]?.dataset.tab || 'overview');
-  activate(initialTab, false);
-  window.__setActiveTab = (tab) => activate(tab);
-}
-
-async function renderDashboard() {
-  const data = await loadData();
-  window.__dashboardData = data;
-  renderWeekHeader(data.weekHeader || null);
-  renderTodayGlance(data.dailyTiles || [], data.weekProgress || [], data.details || {});
-  renderTotals(data.totals || {});
-  renderPerformanceKpis(data.weekProgress || [], data.details || {});
-  renderCycleControl(data.cycleControl || {});
-  renderEst1RM(data.est1RM || []);
-  renderCurrentCyclePlan(data.currentCyclePlan || []);
-  renderCardioAnalytics(data.cardioAnalytics || {});
-  renderAuditLog(data.auditLog || []);
-  renderWeekProgress(data.weekProgress || []);
-  renderDailyTiles(data.dailyTiles || [], data.details || {});
-  bindDetailClicks(data.details || {}, data.dailyTiles || [], data.weekProgress || []);
-  renderWeeklyCompletion(data.weekProgress || [], data.details || {});
-  document.getElementById('generatedAt').textContent = `Data generated: ${new Date(data.generatedAt).toLocaleString()}`;
-}
-
-(async function init() {
-  try {
-    window.__renderDashboard = renderDashboard;
-    window.setRecoveryStatus = async (date, status) => {
-      const targetDate = date || window.__activeDetailDate;
-      if (!targetDate) return;
-      try {
-        const res = await fetch(`/api/set-status?date=${encodeURIComponent(targetDate)}&status=${encodeURIComponent(status)}`, { method: 'POST' });
-        if (!res.ok) throw new Error(`set-status failed (${res.status})`);
-        await renderDashboard();
-        if (window.__openDetailForDate) window.__openDetailForDate(targetDate);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    window.logSessionAction = async (action) => {
-      const date = window.__activeDetailDate;
-      const planned = window.__activePlanned || {};
-      if (!date) return;
-
-      const payload = {
-        action,
-        date,
-        plannedBarbellRows: planned.plannedBarbellRows || [],
-        plannedCardio: planned.plannedCardio || null
-      };
-
-      const postLogAction = async (p) => {
-        const res = await fetch('/api/log-action', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(p)
-        });
-        if (!res.ok) {
-          let msg = `log-action failed (${res.status})`;
-          try {
-            const j = await res.json();
-            if (j?.error) msg = j.error;
-          } catch {}
-          throw new Error(msg);
-        }
-      };
-
-      if (action === 'finish_session') {
-        const mainW = parseFloat(document.getElementById('mainWeightInput')?.value || '');
-        const mainR = parseInt(document.getElementById('mainRepsInput')?.value || '', 10);
-        const mainRpe = parseFloat(document.getElementById('mainRpeInput')?.value || '');
-
-        const suppCompleted = !!document.getElementById('suppCompletedInput')?.checked;
-        const suppModified = !!document.getElementById('suppModifiedInput')?.checked;
-        const suppW = parseFloat(document.getElementById('suppWeightInput')?.value || '');
-        const suppSets = parseInt(document.getElementById('suppSetsInput')?.value || '', 10);
-
-        const cDur = parseInt(document.getElementById('cardioDurationInput')?.value || '', 10);
-        const cHr = parseInt(document.getElementById('cardioAvgHrInput')?.value || '', 10);
-        const cSpeed = parseFloat(document.getElementById('cardioSpeedInput')?.value || '');
-        const cWorkMin = parseFloat(document.getElementById('cardioWorkMinInput')?.value || '');
-        const cRestMin = parseFloat(document.getElementById('cardioRestMinInput')?.value || '');
-        const ringsCompleted = !!document.getElementById('ringsCompletedInput')?.checked;
-
-        if (Number.isFinite(mainW) && Number.isFinite(mainR) && mainW > 0 && mainR > 0) {
-          await postLogAction({
-            action: 'main_done',
-            date,
-            plannedBarbellRows: (planned.plannedBarbellRows || []).map((r) => r.category === 'main' ? { ...r, planned_weight_kg: mainW, prescribed_reps: mainR, note: Number.isFinite(mainRpe) ? `RPE ${mainRpe}` : r.note } : r),
-            plannedCardio: planned.plannedCardio || null
-          });
-        }
-
-        if (suppModified && Number.isFinite(suppW) && suppW > 0) {
-          const reps = ((planned.plannedBarbellRows || []).find((r) => r.category === 'supplemental')?.prescribed_reps) || 5;
-          const sets = Number.isFinite(suppSets) && suppSets > 0 ? suppSets : 10;
-          await postLogAction({
-            action: 'supp_modified',
-            date,
-            plannedBarbellRows: planned.plannedBarbellRows || [],
-            plannedCardio: planned.plannedCardio || null,
-            suppModifiedText: `${sets}x${reps}@${suppW}`
-          });
-        } else if (suppCompleted) {
-          await postLogAction({
-            action: 'supp_done',
-            date,
-            plannedBarbellRows: planned.plannedBarbellRows || [],
-            plannedCardio: planned.plannedCardio || null
-          });
-        }
-
-        if (Number.isFinite(cDur) && cDur > 0 && Number.isFinite(cHr) && cHr > 0) {
-          const pCardio = { ...(planned.plannedCardio || {}), duration_min: cDur };
-          await postLogAction({
-            action: 'cardio_done',
-            date,
-            plannedBarbellRows: planned.plannedBarbellRows || [],
-            plannedCardio: pCardio,
-            avgHr: cHr,
-            speedKmh: Number.isFinite(cSpeed) && cSpeed > 0 ? cSpeed : undefined,
-            workMin: Number.isFinite(cWorkMin) && cWorkMin > 0 ? cWorkMin : undefined,
-            restMin: Number.isFinite(cRestMin) && cRestMin >= 0 ? cRestMin : undefined
-          });
-        }
-
-        if (ringsCompleted) {
-          await postLogAction({
-            action: 'rings_done',
-            date,
-            plannedBarbellRows: planned.plannedBarbellRows || [],
-            plannedCardio: planned.plannedCardio || null
-          });
-        }
-
-        let e1rmText = '—';
-        let deltaText = '—';
-        if (Number.isFinite(mainW) && Number.isFinite(mainR) && mainW > 0 && mainR > 0) {
-          const e1rm = mainW * (1 + (mainR / 30));
-          e1rmText = `${e1rm.toFixed(1)} kg`;
-          const prevMain = ((details?.barbellByDate || {})[date] || []).filter((r) => r.category === 'main');
-          const prevTop = prevMain.length ? prevMain[prevMain.length - 1] : null;
-          if (prevTop?.actual_weight_kg && prevTop?.actual_reps) {
-            const prevE1 = Number(prevTop.actual_weight_kg) * (1 + (Number(prevTop.actual_reps) / 30));
-            const d = e1rm - prevE1;
-            const sign = d >= 0 ? '+' : '';
-            deltaText = `${sign}${d.toFixed(1)} kg vs previous logged main`;
-          }
-        }
-
-        const z2InCap = Number.isFinite(cHr) ? (cHr <= 125 ? 'Yes' : 'No') : '—';
-        const quality = (() => {
-          const mainOk = Number.isFinite(mainW) && Number.isFinite(mainR) && mainW > 0 && mainR > 0;
-          const cardioOk = Number.isFinite(cDur) && Number.isFinite(cHr) && cDur > 0 && cHr > 0;
-          const suppOk = suppCompleted || (suppModified && Number.isFinite(suppW) && suppW > 0);
-          const score = [mainOk, suppOk, cardioOk].filter(Boolean).length;
-          if (score === 3) return 'A (full session)';
-          if (score === 2) return 'B (mostly complete)';
-          if (score === 1) return 'C (partial)';
-          return 'D (logged but incomplete)';
-        })();
-
-        await renderDashboard();
-        if (window.__openDetailForDate) window.__openDetailForDate(date);
-        alert(`Session finished\n\nTop set e1RM: ${e1rmText}\nDelta: ${deltaText}\nZ2 in cap: ${z2InCap}\nSession quality: ${quality}`);
-        return;
-      }
-
-      if (action === 'supp_modified') {
-        const suppW = parseFloat(document.getElementById('suppWeightInput')?.value || '');
-        const suppSets = parseInt(document.getElementById('suppSetsInput')?.value || '', 10);
-        const reps = ((planned.plannedBarbellRows || []).find((r) => r.category === 'supplemental')?.prescribed_reps) || 5;
-        if (!Number.isFinite(suppW) || suppW <= 0) {
-          alert('Enter modified supplemental weight first.');
-          return;
-        }
-        const sets = Number.isFinite(suppSets) && suppSets > 0 ? suppSets : 10;
-        payload.suppModifiedText = `${sets}x${reps}@${suppW}`;
-      }
-
-      if (action === 'cardio_done' || action === 'z2_fixed_hr_test') {
-        const input = document.getElementById('cardioAvgHrInput');
-        const hrTxt = (input?.value || '').trim();
-        const durInput = parseInt(document.getElementById('cardioDurationInput')?.value || '', 10);
-        const speedInput = parseFloat(document.getElementById('cardioSpeedInput')?.value || '');
-        const workMinInput = parseFloat(document.getElementById('cardioWorkMinInput')?.value || '');
-        const restMinInput = parseFloat(document.getElementById('cardioRestMinInput')?.value || '');
-
-        if (!hrTxt) {
-          alert('Enter Avg HR in the Cardio section first, then tap Mark Cardio Complete.');
-          return;
-        }
-
-        const avgHr = parseInt(hrTxt, 10);
-        if (!Number.isFinite(avgHr) || avgHr <= 0) {
-          alert('Please enter a valid average HR number.');
-          return;
-        }
-
-        payload.avgHr = avgHr;
-        payload.plannedCardio = {
-          ...(planned.plannedCardio || {}),
-          duration_min: Number.isFinite(durInput) && durInput > 0
-            ? durInput
-            : ((planned.plannedCardio || {}).duration_min || 30)
-        };
-
-        if (Number.isFinite(speedInput) && speedInput > 0) payload.speedKmh = speedInput;
-
-        const proto = String((payload.plannedCardio || {}).session_type || (payload.plannedCardio || {}).protocol || '');
-        const isVo2 = (proto.includes('VO2') || proto === 'VO2_4x4' || proto === 'VO2_1min');
-        const defaultWork = proto.includes('4x4') || proto === 'VO2_4x4' ? 4 : 1;
-        const defaultRest = proto.includes('4x4') || proto === 'VO2_4x4' ? 3 : 1;
-
-        if (Number.isFinite(workMinInput) && workMinInput > 0) payload.workMin = workMinInput;
-        if (Number.isFinite(restMinInput) && restMinInput >= 0) payload.restMin = restMinInput;
-
-        if (action === 'cardio_done' && isVo2) {
-          if (!Number.isFinite(payload.workMin) || payload.workMin <= 0) payload.workMin = defaultWork;
-          if (!Number.isFinite(payload.restMin) || payload.restMin < 0) payload.restMin = defaultRest;
-        }
-
-        if (action === 'z2_fixed_hr_test' && !payload.speedKmh) {
-          alert('For Fixed-HR test, enter speed (km/h) before saving.');
-          return;
-        }
-      }
-
-      if (action === 'main_done') {
-        const mainW = parseFloat(document.getElementById('mainWeightInput')?.value || '');
-        const mainR = parseInt(document.getElementById('mainRepsInput')?.value || '', 10);
-        if (Number.isFinite(mainW) && mainW > 0 && Number.isFinite(mainR) && mainR > 0) {
-          payload.plannedBarbellRows = (planned.plannedBarbellRows || []).map((r) => r.category === 'main'
-            ? { ...r, planned_weight_kg: mainW, prescribed_reps: mainR }
-            : r);
-        }
-      }
-
-      try {
-        const res = await fetch('/api/log-action', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) {
-          let msg = `log-action failed (${res.status})`;
-          try {
-            const j = await res.json();
-            if (j?.error) msg = j.error;
-          } catch {}
-          throw new Error(msg);
-        }
-        await renderDashboard();
-        if (window.__openDetailForDate) window.__openDetailForDate(date);
-        if (action === 'cardio_done') alert('Cardio session saved.');
-        if (action === 'z2_fixed_hr_test') alert('Monthly Z2 fixed-HR test saved.');
-      } catch (err) {
-        console.error(err);
-        alert(`Could not save action: ${err.message || err}`);
-      }
-    };
-
-    await renderDashboard();
-    bindStatusPicker(renderDashboard);
-    initTabs();
-    initOverviewMode();
-    initUploadBox();
-
-    const todayBtn = document.getElementById('todayBtn');
-    if (todayBtn) {
-      todayBtn.addEventListener('click', () => {
-        if (window.__setActiveTab) window.__setActiveTab('overview');
-        const today = currentDateInDashboardTZ();
-        const target = document.querySelector(`[data-date="${today}"]`);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (window.__openDetailForDate) window.__openDetailForDate(today);
-      });
-    }
-
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('#startSessionBtn');
-      if (!btn) return;
-      const today = currentDateInDashboardTZ();
-      if (window.__openDetailForDate) window.__openDetailForDate(today);
-    });
-
-    const refreshBtn = document.getElementById('refreshBtn');
-    const refreshHealthBtn = document.getElementById('refreshHealthBtn');
-
-    async function runRefresh({ includeHealth = false } = {}) {
-      const btn = includeHealth ? refreshHealthBtn : refreshBtn;
-      if (!btn) return;
-      const old = btn.textContent;
-      btn.disabled = true;
-      if (refreshBtn && includeHealth) refreshBtn.disabled = true;
-      if (refreshHealthBtn && !includeHealth) refreshHealthBtn.disabled = true;
-      btn.textContent = includeHealth ? 'Importing health + refreshing...' : 'Refreshing...';
-      try {
-        const url = includeHealth ? '/api/refresh?includeHealth=1' : '/api/refresh';
-        const res = await fetch(url, { method: 'POST' });
-        if (!res.ok) throw new Error(`Refresh failed (${res.status})`);
-        await renderDashboard();
-        btn.textContent = includeHealth ? 'Health + DB Updated ✓' : 'Updated ✓';
-        setTimeout(() => { btn.textContent = old; }, 1200);
-      } catch (e) {
-        console.error(e);
-        btn.textContent = includeHealth ? 'Health refresh failed' : 'Refresh failed';
-        setTimeout(() => { btn.textContent = old; }, 2200);
-      } finally {
-        btn.disabled = false;
-        if (refreshBtn) refreshBtn.disabled = false;
-        if (refreshHealthBtn) refreshHealthBtn.disabled = false;
-      }
-    }
-
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', async () => {
-        await runRefresh({ includeHealth: false });
-      });
-    }
-
-    if (refreshHealthBtn) {
-      refreshHealthBtn.addEventListener('click', async () => {
-        await runRefresh({ includeHealth: true });
-      });
-    }
-
-    document.addEventListener('click', async (e) => {
-      const tmDeltaBtn = e.target.closest('[data-tm-delta]');
-      if (tmDeltaBtn) {
-        const lift = tmDeltaBtn.getAttribute('data-tm-lift');
-        const delta = parseFloat(tmDeltaBtn.getAttribute('data-tm-delta') || '0');
-        try {
-          tmDeltaBtn.disabled = true;
-          const res = await fetch('/api/tm/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lift, mode: 'delta', value: delta })
-          });
-          if (!res.ok) throw new Error(`TM update failed (${res.status})`);
-          await renderDashboard();
-        } catch (err) {
-          alert(`Could not update TM: ${err.message || err}`);
-        } finally {
-          tmDeltaBtn.disabled = false;
-        }
-        return;
-      }
-
-      const tmSetBtn = e.target.closest('[data-tm-set]');
-      if (tmSetBtn) {
-        const lift = tmSetBtn.getAttribute('data-tm-set');
-        const v = parseFloat(document.getElementById(`tmSet-${lift}`)?.value || '');
-        if (!Number.isFinite(v) || v <= 0) {
-          alert('Enter a valid TM kg value first.');
-          return;
-        }
-        try {
-          tmSetBtn.disabled = true;
-          const res = await fetch('/api/tm/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lift, mode: 'set', value: v })
-          });
-          if (!res.ok) throw new Error(`TM set failed (${res.status})`);
-          await renderDashboard();
-        } catch (err) {
-          alert(`Could not set TM: ${err.message || err}`);
-        } finally {
-          tmSetBtn.disabled = false;
-        }
-        return;
-      }
-
-      const startBtn = e.target.closest('#startCycleBtn');
-      if (startBtn) {
-        const startDate = document.getElementById('newCycleStartInput')?.value || '';
-        const blockType = document.getElementById('newCycleTypeInput')?.value || 'Leader';
-        try {
-          startBtn.disabled = true;
-          const res = await fetch('/api/cycle/start', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ startDate, blockType })
-          });
-          if (!res.ok) throw new Error(`Start cycle failed (${res.status})`);
-          await renderDashboard();
-          alert('New cycle created.');
-        } catch (err) {
-          alert(`Could not start cycle: ${err.message || err}`);
-        } finally {
-          startBtn.disabled = false;
-        }
-        return;
-      }
-
-      const deloadBtn = e.target.closest('#applyDeloadBtn');
-      if (deloadBtn) {
-        const deloadCode = document.getElementById('deloadTypeInput')?.value || '';
-        const startDate = document.getElementById('deloadStartInput')?.value || '';
-        const durationDays = parseInt(document.getElementById('deloadDaysInput')?.value || '', 10) || 7;
-        try {
-          deloadBtn.disabled = true;
-          const res = await fetch('/api/cycle/deload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ deloadCode, startDate, durationDays })
-          });
-          if (!res.ok) throw new Error(`Apply deload failed (${res.status})`);
-          await renderDashboard();
-          alert('Deload applied.');
-        } catch (err) {
-          alert(`Could not apply deload: ${err.message || err}`);
-        } finally {
-          deloadBtn.disabled = false;
-        }
-      }
-    });
-  } catch (err) {
-    document.body.innerHTML = `<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${err}</pre></main>`;
-  }
-})();
+Top set e1RM: ${T}
+Delta: ${A}
+Z2 in cap: ${z}
+Session quality: ${L}`);return}if(d==="supp_modified"){let s=Number.parseFloat(F("suppWeightInput")),r=Number.parseInt(F("suppSetsInput"),10),o=(n.plannedBarbellRows||[]).find((c)=>c.category==="supplemental")?.prescribed_reps||5;if(!Number.isFinite(s)||s<=0){alert("Enter modified supplemental weight first.");return}let m=Number.isFinite(r)&&r>0?r:10;a.suppModifiedText=`${m}x${o}@${s}`}if(d==="cardio_done"||d==="z2_fixed_hr_test"){let s=F("cardioAvgHrInput").trim(),r=Number.parseInt(F("cardioDurationInput"),10),o=Number.parseFloat(F("cardioSpeedInput")),m=Number.parseFloat(F("cardioWorkMinInput")),c=Number.parseFloat(F("cardioRestMinInput"));if(!s){alert("Enter Avg HR in the Cardio section first, then tap Mark Cardio Complete.");return}let u=Number.parseInt(s,10);if(!Number.isFinite(u)||u<=0){alert("Please enter a valid average HR number.");return}if(a.avgHr=u,a.plannedCardio={...n.plannedCardio||{},duration_min:Number.isFinite(r)&&r>0?r:n.plannedCardio?.duration_min||30},Number.isFinite(o)&&o>0)a.speedKmh=o;let p=String(a.plannedCardio?.session_type||a.plannedCardio?.protocol||""),b=p.includes("VO2")||p==="VO2_4x4"||p==="VO2_1min",g=p.includes("4x4")||p==="VO2_4x4"?4:1,y=p.includes("4x4")||p==="VO2_4x4"?3:1;if(Number.isFinite(m)&&m>0)a.workMin=m;if(Number.isFinite(c)&&c>=0)a.restMin=c;if(d==="cardio_done"&&b){if(!Number.isFinite(a.workMin)||a.workMin<=0)a.workMin=g;if(!Number.isFinite(a.restMin)||a.restMin<0)a.restMin=y}if(d==="z2_fixed_hr_test"&&!a.speedKmh){alert("For Fixed-HR test, enter speed (km/h) before saving.");return}}if(d==="main_done"){let s=Number.parseFloat(F("mainWeightInput")),r=Number.parseInt(F("mainRepsInput"),10);if(Number.isFinite(s)&&s>0&&Number.isFinite(r)&&r>0)a.plannedBarbellRows=(n.plannedBarbellRows||[]).map((o)=>o.category==="main"?{...o,planned_weight_kg:s,prescribed_reps:r}:o)}try{if(await i(a),await t(),window.__openDetailForDate?.(l),d==="cardio_done")alert("Cardio session saved.");if(d==="z2_fixed_hr_test")alert("Monthly Z2 fixed-HR test saved.")}catch(s){console.error(s),alert(`Could not save action: ${s.message||s}`)}}}async function st(){try{window.__renderDashboard=ie,nt(ie),await ie(),Ce(ie),Oe(),He(),Pe();let t=document.getElementById("todayBtn");if(t)t.addEventListener("click",()=>{window.__setActiveTab?.("overview");let a=ee(),i=document.querySelector(`[data-date="${a}"]`);if(i)i.scrollIntoView({behavior:"smooth",block:"center"});window.__openDetailForDate?.(a)});document.addEventListener("click",(a)=>{if(!fe(a,"#startSessionBtn"))return;window.__openDetailForDate?.(ee())});let{refreshButton:d,refreshHealthButton:l}=ze(),n=async({includeHealth:a=!1}={})=>{let i=a?l:d;if(!i)return;let s=i.textContent;if(i.disabled=!0,d&&a)d.disabled=!0;if(l&&!a)l.disabled=!0;i.textContent=a?"Importing health + refreshing...":"Refreshing...";try{let o=await fetch(a?"/api/refresh?includeHealth=1":"/api/refresh",{method:"POST"});if(!o.ok)throw Error(`Refresh failed (${o.status})`);await ie(),i.textContent=a?"Health + DB Updated ✓":"Updated ✓",setTimeout(()=>{i.textContent=s},1200)}catch(r){console.error(r),i.textContent=a?"Health refresh failed":"Refresh failed",setTimeout(()=>{i.textContent=s},2200)}finally{if(i.disabled=!1,d)d.disabled=!1;if(l)l.disabled=!1}};d?.addEventListener("click",async()=>{await n({includeHealth:!1})}),l?.addEventListener("click",async()=>{await n({includeHealth:!0})}),document.addEventListener("click",async(a)=>{let i=fe(a,"[data-tm-delta]");if(i){let m=i.getAttribute("data-tm-lift"),c=Number.parseFloat(i.getAttribute("data-tm-delta")||"0");try{i.disabled=!0;let u=await fetch("/api/tm/update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({lift:m,mode:"delta",value:c})});if(!u.ok)throw Error(`TM update failed (${u.status})`);await ie()}catch(u){alert(`Could not update TM: ${u.message||u}`)}finally{i.disabled=!1}return}let s=fe(a,"[data-tm-set]");if(s){let m=s.getAttribute("data-tm-set"),c=Number.parseFloat(F(`tmSet-${m}`));if(!Number.isFinite(c)||c<=0){alert("Enter a valid TM kg value first.");return}try{s.disabled=!0;let u=await fetch("/api/tm/update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({lift:m,mode:"set",value:c})});if(!u.ok)throw Error(`TM set failed (${u.status})`);await ie()}catch(u){alert(`Could not set TM: ${u.message||u}`)}finally{s.disabled=!1}return}let r=fe(a,"#startCycleBtn");if(r){let m=F("newCycleStartInput"),c=F("newCycleTypeInput")||"Leader";try{r.disabled=!0;let u=await fetch("/api/cycle/start",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({startDate:m,blockType:c})});if(!u.ok)throw Error(`Start cycle failed (${u.status})`);await ie(),alert("New cycle created.")}catch(u){alert(`Could not start cycle: ${u.message||u}`)}finally{r.disabled=!1}return}let o=fe(a,"#applyDeloadBtn");if(o){let m=F("deloadTypeInput"),c=F("deloadStartInput"),u=Number.parseInt(F("deloadDaysInput"),10)||7;try{o.disabled=!0;let p=await fetch("/api/cycle/deload",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({deloadCode:m,startDate:c,durationDays:u})});if(!p.ok)throw Error(`Apply deload failed (${p.status})`);await ie(),alert("Deload applied.")}catch(p){alert(`Could not apply deload: ${p.message||p}`)}finally{o.disabled=!1}}})}catch(t){document.body.innerHTML=`<main class="app"><p>Failed to load dashboard data. Run export script first.</p><pre>${t}</pre></main>`}}st();})();

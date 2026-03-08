@@ -5,16 +5,17 @@ Dark-themed static dashboard for the `training_dashboard.db` data.
 ## Files
 
 - `index.html` – UI shell
-- `styles.css` – dark card/tile styling
-- `app.js` – renders cards, weekly progress, and daily tiles from JSON
-- `export-data.mjs` – lightweight data exporter (`training_dashboard.db` -> `dashboard/data.json`)
+- `styles.css` – dashboard styling
+- `app.js` – generated Bun build output for the browser
+- `src/main.ts` – dashboard frontend source
+- `src/export-data.ts` – dashboard data exporter source
 
 ## Generate data
 
 From workspace root:
 
 ```bash
-node dashboard/export-data.mjs
+bun run export:data
 ```
 
 This writes/refreshes:
@@ -26,7 +27,8 @@ This writes/refreshes:
 From workspace root:
 
 ```bash
-python3 -m http.server 8080
+bun run build
+python3 dashboard/server.py
 ```
 
 Then open:
