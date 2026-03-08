@@ -224,16 +224,22 @@ export function renderPerformanceKpis(weekRows: AnyList = [], details: AnyRecord
   const vo2Pct = 100 - z2Pct
 
   const z2WeeklyTarget = 120
+  const formatLocalDate = (date: Date): string => {
+    const y = date.getFullYear()
+    const m = `${date.getMonth() + 1}`.padStart(2, '0')
+    const d = `${date.getDate()}`.padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
   const weekStart = (() => {
     const date = new Date(`${today}T00:00:00`)
     const day = (date.getDay() + 6) % 7
     date.setDate(date.getDate() - day)
-    return date.toISOString().slice(0, 10)
+    return formatLocalDate(date)
   })()
   const weekEnd = (() => {
     const date = new Date(`${weekStart}T00:00:00`)
     date.setDate(date.getDate() + 6)
-    return date.toISOString().slice(0, 10)
+    return formatLocalDate(date)
   })()
   const z2WeekMin = z2Sessions
     .filter((row) => row.session_date >= weekStart && row.session_date <= weekEnd)

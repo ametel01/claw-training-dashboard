@@ -12,10 +12,26 @@ from datetime import datetime
 import urllib.request
 import urllib.error
 import sys
+import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 PORT = int(os.environ.get("PORT", "8080"))
-BUN_BIN = os.environ.get("BUN_BIN", "bun")
+
+
+def _resolve_bun_bin():
+    candidates = [
+        os.environ.get("BUN_BIN"),
+        shutil.which("bun"),
+        "/Users/brunoclaw/.bun/bin/bun",
+        "/opt/homebrew/bin/bun",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).exists():
+            return candidate
+    return "bun"
+
+
+BUN_BIN = _resolve_bun_bin()
 PYTHON_BIN = os.environ.get("PYTHON_BIN", sys.executable or "python3")
 
 class Handler(SimpleHTTPRequestHandler):
@@ -1302,6 +1318,7 @@ FROM v_planned_barbell_sets p;
         self._send_json(404, {"ok": False, "error": "Not found"})
 
 if __name__ == "__main__":
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    print(f"Serving dashboard with refresh API on http://127.0.0.1:{PORT}")
+    host = os.environ.get("HOST", "0.0.0.0")
+    server = ThreadingHTTPServer((host, PORT), Handler)
+    print(f"Serving dashboard with refresh API on http://{host}:{PORT}")
     server.serve_forever()
