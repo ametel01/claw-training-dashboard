@@ -8,7 +8,7 @@ Standalone training dashboard repository.
 bun install
 bun run build
 bun run export:data
-./scripts/start_training_dashboard.sh
+PORT=8090 ./scripts/start_training_dashboard.sh
 # or: PORT=8080 PYTHON_BIN=python3 python3 dashboard/server.py
 ```
 
