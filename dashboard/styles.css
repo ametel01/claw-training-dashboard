@@ -1369,6 +1369,7 @@ summary.panel-head::-webkit-details-marker {
   .kpi-grid {
     grid-template-columns: 1fr;
   }
+
   .week-rows {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
@@ -1379,14 +1380,14 @@ summary.panel-head::-webkit-details-marker {
     min-height: 110px;
   }
   .week-day {
-    font-size: 15px;
+    font-size: 13px;
   }
   .week-chips {
-    gap: 5px;
+    gap: 4px;
   }
   .chip {
-    padding: 3px 8px;
-    font-size: 11px;
+    padding: 3px 7px;
+    font-size: 10px;
   }
 
   .tiles {
@@ -1397,54 +1398,49 @@ summary.panel-head::-webkit-details-marker {
     min-height: 82px;
     padding: 8px;
   }
-  .tile-main {
-    font-size: 13px;
-    margin-top: 4px;
-  }
-  .tile-flags {
-    margin-top: 6px;
-    gap: 4px;
-  }
   .badge {
-    font-size: 10px;
-    padding: 2px 6px;
+    font-size: 9px;
+    padding: 2px 5px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — 480px
+═══════════════════════════════════════════════════════ */
 
 @media (max-width: 480px) {
   .app {
     padding: 10px 8px 20px;
   }
   .kicker {
-    font-size: 11px;
+    font-size: 10px;
   }
   h1 {
-    font-size: 20px;
-    margin-top: 4px;
+    font-size: 22px;
   }
   h2 {
-    font-size: 16px;
+    font-size: 12px;
   }
+
   .btn-primary {
     padding: 5px 8px;
     font-size: 11px;
-    border-radius: 8px;
   }
   .weekly-pill {
-    font-size: 11px;
-    padding: 4px 8px;
+    font-size: 10px;
+    padding: 4px 7px;
   }
 
   .week-header-banner,
   .today-glance {
     padding: 8px 10px;
-    border-radius: 10px;
+    border-radius: 6px;
   }
   .week-header-title {
-    font-size: 14px;
+    font-size: 13px;
   }
   .today-progress {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .card-grid {
@@ -1452,18 +1448,19 @@ summary.panel-head::-webkit-details-marker {
     gap: 6px;
   }
   .stat-value {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .panel {
     padding: 8px;
-    border-radius: 10px;
+    border-radius: 6px;
   }
   .panel-head {
     flex-direction: column;
     gap: 2px;
     align-items: flex-start;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
   }
 
   .week-rows {
@@ -1495,7 +1492,7 @@ summary.panel-head::-webkit-details-marker {
   .tile {
     min-height: 80px;
     padding: 8px;
-    border-radius: 10px;
+    border-radius: 6px;
   }
 
   .est1rm-grid {
@@ -1514,8 +1511,8 @@ summary.panel-head::-webkit-details-marker {
   }
 
   .modal-card {
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 12px;
   }
   .upload-box {
     padding: 8px;
@@ -1530,9 +1527,7 @@ summary.panel-head::-webkit-details-marker {
     font-size: 20px;
   }
 
-  .status-actions {
-    flex-wrap: wrap;
-  }
+  .status-actions .status-input,
   .status-actions.compact .status-input {
     width: 100%;
   }
@@ -1540,6 +1535,10 @@ summary.panel-head::-webkit-details-marker {
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — 360px
+═══════════════════════════════════════════════════════ */
 
 @media (max-width: 360px) {
   .card-grid {
@@ -1552,7 +1551,7 @@ summary.panel-head::-webkit-details-marker {
     grid-template-columns: 1fr;
   }
   .stat-value {
-    font-size: 18px;
+    font-size: 20px;
   }
   h1 {
     font-size: 18px;
