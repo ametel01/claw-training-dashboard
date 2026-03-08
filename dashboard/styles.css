@@ -914,19 +914,36 @@ summary.panel-head::-webkit-details-marker {
     padding: 14px 10px 20px;
   }
   .topbar {
+    flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
   }
   h1 {
     font-size: 24px;
   }
   .top-actions {
+    width: 100%;
     justify-content: flex-start;
     gap: 8px;
   }
   .btn-primary {
     padding: 6px 10px;
     font-size: 12px;
+  }
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    gap: 6px;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .today-glance {
