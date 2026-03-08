@@ -24,7 +24,7 @@ It is designed for backward compatibility while you keep using the current dashb
 
 ## Backward compatibility
 
-- Existing `gym531.db` and dashboard exporter are untouched.
+- Existing `training_dashboard.db` and dashboard exporter are untouched.
 - This pipeline writes to its own output folders only.
 - Your backend can choose when to execute generated SQL in Postgres.
 

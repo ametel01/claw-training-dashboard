@@ -4,7 +4,7 @@ import sqlite3
 from datetime import date, datetime
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent / "gym531.db"
+DB_PATH = Path(__file__).resolve().parent / "training_dashboard.db"
 
 MAIN_PCTS = {
     1: [0.65, 0.75, 0.85],

@@ -1,13 +1,13 @@
 # Gym531 Local Dashboard
 
-Dark-themed static dashboard for the `gym531.db` data.
+Dark-themed static dashboard for the `training_dashboard.db` data.
 
 ## Files
 
 - `index.html` – UI shell
 - `styles.css` – dark card/tile styling
 - `app.js` – renders cards, weekly progress, and daily tiles from JSON
-- `export-data.mjs` – lightweight data exporter (`gym531.db` -> `dashboard/data.json`)
+- `export-data.mjs` – lightweight data exporter (`training_dashboard.db` -> `dashboard/data.json`)
 
 ## Generate data
 
@@ -35,7 +35,7 @@ Then open:
 
 ## Notes
 
-- Uses existing schema/tables/views from `gym531.db`.
+- Uses existing schema/tables/views from `training_dashboard.db`.
 - Weekly rows are anchored to the latest logged training date.
 - Daily tiles show the latest 14-day window ending on latest logged date.
 

@@ -16,5 +16,5 @@ Open:
 
 - `dashboard/` UI + API server
 - `health_pipeline/` data ingestion pipeline
-- `gym531.db` + SQL/bootstrap helpers
+- `training_dashboard.db` + SQL/bootstrap helpers
 - `gym531.py` utilities

@@ -5,7 +5,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const dbPath = resolve(__dirname, '..', 'gym531.db');
+const dbPath = resolve(__dirname, '..', 'training_dashboard.db');
 const outPath = resolve(__dirname, 'data.json');
 
 function sqlJson(sql) {

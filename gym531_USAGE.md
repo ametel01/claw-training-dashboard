@@ -1,6 +1,6 @@
 # gym531 helper usage (separated tracks)
 
-DB: `gym531.db`
+DB: `training_dashboard.db`
 Script: `gym531.py`
 
 Tracks are separated in DB:
