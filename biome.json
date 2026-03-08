@@ -1,0 +1,39 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "files": {
+    "ignore": ["dashboard/app.js", "dashboard/data.json", "imports/**", "training_dashboard.db"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noExtraBooleanCast": "off",
+        "noForEach": "off",
+        "useOptionalChain": "off"
+      },
+      "style": {
+        "noParameterAssign": "off",
+        "noUnusedTemplateLiteral": "off",
+        "useNumberNamespace": "off",
+        "useSingleVarDeclarator": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded",
+      "trailingCommas": "none"
+    }
+  }
+}
