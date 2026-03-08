@@ -114,7 +114,7 @@ def get_block_for_date(conn: sqlite3.Connection, d: date):
         FROM program_blocks pb
         JOIN templates t ON t.id = pb.template_id
         WHERE date(pb.start_date) <= date(?)
-        ORDER BY date(pb.start_date) DESC
+        ORDER BY date(pb.start_date) DESC, pb.block_no DESC, pb.id DESC
         LIMIT 1
         """,
         (d.isoformat(),),

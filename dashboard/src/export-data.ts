@@ -653,8 +653,10 @@ WITH d AS (
   SELECT date('now','localtime') AS today
 ),
 pc AS (
-  SELECT * FROM v_program_calendar
+  SELECT *
+  FROM v_program_calendar
   WHERE session_date = (SELECT today FROM d)
+  ORDER BY session_date DESC, block_no DESC, block_id DESC
   LIMIT 1
 ),
 active_deload AS (
@@ -726,7 +728,8 @@ const cycleControl = {
     sqlJson(`
     SELECT block_no, block_type, start_date, end_date, notes
     FROM program_blocks
-    ORDER BY block_no DESC
+    WHERE date(start_date) <= date('now','localtime')
+    ORDER BY date(start_date) DESC, block_no DESC, id DESC
     LIMIT 1
   `)[0] || null,
   recentEvents: sqlJson(`
@@ -859,8 +862,9 @@ SELECT
 const currentCyclePlan = sqlJson(`
 WITH cur AS (
   SELECT block_no
-  FROM v_program_calendar
-  WHERE session_date = date('now','localtime')
+  FROM program_blocks
+  WHERE start_date <= date('now','localtime')
+  ORDER BY start_date DESC, block_no DESC, id DESC
   LIMIT 1
 ), rows AS (
   SELECT
@@ -885,11 +889,11 @@ WITH cur AS (
     pv.planned_weight_kg,
     pv.prescribed_pct
   FROM v_planned_barbell_sets pv
-  JOIN v_program_calendar c ON c.session_date = pv.session_date
-  WHERE c.block_no = (SELECT block_no FROM cur)
+  WHERE pv.block_no = (SELECT block_no FROM cur)
     AND NOT EXISTS (
       SELECT 1 FROM planned_barbell_sets_snapshot ps
-      WHERE ps.session_date = pv.session_date
+      WHERE ps.block_no = (SELECT block_no FROM cur)
+        AND ps.session_date = pv.session_date
     )
 )
 SELECT *

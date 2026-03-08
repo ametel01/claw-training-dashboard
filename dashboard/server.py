@@ -34,6 +34,65 @@ class Handler(SimpleHTTPRequestHandler):
         proc = subprocess.run(["sqlite3", str(db), sql], check=True, cwd=str(ROOT), capture_output=True, text=True)
         return (proc.stdout or "").strip()
 
+    def _resolve_template_id(self, block_type):
+        db = ROOT / "training_dashboard.db"
+        with sqlite3.connect(str(db)) as conn:
+            conn.row_factory = sqlite3.Row
+            main_scheme = conn.execute(
+                "SELECT COALESCE((SELECT value FROM config WHERE key='main_scheme'), '5s Pro')"
+            ).fetchone()[0]
+            supp_key = "leader_supplemental" if block_type == "Leader" else "anchor_supplemental"
+            desired_supp = conn.execute(
+                "SELECT COALESCE((SELECT value FROM config WHERE key=?), '')",
+                (supp_key,),
+            ).fetchone()[0]
+
+            candidates = []
+            for value in (
+                desired_supp,
+                (desired_supp or "").split(" ", 1)[0],
+                "BBS 5x10" if block_type == "Leader" else "FSL 5x5",
+                "BBS" if block_type == "Leader" else "FSL",
+            ):
+                normalized = (value or "").strip()
+                if normalized and normalized.lower() not in {item.lower() for item in candidates}:
+                    candidates.append(normalized)
+
+            placeholders = ",".join("?" for _ in candidates)
+            row = conn.execute(
+                f"""
+                SELECT id
+                FROM templates
+                WHERE main_scheme = ?
+                  AND lower(supplemental_scheme) IN ({placeholders})
+                ORDER BY
+                  CASE
+                    WHEN lower(supplemental_scheme) = lower(?) THEN 0
+                    WHEN lower(supplemental_scheme) = lower(?) THEN 1
+                    ELSE 2
+                  END,
+                  id
+                LIMIT 1
+                """,
+                (
+                    main_scheme,
+                    *[value.lower() for value in candidates],
+                    desired_supp or "",
+                    candidates[0],
+                ),
+            ).fetchone()
+            if row:
+                return int(row[0])
+
+            fallback = conn.execute(
+                "SELECT id FROM templates WHERE name LIKE ? ORDER BY id LIMIT 1",
+                (f"{block_type}%",),
+            ).fetchone()
+            if fallback:
+                return int(fallback[0])
+
+        raise RuntimeError(f"No template found for block type {block_type}")
+
     def _save_upload_bytes(self, filename, content_bytes, dest_dir):
         filename = os.path.basename(filename or "upload.bin")
         if not filename:
@@ -748,14 +807,25 @@ FROM v_planned_barbell_sets p;
                 return
 
             try:
-                last = self._run_sql("SELECT COALESCE(MAX(block_no),0), COALESCE(MAX(template_id),1), COALESCE((SELECT block_type FROM program_blocks ORDER BY block_no DESC LIMIT 1),'Leader') FROM program_blocks;")
-                parts = (last or "0|1|Leader").split("|")
+                last = self._run_sql("SELECT COALESCE(MAX(block_no),0), COALESCE((SELECT block_type FROM program_blocks ORDER BY block_no DESC, id DESC LIMIT 1),'Leader') FROM program_blocks;")
+                parts = (last or "0|Leader").split("|")
                 next_block = int(parts[0] or 0) + 1
-                template_id = int(parts[1] or 1)
-                chosen_type = block_type or (parts[2] if len(parts) > 2 and parts[2] in {"Leader","Anchor"} else "Leader")
+                chosen_type = block_type or (parts[1] if len(parts) > 1 and parts[1] in {"Leader","Anchor"} else "Leader")
+                template_id = self._resolve_template_id(chosen_type)
+                override_blocks = (
+                    "SELECT pb.id, pb.block_no "
+                    "FROM program_blocks pb "
+                    "LEFT JOIN barbell_sessions bs ON bs.block_id = pb.id "
+                    f"WHERE date(pb.start_date) >= date('{start_date}') "
+                    "GROUP BY pb.id, pb.block_no "
+                    "HAVING COUNT(bs.id) = 0"
+                )
 
                 sql = (
                     "BEGIN;"
+                    f"DELETE FROM planned_barbell_sets_snapshot WHERE block_no IN (SELECT block_no FROM ({override_blocks}));"
+                    f"DELETE FROM cycle_events WHERE event_type='new_cycle' AND block_no IN (SELECT block_no FROM ({override_blocks}));"
+                    f"DELETE FROM program_blocks WHERE id IN (SELECT id FROM ({override_blocks}));"
                     f"INSERT INTO program_blocks(block_no,block_type,start_date,template_id,notes) VALUES({next_block},'{chosen_type}','{start_date}',{template_id},'{note}');"
                     f"INSERT INTO cycle_events(event_date,event_type,block_no,note,created_by) VALUES(date('now','localtime'),'new_cycle',{next_block},'Start new cycle: {chosen_type} @ {start_date}','dashboard');"
                     "INSERT OR IGNORE INTO planned_barbell_sets_snapshot("
