@@ -1,27 +1,31 @@
-#!/usr/bin/env node
-import { execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+#!/usr/bin/env bun
+import { execSync } from 'node:child_process'
+import { writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const dbPath = resolve(__dirname, '..', 'training_dashboard.db');
-const outPath = resolve(__dirname, 'data.json');
+type JsonRow = Record<string, any>
+type JsonRows = JsonRow[]
 
-function sqlJson(sql) {
-  const escaped = sql.replace(/"/g, '\\"').replace(/\n/g, ' ');
-  const cmd = `sqlite3 -json \"${dbPath}\" \"${escaped}\"`;
-  const raw = execSync(cmd, { encoding: 'utf8' }).trim();
-  return raw ? JSON.parse(raw) : [];
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const repoRoot = resolve(__dirname, '..', '..')
+const dbPath = resolve(repoRoot, 'training_dashboard.db')
+const outPath = resolve(repoRoot, 'dashboard', 'data.json')
+
+function sqlJson(sql: string): JsonRows {
+  const escaped = sql.replace(/"/g, '\\"').replace(/\n/g, ' ')
+  const cmd = `sqlite3 -json \"${dbPath}\" \"${escaped}\"`
+  const raw = execSync(cmd, { encoding: 'utf8' }).trim()
+  return raw ? (JSON.parse(raw) as JsonRows) : []
 }
 
-function groupByDate(rows, key = 'session_date') {
-  return rows.reduce((acc, row) => {
-    const d = row[key];
-    if (!acc[d]) acc[d] = [];
-    acc[d].push(row);
-    return acc;
-  }, {});
+function groupByDate(rows: JsonRows, key = 'session_date'): Record<string, JsonRows> {
+  return rows.reduce<Record<string, JsonRows>>((acc, row) => {
+    const dateKey = String(row[key] ?? '')
+    if (!acc[dateKey]) acc[dateKey] = []
+    acc[dateKey].push(row)
+    return acc
+  }, {})
 }
 
 execSync(`sqlite3 "${dbPath}" "
@@ -86,9 +90,10 @@ SELECT
   p.category, p.lift, p.set_no, p.prescribed_reps, p.prescribed_pct, p.planned_weight_kg,
   ROUND(CASE WHEN p.prescribed_pct > 0 THEN p.planned_weight_kg / p.prescribed_pct ELSE NULL END, 2) AS source_tm_kg
 FROM v_planned_barbell_sets p;
-"`);
+"`)
 
-const totals = sqlJson(`
+const totals =
+  sqlJson(`
 WITH latest AS (
   SELECT MAX(session_date) AS latest_date
   FROM (
@@ -114,7 +119,7 @@ SELECT
   (SELECT COUNT(*) FROM v_training_day_summary) AS total_training_days,
   (SELECT days_trained FROM active_days) AS active_days_last_14,
   (SELECT latest_date FROM latest) AS latest_date
-`)[0] ?? {};
+`)[0] ?? {}
 
 const weekProgress = sqlJson(`
 WITH week_window AS (
@@ -185,7 +190,7 @@ LEFT JOIN barbell_sessions bs ON bs.session_date = d.session_date
 LEFT JOIN cardio_sessions cs ON cs.session_date = d.session_date
 LEFT JOIN rings_sessions rs ON rs.session_date = d.session_date
 ORDER BY d.weekday
-`);
+`)
 
 const dailyTiles = sqlJson(`
 WITH RECURSIVE
@@ -259,7 +264,7 @@ LEFT JOIN (
   GROUP BY session_date
 ) rpe ON rpe.session_date = b.session_date
 ORDER BY b.session_date
-`);
+`)
 
 const barbellRows = sqlJson(`
 SELECT
@@ -275,7 +280,7 @@ JOIN barbell_sessions bs ON bs.id = bsl.session_id
 JOIN lifts l ON l.id = bsl.lift_id
 WHERE bs.session_date >= date('now','localtime','-90 day')
 ORDER BY bs.session_date, bsl.category, bsl.set_no
-`);
+`)
 
 const cardioRows = sqlJson(`
 SELECT
@@ -294,7 +299,7 @@ FROM cardio_sessions cs
 LEFT JOIN cardio_intervals ci ON ci.session_id = cs.id
 WHERE cs.session_date >= date('now','localtime','-90 day')
 ORDER BY cs.session_date, ci.interval_no
-`);
+`)
 
 const ringsRows = sqlJson(`
 SELECT
@@ -309,7 +314,7 @@ FROM rings_sessions rs
 LEFT JOIN rings_logs rl ON rl.session_id = rs.id
 WHERE rs.session_date >= date('now','localtime','-90 day')
 ORDER BY rs.session_date, rl.item_no
-`);
+`)
 
 const plannedBarbellRows = sqlJson(`
 WITH RECURSIVE dates(day) AS (
@@ -357,7 +362,7 @@ LEFT JOIN v_planned_barbell_sets pv ON pv.session_date = sd.source_session_date
   AND ps.id IS NULL
 WHERE COALESCE(ps.session_date, pv.session_date) IS NOT NULL
 ORDER BY sd.session_date, COALESCE(ps.category, pv.category), COALESCE(ps.set_no, pv.set_no)
-`);
+`)
 
 const plannedCardioRows = sqlJson(`
 WITH RECURSIVE dates(day) AS (
@@ -395,7 +400,7 @@ LEFT JOIN cardio_plan_days cpd ON cpd.weekday = CASE
   ELSE b.weekday
 END
 ORDER BY b.session_date
-`);
+`)
 
 const plannedRingsRows = sqlJson(`
 WITH RECURSIVE dates(day) AS (
@@ -441,7 +446,7 @@ FROM all_tpl t
 LEFT JOIN rings_templates rt ON rt.code = t.template_code
 LEFT JOIN rings_template_items rti ON rti.template_id = rt.id
 ORDER BY t.session_date, t.template_code, rti.item_no
-`);
+`)
 
 const est1RM = sqlJson(`
 WITH cfg AS (
@@ -640,9 +645,10 @@ ORDER BY CASE r.lift
   WHEN 'Deadlift' THEN 3
   WHEN 'Press' THEN 4
   ELSE 99 END
-`);
+`)
 
-const weekHeader = sqlJson(`
+const weekHeader =
+  sqlJson(`
 WITH d AS (
   SELECT date('now','localtime') AS today
 ),
@@ -691,7 +697,7 @@ SELECT
   END AS supp_pct
 FROM pc CROSS JOIN cfg
 LEFT JOIN active_deload ad ON 1=1
-`)[0] || null;
+`)[0] || null
 
 const aerobicTests = sqlJson(`
 SELECT id, date, test_type, speed, distance, duration, avg_hr, max_hr, avg_speed,
@@ -699,7 +705,7 @@ SELECT id, date, test_type, speed, distance, duration, avg_hr, max_hr, avg_speed
        decoupling_percent, notes
 FROM aerobic_tests
 ORDER BY date ASC, id ASC
-`);
+`)
 
 const cycleControl = {
   profiles: sqlJson(`
@@ -707,7 +713,8 @@ const cycleControl = {
     FROM deload_profiles
     ORDER BY code
   `),
-  activeDeload: sqlJson(`
+  activeDeload:
+    sqlJson(`
     SELECT db.start_date, db.end_date, db.deload_code, dp.name, dp.description
     FROM deload_blocks db
     LEFT JOIN deload_profiles dp ON dp.code = db.deload_code
@@ -715,7 +722,8 @@ const cycleControl = {
     ORDER BY db.id DESC
     LIMIT 1
   `)[0] || null,
-  latestBlock: sqlJson(`
+  latestBlock:
+    sqlJson(`
     SELECT block_no, block_type, start_date, end_date, notes
     FROM program_blocks
     ORDER BY block_no DESC
@@ -732,9 +740,10 @@ const cycleControl = {
     FROM v_current_tm
     ORDER BY CASE lift WHEN 'Squat' THEN 1 WHEN 'Bench' THEN 2 WHEN 'Deadlift' THEN 3 WHEN 'Press' THEN 4 ELSE 99 END
   `)
-};
+}
 
-const cardioAnalytics = sqlJson(`
+const cardioAnalytics =
+  sqlJson(`
 WITH z2 AS (
   SELECT
     COUNT(*) AS total_z2,
@@ -845,7 +854,7 @@ SELECT
     'easy_min', easy_min,
     'n_intervals', n_intervals
   )) FROM vo2)) AS vo2_points
-`)[0] || {};
+`)[0] || {}
 
 const currentCyclePlan = sqlJson(`
 WITH cur AS (
@@ -886,7 +895,7 @@ WITH cur AS (
 SELECT *
 FROM rows
 ORDER BY session_date, CASE category WHEN 'main' THEN 1 ELSE 2 END, set_no
-`);
+`)
 
 const auditLog = sqlJson(`
 SELECT
@@ -900,7 +909,7 @@ SELECT
 FROM audit_log
 ORDER BY event_time DESC, id DESC
 LIMIT 60
-`);
+`)
 
 const payload = {
   generatedAt: new Date().toISOString(),
@@ -922,7 +931,7 @@ const payload = {
     plannedCardioByDate: groupByDate(plannedCardioRows),
     plannedRingsByDate: groupByDate(plannedRingsRows)
   }
-};
+}
 
-writeFileSync(outPath, JSON.stringify(payload, null, 2) + '\n', 'utf8');
-console.log(`Wrote ${outPath}`);
+writeFileSync(outPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
+console.log(`Wrote ${outPath}`)
