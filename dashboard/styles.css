@@ -1068,3 +1068,151 @@ summary.panel-head::-webkit-details-marker {
     padding: 2px 6px;
   }
 }
+
+@media (max-width: 480px) {
+  .app {
+    padding: 10px 8px 20px;
+  }
+  .kicker {
+    font-size: 11px;
+  }
+  h1 {
+    font-size: 20px;
+    margin-top: 4px;
+  }
+  h2 {
+    font-size: 16px;
+  }
+  .btn-primary {
+    padding: 5px 8px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+  .weekly-pill {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .week-header-banner,
+  .today-glance {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+  .week-header-title {
+    font-size: 14px;
+  }
+  .today-progress {
+    font-size: 16px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .panel {
+    padding: 8px;
+    border-radius: 10px;
+  }
+  .panel-head {
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .week-rows {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .week-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    min-height: auto;
+    padding: 8px 10px;
+  }
+  .week-meta {
+    min-width: 48px;
+  }
+  .week-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .tile {
+    min-height: 80px;
+    padding: 8px;
+    border-radius: 10px;
+  }
+
+  .est1rm-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .est1rm-value {
+    font-size: 18px;
+  }
+
+  .kpi-card {
+    padding: 8px;
+  }
+  .kpi-value {
+    font-size: 20px;
+  }
+
+  .modal-card {
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .upload-box {
+    padding: 8px;
+  }
+
+  .cardio-vo2-row {
+    grid-template-columns: 80px 70px 1fr;
+    font-size: 10px;
+    gap: 4px;
+  }
+  .cardio-z2-big {
+    font-size: 20px;
+  }
+
+  .status-actions {
+    flex-wrap: wrap;
+  }
+  .status-actions.compact .status-input {
+    width: 100%;
+  }
+  .tm-set-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+  .tiles {
+    grid-template-columns: 1fr;
+  }
+  .est1rm-grid {
+    grid-template-columns: 1fr;
+  }
+  .stat-value {
+    font-size: 18px;
+  }
+  h1 {
+    font-size: 18px;
+  }
+}
