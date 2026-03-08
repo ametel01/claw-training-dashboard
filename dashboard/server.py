@@ -10,6 +10,7 @@ import hashlib
 import sqlite3
 from datetime import datetime
 import urllib.request
+import urllib.error
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,42 @@ PYTHON_BIN = os.environ.get("PYTHON_BIN", sys.executable or "python3")
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
+
+    def _proxy_money_api(self, method: str):
+        target_port = int(os.environ.get("MONEY_API_PORT", "8081"))
+        target_url = f"http://127.0.0.1:{target_port}{self.path}"
+        body = b""
+        if method.upper() in {"POST", "PUT", "PATCH"}:
+            length = int(self.headers.get("Content-Length", "0") or 0)
+            body = self.rfile.read(length) if length > 0 else b""
+
+        headers = {}
+        ctype = self.headers.get("Content-Type")
+        if ctype:
+            headers["Content-Type"] = ctype
+
+        req = urllib.request.Request(target_url, data=body if body else None, headers=headers, method=method.upper())
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                payload = resp.read()
+                self.send_response(resp.getcode())
+                self.send_header("Content-Type", resp.headers.get("Content-Type", "application/json"))
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+                return
+        except urllib.error.HTTPError as e:
+            payload = e.read() if hasattr(e, "read") else b""
+            self.send_response(e.code)
+            self.send_header("Content-Type", e.headers.get("Content-Type", "application/json") if e.headers else "application/json")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            if payload:
+                self.wfile.write(payload)
+            return
+        except Exception as e:
+            self._send_json(502, {"ok": False, "error": f"money API unavailable: {e}"})
+            return
 
     def _read_json_body(self):
         length = int(self.headers.get("Content-Length", "0") or 0)
@@ -581,6 +618,9 @@ FROM v_planned_barbell_sets p;
 
     def do_GET(self):
         parsed = urlparse(self.path)
+        if parsed.path.startswith("/api/expenses"):
+            self._proxy_money_api("GET")
+            return
         if parsed.path == "/api/expenses/overview":
             try:
                 self._exp_ensure_schema()
@@ -642,6 +682,10 @@ FROM v_planned_barbell_sets p;
 
     def do_POST(self):
         parsed = urlparse(self.path)
+
+        if parsed.path.startswith("/api/expenses"):
+            self._proxy_money_api("POST")
+            return
 
         if parsed.path == "/api/expenses/fx-rate":
             try:
