@@ -1,8 +1,9 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
-WORKDIR="/Users/brunoclaw/source/training-dasboard"
-PYTHON_BIN="/opt/homebrew/bin/python3"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKDIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
 export PORT="${PORT:-8080}"
 
 cd "$WORKDIR"

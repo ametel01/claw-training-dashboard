@@ -10,11 +10,12 @@ import hashlib
 import sqlite3
 from datetime import datetime
 import urllib.request
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 PORT = int(os.environ.get("PORT", "8080"))
-NODE_BIN = "/Users/brunoclaw/.nvm/versions/node/v24.13.1/bin/node"
-PYTHON_BIN = "/usr/bin/python3"
+BUN_BIN = os.environ.get("BUN_BIN", "bun")
+PYTHON_BIN = os.environ.get("PYTHON_BIN", sys.executable or "python3")
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -87,6 +88,16 @@ class Handler(SimpleHTTPRequestHandler):
                 fields[name] = body.decode('utf-8', errors='ignore')
 
         return fields, files
+
+    def _run_dashboard_export(self):
+        proc = subprocess.run(
+            [BUN_BIN, "run", "--bun", str(ROOT / "dashboard" / "src" / "export-data.ts")],
+            check=True,
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+        )
+        return (proc.stdout or "").strip()
 
     def _run_health_pipeline(self):
         user_id = os.environ.get("HEALTH_PIPELINE_USER_ID", "00000000-0000-0000-0000-000000000001")
@@ -754,9 +765,7 @@ FROM v_planned_barbell_sets p;
                     "COMMIT;"
                 )
                 self._run_sql(sql)
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True, "blockNo": next_block, "blockType": chosen_type, "startDate": start_date})
             except Exception as e:
                 self._send_json(500, {"ok": False, "error": str(e)})
@@ -790,9 +799,7 @@ FROM v_planned_barbell_sets p;
                     "COMMIT;"
                 )
                 self._run_sql(sql)
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True, "deloadCode": deload_code, "startDate": start_date, "endDate": end_date})
             except Exception as e:
                 self._send_json(500, {"ok": False, "error": str(e)})
@@ -842,9 +849,7 @@ FROM v_planned_barbell_sets p;
                     "COMMIT;"
                 )
                 self._run_sql(sql)
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True, "lift": lift, "tmKg": new_tm, "effectiveDate": effective_date})
             except Exception as e:
                 self._send_json(500, {"ok": False, "error": str(e)})
@@ -858,9 +863,7 @@ FROM v_planned_barbell_sets p;
                 if include_health:
                     health_status = self._run_health_pipeline()
 
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True, "healthPipeline": health_status})
             except Exception as e:
                 self._send_json(500, {
@@ -872,9 +875,7 @@ FROM v_planned_barbell_sets p;
         if parsed.path == "/api/refresh-health":
             try:
                 health_status = self._run_health_pipeline()
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True, "healthPipeline": health_status})
             except Exception as e:
                 self._send_json(500, {"ok": False, "error": str(e).strip()})
@@ -897,9 +898,7 @@ FROM v_planned_barbell_sets p;
 
             try:
                 self._run_sql(sql)
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True})
             except subprocess.CalledProcessError as e:
                 self._send_json(500, {"ok": False, "error": (e.stderr or e.stdout or str(e)).strip()})
@@ -949,9 +948,7 @@ FROM v_planned_barbell_sets p;
             )
             try:
                 self._run_sql(sql)
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True, "decouplingPercent": decoupling})
             except subprocess.CalledProcessError as e:
                 self._send_json(500, {"ok": False, "error": (e.stderr or e.stdout or str(e)).strip()})
@@ -1182,9 +1179,7 @@ FROM v_planned_barbell_sets p;
                     self._send_json(400, {"ok": False, "error": "unknown action"})
                     return
 
-                subprocess.run([
-                    NODE_BIN, str(ROOT / "dashboard" / "export-data.mjs")
-                ], check=True, cwd=str(ROOT), capture_output=True, text=True)
+                self._run_dashboard_export()
                 self._send_json(200, {"ok": True})
             except subprocess.CalledProcessError as e:
                 self._send_json(500, {"ok": False, "error": (e.stderr or e.stdout or str(e)).strip()})
