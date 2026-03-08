@@ -5,7 +5,8 @@ Standalone training dashboard repository.
 ## Run
 
 ```bash
-python3 dashboard/server.py
+./scripts/start_training_dashboard.sh
+# or: PORT=8080 python3 dashboard/server.py
 ```
 
 Open:
