@@ -1,16 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { RefreshCw } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TopBarProps {
-  onRefresh: () => void
-  onRefreshWithHealth: () => void
-  onToday: () => void
-  loading: boolean
-  refreshLabel: string
-  refreshHealthLabel: string
-  weeklyCompletion: string
-  generatedAt: string
+  onRefresh: () => void;
+  onRefreshWithHealth: () => void;
+  onToday: () => void;
+  loading: boolean;
+  refreshLabel: string;
+  refreshHealthLabel: string;
+  weeklyCompletion: string;
+  generatedAt: string;
 }
 
 export function TopBar({
@@ -21,7 +21,7 @@ export function TopBar({
   refreshLabel,
   refreshHealthLabel,
   weeklyCompletion,
-  generatedAt
+  generatedAt,
 }: TopBarProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-md">
@@ -66,5 +66,5 @@ export function TopBar({
         </div>
       </div>
     </header>
-  )
+  );
 }

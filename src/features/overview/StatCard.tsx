@@ -1,12 +1,12 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface StatCardProps {
-  label: string
-  value: string | number
-  unit?: string
-  trend?: number
-  accent?: boolean
+  label: string;
+  value: string | number;
+  unit?: string;
+  trend?: number;
+  accent?: boolean;
 }
 
 export function StatCard({ label, value, unit, trend, accent }: StatCardProps) {
@@ -14,7 +14,7 @@ export function StatCard({ label, value, unit, trend, accent }: StatCardProps) {
     <Card
       className={cn(
         'border-border/50',
-        accent && 'border-primary/30 shadow-[0_0_12px_hsl(var(--primary)/0.15)]'
+        accent && 'border-primary/30 shadow-[0_0_12px_hsl(var(--primary)/0.15)]',
       )}
     >
       <CardContent className="p-4">
@@ -25,7 +25,7 @@ export function StatCard({ label, value, unit, trend, accent }: StatCardProps) {
           <span
             className={cn(
               'font-display text-3xl font-bold',
-              accent ? 'text-primary' : 'text-foreground'
+              accent ? 'text-primary' : 'text-foreground',
             )}
           >
             {value}
@@ -42,5 +42,5 @@ export function StatCard({ label, value, unit, trend, accent }: StatCardProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,35 +1,35 @@
-import type { WeekHeader } from '@/types/dashboard'
+import type { WeekHeader } from '@/types/dashboard';
 
 interface WeekHeaderBannerProps {
-  weekHeader: WeekHeader | null
+  weekHeader: WeekHeader | null;
 }
 
 function clampPct(value: number) {
-  return Math.max(0, Math.min(100, Number(value) || 0))
+  return Math.max(0, Math.min(100, Number(value) || 0));
 }
 
 function pctHue(value: number) {
-  const pct = clampPct(value)
-  const scaled = Math.max(0, Math.min(1, (pct - 60) / 40))
-  return 120 - 120 * scaled
+  const pct = clampPct(value);
+  const scaled = Math.max(0, Math.min(1, (pct - 60) / 40));
+  return 120 - 120 * scaled;
 }
 
 function barFill(value: number) {
-  const hue = pctHue(value)
-  const c1 = `hsl(${hue.toFixed(0)} 85% 66%)`
-  const c2 = `hsl(${hue.toFixed(0)} 80% 52%)`
-  const c3 = `hsl(${hue.toFixed(0)} 88% 42%)`
-  return `linear-gradient(90deg, ${c1} 0%, ${c2} 55%, ${c3} 100%)`
+  const hue = pctHue(value);
+  const c1 = `hsl(${hue.toFixed(0)} 85% 66%)`;
+  const c2 = `hsl(${hue.toFixed(0)} 80% 52%)`;
+  const c3 = `hsl(${hue.toFixed(0)} 88% 42%)`;
+  return `linear-gradient(90deg, ${c1} 0%, ${c2} 55%, ${c3} 100%)`;
 }
 
 export function WeekHeaderBanner({ weekHeader }: WeekHeaderBannerProps) {
-  if (!weekHeader) return null
+  if (!weekHeader) return null;
 
   const mainNumbers = String(weekHeader.main_pct || '')
     .split('/')
     .map((value) => Number(String(value).replace('%', '')))
-    .filter((value) => Number.isFinite(value))
-  const supplementalNumber = Number(String(weekHeader.supp_pct || '').replace('%', ''))
+    .filter((value) => Number.isFinite(value));
+  const supplementalNumber = Number(String(weekHeader.supp_pct || '').replace('%', ''));
 
   return (
     <section className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-4">
@@ -69,7 +69,7 @@ export function WeekHeaderBanner({ weekHeader }: WeekHeaderBannerProps) {
                 className="h-full rounded-full"
                 style={{
                   width: `${clampPct(supplementalNumber)}%`,
-                  background: barFill(supplementalNumber)
+                  background: barFill(supplementalNumber),
                 }}
               />
             </div>
@@ -78,5 +78,5 @@ export function WeekHeaderBanner({ weekHeader }: WeekHeaderBannerProps) {
         )}
       </div>
     </section>
-  )
+  );
 }

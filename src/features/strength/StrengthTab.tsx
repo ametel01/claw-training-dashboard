@@ -1,19 +1,19 @@
-import type { DashboardData } from '@/types/dashboard'
-import { TrainingMaxCard } from './TrainingMaxCard'
-import { CycleControl } from './CycleControl'
-import { CyclePlan } from './CyclePlan'
-import { Est1RMCard } from './Est1RMCard'
+import type { DashboardData } from '@/types/dashboard';
+import { TrainingMaxCard } from './TrainingMaxCard';
+import { CycleControl } from './CycleControl';
+import { CyclePlan } from './CyclePlan';
+import { Est1RMCard } from './Est1RMCard';
 
 interface StrengthTabProps {
-  data: DashboardData
-  onRefresh: () => void
+  data: DashboardData;
+  onRefresh: () => void;
 }
 
 export function StrengthTab({ data, onRefresh }: StrengthTabProps) {
-  const cycleControl = data.cycleControl || {}
-  const tms = cycleControl.currentTM || []
-  const est1rm = data.est1RM || []
-  const plan = data.currentCyclePlan || []
+  const cycleControl = data.cycleControl || {};
+  const tms = cycleControl.currentTM || [];
+  const est1rm = data.est1RM || [];
+  const plan = data.currentCyclePlan || [];
 
   return (
     <div className="space-y-6 py-4">
@@ -51,5 +51,5 @@ export function StrengthTab({ data, onRefresh }: StrengthTabProps) {
       {/* Current Cycle Plan */}
       {plan.length > 0 && <CyclePlan plan={plan} />}
     </div>
-  )
+  );
 }
