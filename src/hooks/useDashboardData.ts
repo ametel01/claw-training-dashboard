@@ -1,7 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { DashboardData } from '@/types/dashboard';
 
-export function useDashboardData() {
+export type DashboardRefresh = (includeHealth?: boolean) => Promise<void>;
+
+export interface UseDashboardDataResult {
+  data: DashboardData | null;
+  error: string | null;
+  loading: boolean;
+  refresh: DashboardRefresh;
+}
+
+export function useDashboardData(): UseDashboardDataResult {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +30,7 @@ export function useDashboardData() {
     }
   }, []);
 
-  const refresh = useCallback(
+  const refresh: DashboardRefresh = useCallback(
     async (includeHealth = false) => {
       setLoading(true);
       try {

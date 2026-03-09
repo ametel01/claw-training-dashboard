@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import type { DashboardRefresh } from '@/hooks/useDashboardData';
 import type { DashboardData, PlannedBarbellRow, PlannedCardioRow } from '@/types/dashboard';
 import { logAction } from '@/hooks/useApi';
 
@@ -10,7 +11,7 @@ interface DetailDialogProps {
   data: DashboardData | null;
   open: boolean;
   onClose: () => void;
-  onRefresh: () => void;
+  onRefresh: DashboardRefresh;
 }
 
 interface DetailFormState {
