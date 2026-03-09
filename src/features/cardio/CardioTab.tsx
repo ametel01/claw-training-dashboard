@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent, type ReactNode } from 'react';
 import type {
   DashboardData,
   Z2Point,
@@ -6,17 +6,16 @@ import type {
   Z2EfficiencyPoint,
   Z2DecouplingPoint,
   VO2Point,
-  AerobicTest
-} from '@/types/dashboard'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { cn } from '@/lib/utils'
+  AerobicTest,
+} from '@/types/dashboard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
-const Z2_CAP = 125
+const Z2_CAP = 125;
 const CHART_COLORS = {
   axis: 'rgba(148, 163, 184, 0.55)',
   grid: 'rgba(148, 163, 184, 0.28)',
@@ -27,62 +26,62 @@ const CHART_COLORS = {
   efficiency: '#ff9ed1',
   z2Cap: '#ffd166',
   vo2FourByFour: '#ffb454',
-  vo2OneMin: '#8ae6ff'
-} as const
+  vo2OneMin: '#8ae6ff',
+} as const;
 
 function parseJsonArray<T>(val: T[] | string | undefined | null): T[] {
-  if (Array.isArray(val)) return val
+  if (Array.isArray(val)) return val;
   if (typeof val === 'string') {
     try {
-      return JSON.parse(val) || []
+      return JSON.parse(val) || [];
     } catch {
-      return []
+      return [];
     }
   }
-  return []
+  return [];
 }
 
 function formatAxisDate(date: string) {
-  const parsed = new Date(`${date}T00:00:00`)
-  if (Number.isNaN(parsed.getTime())) return date
+  const parsed = new Date(`${date}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return date;
   return parsed.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    timeZone: 'Asia/Manila'
-  })
+    timeZone: 'Asia/Manila',
+  });
 }
 
 function buildValueTicks(min: number, max: number, steps = 4) {
-  const span = max - min
+  const span = max - min;
   return Array.from({ length: steps + 1 }, (_, index) => {
-    const ratio = index / steps
+    const ratio = index / steps;
     return {
       ratio,
-      value: min + span * ratio
-    }
-  })
+      value: min + span * ratio,
+    };
+  });
 }
 
 function buildDateTicks<T extends { x: number; date?: string; session_date?: string }>(
-  points: T[]
+  points: T[],
 ) {
-  if (points.length === 0) return []
+  if (points.length === 0) return [];
   if (points.length === 1)
     return [
       {
         x: points[0].x,
-        date: points[0].date ?? points[0].session_date ?? ''
-      }
-    ]
+        date: points[0].date ?? points[0].session_date ?? '',
+      },
+    ];
 
-  const indexes = Array.from(new Set([0, Math.floor((points.length - 1) / 2), points.length - 1]))
+  const indexes = Array.from(new Set([0, Math.floor((points.length - 1) / 2), points.length - 1]));
   return indexes
     .map((index) => points[index])
     .filter(Boolean)
     .map((point) => ({
       x: point.x,
-      date: point.date ?? point.session_date ?? ''
-    }))
+      date: point.date ?? point.session_date ?? '',
+    }));
 }
 
 // ─── Reusable mini line chart ────────────────────────────────────────────────
@@ -91,36 +90,36 @@ function MiniSeriesChart({
   rows,
   getValue,
   formatLabel,
-  yAxisLabel
+  yAxisLabel,
 }: {
-  rows: { date?: string; session_date?: string }[]
-  getValue: (row: Record<string, unknown>) => number
-  formatLabel: (v: number) => string
-  yAxisLabel: string
+  rows: { date?: string; session_date?: string }[];
+  getValue: (row: Record<string, unknown>) => number;
+  formatLabel: (v: number) => string;
+  yAxisLabel: string;
 }) {
   const values = rows
     .map((r) => getValue(r as Record<string, unknown>))
-    .filter((v) => Number.isFinite(v))
+    .filter((v) => Number.isFinite(v));
   if (values.length < 2)
-    return <p className="text-xs text-muted-foreground">Need at least 2 tests.</p>
+    return <p className="text-xs text-muted-foreground">Need at least 2 tests.</p>;
 
   const W = 320,
     H = 130,
     L = 40,
     R = 8,
     T = 10,
-    B = 26
+    B = 26;
   const min = Math.min(...values),
-    max = Math.max(...values)
-  const span = Math.max(1, max - min)
+    max = Math.max(...values);
+  const span = Math.max(1, max - min);
   const pw = W - L - R,
-    ph = H - T - B
+    ph = H - T - B;
   const yTicks = buildValueTicks(min, max).map((tick) => ({
     ...tick,
-    y: T + (1 - (tick.value - min) / span) * ph
-  }))
+    y: T + (1 - (tick.value - min) / span) * ph,
+  }));
   const pts = rows.map((r, i) => {
-    const v = getValue(r as Record<string, unknown>)
+    const v = getValue(r as Record<string, unknown>);
     return {
       key: `${(r as { date?: string; session_date?: string }).date || (r as { date?: string; session_date?: string }).session_date || 'point'}-${v}`,
       x: L + i * (pw / (rows.length - 1)),
@@ -129,11 +128,11 @@ function MiniSeriesChart({
       date:
         (r as { date?: string; session_date?: string }).date ||
         (r as { date?: string; session_date?: string }).session_date ||
-        ''
-    }
-  })
-  const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ')
-  const xTicks = buildDateTicks(pts)
+        '',
+    };
+  });
+  const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ');
+  const xTicks = buildDateTicks(pts);
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-24">
@@ -195,34 +194,34 @@ function MiniSeriesChart({
         </text>
       ))}
     </svg>
-  )
+  );
 }
 
 // ─── Z2 HR Trend chart (with efficiency overlay + Z2 cap) ───────────────────
 
 function Z2HrTrendChart({
   trendPoints,
-  speedByDate
+  speedByDate,
 }: {
-  trendPoints: { date: string; hr: number; estimated: boolean }[]
-  speedByDate: Map<string, number>
+  trendPoints: { date: string; hr: number; estimated: boolean }[];
+  speedByDate: Map<string, number>;
 }) {
-  const recent = trendPoints.slice(-8)
+  const recent = trendPoints.slice(-8);
   if (recent.length < 2)
-    return <p className="text-xs text-muted-foreground">No Z2 HR data in last 12 weeks.</p>
+    return <p className="text-xs text-muted-foreground">No Z2 HR data in last 12 weeks.</p>;
 
   const W = 320,
     H = 132,
     L = 40,
     R = 10,
     T = 10,
-    B = 26
-  const hrs = recent.map((p) => p.hr)
-  const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5
-  const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5
-  const span = Math.max(5, maxHr - minHr)
+    B = 26;
+  const hrs = recent.map((p) => p.hr);
+  const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5;
+  const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5;
+  const span = Math.max(5, maxHr - minHr);
   const pw = W - L - R,
-    ph = H - T - B
+    ph = H - T - B;
 
   const points = recent.map((p, i) => ({
     key: `${p.date}-${p.hr}-${p.estimated ? 'estimated' : 'actual'}`,
@@ -230,43 +229,43 @@ function Z2HrTrendChart({
     y: T + (1 - (p.hr - minHr) / span) * ph,
     hr: p.hr,
     date: p.date,
-    estimated: p.estimated
-  }))
+    estimated: p.estimated,
+  }));
 
-  const z2CapY = T + (1 - (Z2_CAP - minHr) / span) * ph
+  const z2CapY = T + (1 - (Z2_CAP - minHr) / span) * ph;
   const ticks = buildValueTicks(minHr, maxHr).map((tick) => ({
     hr: Math.round(tick.value),
-    y: T + (1 - tick.ratio) * ph
-  }))
-  const xTicks = buildDateTicks(points)
+    y: T + (1 - tick.ratio) * ph,
+  }));
+  const xTicks = buildDateTicks(points);
 
   // Efficiency overlay
   const effTrend = points
     .map((p) => {
-      const spd = speedByDate.get(p.date)
-      return spd && spd > 0 && p.hr > 0 ? { x: p.x, eff: spd / p.hr } : null
+      const spd = speedByDate.get(p.date);
+      return spd && spd > 0 && p.hr > 0 ? { x: p.x, eff: spd / p.hr } : null;
     })
-    .filter(Boolean) as { x: number; eff: number }[]
+    .filter(Boolean) as { x: number; eff: number }[];
 
-  let effPolyline = ''
-  let effLegend = 'efficiency line: need speed+HR logs'
+  let effPolyline = '';
+  let effLegend = 'efficiency line: need speed+HR logs';
   if (effTrend.length >= 2) {
-    const minE = Math.min(...effTrend.map((e) => e.eff))
-    const maxE = Math.max(...effTrend.map((e) => e.eff))
-    const spanE = Math.max(0.0001, maxE - minE)
+    const minE = Math.min(...effTrend.map((e) => e.eff));
+    const maxE = Math.max(...effTrend.map((e) => e.eff));
+    const spanE = Math.max(0.0001, maxE - minE);
     const ep = effTrend.map((e) => ({
       x: e.x,
-      y: T + (1 - (e.eff - minE) / spanE) * ph
-    }))
-    effPolyline = ep.map((e) => `${e.x},${e.y}`).join(' ')
-    const first = effTrend[0].eff
-    const last = effTrend[effTrend.length - 1].eff
-    const delta = ((last - first) / first) * 100
-    effLegend = `efficiency Δ ${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%`
+      y: T + (1 - (e.eff - minE) / spanE) * ph,
+    }));
+    effPolyline = ep.map((e) => `${e.x},${e.y}`).join(' ');
+    const first = effTrend[0].eff;
+    const last = effTrend[effTrend.length - 1].eff;
+    const delta = ((last - first) / first) * 100;
+    effLegend = `efficiency Δ ${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%`;
   }
 
-  const deltaHr = (points[points.length - 1].hr - points[0].hr).toFixed(1)
-  const estimatedCount = recent.filter((p) => p.estimated).length
+  const deltaHr = (points[points.length - 1].hr - points[0].hr).toFixed(1);
+  const estimatedCount = recent.filter((p) => p.estimated).length;
 
   return (
     <div>
@@ -381,15 +380,15 @@ function Z2HrTrendChart({
         {effLegend}
       </p>
     </div>
-  )
+  );
 }
 
 // ─── Z2 scatter plot (speed vs HR with trendline) ───────────────────────────
 
 function Z2ScatterChart({
-  points
+  points,
 }: {
-  points: { date: string; hr: number; speed: number }[]
+  points: { date: string; hr: number; speed: number }[];
 }) {
   if (points.length < 2) {
     return (
@@ -399,7 +398,7 @@ function Z2ScatterChart({
           Log speed in notes as: <code className="text-primary">@ 6.2 km/h</code>
         </p>
       </div>
-    )
+    );
   }
 
   const W = 320,
@@ -407,45 +406,45 @@ function Z2ScatterChart({
     L = 40,
     R = 12,
     T = 12,
-    B = 24
-  const speeds = points.map((p) => p.speed)
-  const hrs = points.map((p) => p.hr)
+    B = 24;
+  const speeds = points.map((p) => p.speed);
+  const hrs = points.map((p) => p.hr);
   const minX = Math.min(...speeds) - 0.2,
-    maxX = Math.max(...speeds) + 0.2
-  const minY = Math.floor((Math.min(...hrs) - 3) / 5) * 5
-  const maxY = Math.ceil((Math.max(...hrs) + 3) / 5) * 5
+    maxX = Math.max(...speeds) + 0.2;
+  const minY = Math.floor((Math.min(...hrs) - 3) / 5) * 5;
+  const maxY = Math.ceil((Math.max(...hrs) + 3) / 5) * 5;
   const xSpan = Math.max(0.5, maxX - minX),
-    ySpan = Math.max(5, maxY - minY)
+    ySpan = Math.max(5, maxY - minY);
   const pw = W - L - R,
-    ph = H - T - B
+    ph = H - T - B;
 
   const svgPts = points.map((p, i) => ({
     key: `${p.date}-${p.speed}-${p.hr}`,
     x: L + ((p.speed - minX) / xSpan) * pw,
     y: T + (1 - (p.hr - minY) / ySpan) * ph,
     opacity: (0.35 + (0.65 * (i + 1)) / points.length).toFixed(2),
-    ...p
-  }))
+    ...p,
+  }));
   const yTicks = [0, 0.25, 0.5, 0.75, 1].map((v) => ({
     hr: Math.round(minY + v * ySpan),
-    y: T + (1 - v) * ph
-  }))
+    y: T + (1 - v) * ph,
+  }));
   const xTicks = buildValueTicks(minX, maxX).map((tick) => ({
     value: tick.value,
-    x: L + ((tick.value - minX) / xSpan) * pw
-  }))
+    x: L + ((tick.value - minX) / xSpan) * pw,
+  }));
 
   // Linear regression trendline
-  let trendLine: React.ReactNode = null
-  let trendNote = 'Need ≥4 sessions for a stable trendline'
+  let trendLine: ReactNode = null;
+  let trendNote = 'Need ≥4 sessions for a stable trendline';
   if (points.length >= 4) {
-    const meanX = speeds.reduce((s, v) => s + v, 0) / speeds.length
-    const meanY = hrs.reduce((s, v) => s + v, 0) / hrs.length
-    const cov = points.reduce((s, p) => s + (p.speed - meanX) * (p.hr - meanY), 0)
-    const varX = points.reduce((s, p) => s + (p.speed - meanX) ** 2, 0) || 1
-    const slope = cov / varX
-    const intercept = meanY - slope * meanX
-    const toY = (v: number) => T + (1 - (v - minY) / ySpan) * ph
+    const meanX = speeds.reduce((s, v) => s + v, 0) / speeds.length;
+    const meanY = hrs.reduce((s, v) => s + v, 0) / hrs.length;
+    const cov = points.reduce((s, p) => s + (p.speed - meanX) * (p.hr - meanY), 0);
+    const varX = points.reduce((s, p) => s + (p.speed - meanX) ** 2, 0) || 1;
+    const slope = cov / varX;
+    const intercept = meanY - slope * meanX;
+    const toY = (v: number) => T + (1 - (v - minY) / ySpan) * ph;
     trendLine = (
       <line
         x1={L}
@@ -456,8 +455,8 @@ function Z2ScatterChart({
         strokeWidth="1.2"
         strokeDasharray="4 2"
       />
-    )
-    trendNote = 'Trendline shown (≥4 sessions)'
+    );
+    trendNote = 'Trendline shown (≥4 sessions)';
   }
 
   return (
@@ -533,7 +532,7 @@ function Z2ScatterChart({
         Older = lighter dot · newer = darker dot · {trendNote}
       </p>
     </div>
-  )
+  );
 }
 
 // ─── VO2 protocol chart ─────────────────────────────────────────────────────
@@ -541,13 +540,13 @@ function Z2ScatterChart({
 function VO2ProtocolChart({
   rows,
   protocol,
-  label
+  label,
 }: {
-  rows: VO2Point[]
-  protocol: string
-  label: string
+  rows: VO2Point[];
+  protocol: string;
+  label: string;
 }) {
-  const defaultRestByProtocol: Record<string, number> = { VO2_4x4: 3, VO2_1min: 1 }
+  const defaultRestByProtocol: Record<string, number> = { VO2_4x4: 3, VO2_1min: 1 };
   const series = rows
     .filter((r) => r.protocol === protocol)
     .map((r) => ({
@@ -555,52 +554,53 @@ function VO2ProtocolChart({
       speed: Number(r.avg_speed_kmh || r.max_speed_kmh || 0),
       hr: Number(r.avg_hr ?? r.max_hr ?? 0),
       workMin: Number(r.work_min || (protocol === 'VO2_4x4' ? 4 : protocol === 'VO2_1min' ? 1 : 0)),
-      restMin: Number(r.easy_min || defaultRestByProtocol[protocol] || 0)
+      restMin: Number(r.easy_min || defaultRestByProtocol[protocol] || 0),
     }))
     .filter((r) => r.hr > 0)
-    .sort((a, b) => (a.session_date < b.session_date ? -1 : 1))
+    .sort((a, b) => (a.session_date < b.session_date ? -1 : 1));
 
-  if (!series.length) return <p className="text-xs text-muted-foreground mb-2">{label}: no data.</p>
+  if (!series.length)
+    return <p className="text-xs text-muted-foreground mb-2">{label}: no data.</p>;
 
   const W = 320,
     H = 132,
     L = 40,
     R = 22,
     T = 10,
-    B = 26
-  const hrs = series.map((r) => r.hr)
-  const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5
-  const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5
-  const span = Math.max(5, maxHr - minHr)
+    B = 26;
+  const hrs = series.map((r) => r.hr);
+  const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5;
+  const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5;
+  const span = Math.max(5, maxHr - minHr);
   const pw = W - L - R,
-    ph = H - T - B
+    ph = H - T - B;
   const ticks = buildValueTicks(minHr, maxHr).map((tick) => ({
     hr: Math.round(tick.value),
-    y: T + (1 - tick.ratio) * ph
-  }))
+    y: T + (1 - tick.ratio) * ph,
+  }));
   const pts = series.map((r, i) => ({
     key: `${r.session_date}-${protocol}-${r.hr}-${r.speed}`,
     x: series.length === 1 ? L + pw / 2 : L + i * (pw / (series.length - 1)),
     y: T + (1 - (r.hr - minHr) / span) * ph,
-    ...r
-  }))
-  const polyline = pts.length >= 2 ? pts.map((p) => `${p.x},${p.y}`).join(' ') : ''
-  const strokeColor = protocol === 'VO2_4x4' ? CHART_COLORS.vo2FourByFour : CHART_COLORS.vo2OneMin
-  const xTicks = buildDateTicks(pts)
+    ...r,
+  }));
+  const polyline = pts.length >= 2 ? pts.map((p) => `${p.x},${p.y}`).join(' ') : '';
+  const strokeColor = protocol === 'VO2_4x4' ? CHART_COLORS.vo2FourByFour : CHART_COLORS.vo2OneMin;
+  const xTicks = buildDateTicks(pts);
 
   // Efficiency trend
   const effRows = series
     .filter((r) => r.speed > 0 && r.hr > 0)
     .map((r) => {
-      const rf = r.workMin > 0 && r.restMin > 0 ? r.workMin / r.restMin : r.workMin > 0 ? 1 : 0
-      return { ...r, eff: (r.speed / r.hr) * rf }
-    })
-  let trendText = `${label}: need ≥2 sessions with speed + HR logged`
+      const rf = r.workMin > 0 && r.restMin > 0 ? r.workMin / r.restMin : r.workMin > 0 ? 1 : 0;
+      return { ...r, eff: (r.speed / r.hr) * rf };
+    });
+  let trendText = `${label}: need ≥2 sessions with speed + HR logged`;
   if (effRows.length >= 2) {
     const first = effRows[0],
-      last = effRows[effRows.length - 1]
-    const delta = ((last.eff - first.eff) / first.eff) * 100
-    trendText = `${label} efficiency Δ ${delta >= 0 ? '+' : ''}${delta.toFixed(1)}% (${first.eff.toFixed(4)} → ${last.eff.toFixed(4)}, ${effRows.length} sessions, rest-adjusted)`
+      last = effRows[effRows.length - 1];
+    const delta = ((last.eff - first.eff) / first.eff) * 100;
+    trendText = `${label} efficiency Δ ${delta >= 0 ? '+' : ''}${delta.toFixed(1)}% (${first.eff.toFixed(4)} → ${last.eff.toFixed(4)}, ${effRows.length} sessions, rest-adjusted)`;
   }
 
   return (
@@ -642,9 +642,9 @@ function VO2ProtocolChart({
           />
         )}
         {pts.map((p, i) => {
-          const dy = i % 2 === 0 ? -6 : 12
-          const spd = p.speed > 0 ? `${p.speed}k` : ''
-          const workRest = p.workMin > 0 ? `${p.workMin}/${p.restMin}m` : 'n/a'
+          const dy = i % 2 === 0 ? -6 : 12;
+          const spd = p.speed > 0 ? `${p.speed}k` : '';
+          const workRest = p.workMin > 0 ? `${p.workMin}/${p.restMin}m` : 'n/a';
           return (
             <g key={p.key}>
               <circle cx={p.x} cy={p.y} r={2.8} fill={strokeColor}>
@@ -665,7 +665,7 @@ function VO2ProtocolChart({
                 </text>
               )}
             </g>
-          )
+          );
         })}
         <text x={W / 2} y={H - 5} fontSize="8" fill={CHART_COLORS.label} textAnchor="middle">
           Session date
@@ -695,43 +695,42 @@ function VO2ProtocolChart({
       </svg>
       <p className="text-xs text-muted-foreground">{trendText}</p>
     </div>
-  )
+  );
 }
 
-// ─── Aerobic test log modal ─────────────────────────────────────────────────
+function getAfsLabel(value: number) {
+  if (value >= 80) return 'excellent';
+  if (value >= 65) return 'strong';
+  if (value >= 50) return 'average';
+  if (value >= 35) return 'developing';
+  return 'weak base';
+}
 
-function AerobicTestModal({
-  open,
-  kind,
-  today,
-  onClose,
-  onSaved
-}: {
-  open: boolean
-  kind: 'FIXED_SPEED' | 'FIXED_HR' | 'ZONE2_SESSION' | null
-  today: string
-  onClose: () => void
-  onSaved: () => void
-}) {
-  const [fields, setFields] = useState<Record<string, string>>({})
-  const [saving, setSaving] = useState(false)
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFields((f) => ({ ...f, [k]: e.target.value }))
-  const num = (k: string) => {
-    const v = parseFloat(fields[k] ?? '')
-    return Number.isFinite(v) ? v : null
-  }
+function getAfsBandColor(value: number | null) {
+  if (value == null || !Number.isFinite(value)) return 'border-border/30';
+  if (value >= 80) return 'border-blue-400/50';
+  if (value >= 65) return 'border-green-400/50';
+  if (value >= 50) return 'border-yellow-400/50';
+  if (value >= 35) return 'border-orange-400/50';
+  return 'border-red-400/50';
+}
 
-  async function save() {
-    setSaving(true)
-    let payload: Record<string, unknown> = { date: today }
-    if (kind === 'FIXED_SPEED') {
-      const avgHr = num('avgHr')
-      if (!avgHr) {
-        setSaving(false)
-        return
-      }
-      payload = {
+function buildAerobicTestPayload(
+  kind: 'FIXED_SPEED' | 'FIXED_HR' | 'ZONE2_SESSION' | null,
+  today: string,
+  fields: Record<string, string>,
+) {
+  const payload: Record<string, unknown> = { date: today };
+  const num = (key: string) => {
+    const value = Number.parseFloat(fields[key] ?? '');
+    return Number.isFinite(value) ? value : null;
+  };
+
+  switch (kind) {
+    case 'FIXED_SPEED': {
+      const avgHr = num('avgHr');
+      if (!avgHr) return null;
+      return {
         ...payload,
         testType: 'FIXED_SPEED',
         speed: 11,
@@ -739,30 +738,26 @@ function AerobicTestModal({
         duration: 13,
         avgHr,
         maxHr: num('maxHr'),
-        notes: 'Monthly fixed-speed test'
-      }
-    } else if (kind === 'FIXED_HR') {
-      const avgSpeed = num('avgSpeed')
-      if (!avgSpeed) {
-        setSaving(false)
-        return
-      }
-      payload = {
+        notes: 'Monthly fixed-speed test',
+      };
+    }
+    case 'FIXED_HR': {
+      const avgSpeed = num('avgSpeed');
+      if (!avgSpeed) return null;
+      return {
         ...payload,
         testType: 'FIXED_HR',
         duration: 30,
         avgSpeed,
         avgHr: num('avgHr') || 120,
-        notes: 'Monthly fixed-HR test'
-      }
-    } else if (kind === 'ZONE2_SESSION') {
-      const hr1 = num('hr1'),
-        hr2 = num('hr2')
-      if (!hr1 || !hr2) {
-        setSaving(false)
-        return
-      }
-      payload = {
+        notes: 'Monthly fixed-HR test',
+      };
+    }
+    case 'ZONE2_SESSION': {
+      const hr1 = num('hr1');
+      const hr2 = num('hr2');
+      if (!hr1 || !hr2) return null;
+      return {
         ...payload,
         testType: 'ZONE2_SESSION',
         duration: 40,
@@ -770,29 +765,68 @@ function AerobicTestModal({
         hrSecondHalf: hr2,
         speedFirstHalf: num('s1'),
         speedSecondHalf: num('s2'),
-        notes: 'Monthly decoupling test'
-      }
+        notes: 'Monthly decoupling test',
+      };
+    }
+    default:
+      return null;
+  }
+}
+
+function getDecouplingState(value: number) {
+  if (value < 5) return { color: 'var(--ok)', label: 'good' };
+  if (value <= 7) return { color: 'var(--warn)', label: 'watch' };
+  return { color: 'var(--danger)', label: 'high' };
+}
+
+// ─── Aerobic test log modal ─────────────────────────────────────────────────
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: This modal compacts three test-entry flows.
+function AerobicTestModal({
+  open,
+  kind,
+  today,
+  onClose,
+  onSaved,
+}: {
+  open: boolean;
+  kind: 'FIXED_SPEED' | 'FIXED_HR' | 'ZONE2_SESSION' | null;
+  today: string;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [fields, setFields] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+  const set = (k: string) => (e: ChangeEvent<HTMLInputElement>) =>
+    setFields((f) => ({ ...f, [k]: e.target.value }));
+
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Payload construction branches by test type.
+  async function save() {
+    setSaving(true);
+    const payload = buildAerobicTestPayload(kind, today, fields);
+    if (!payload) {
+      setSaving(false);
+      return;
     }
     try {
       await fetch('/api/log-aerobic-test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
+        body: JSON.stringify(payload),
+      });
     } catch {
       /* best-effort */
     }
-    setSaving(false)
-    setFields({})
-    onSaved()
-    onClose()
+    setSaving(false);
+    setFields({});
+    onSaved();
+    onClose();
   }
 
   const titles: Record<string, string> = {
     FIXED_SPEED: 'Log Fixed-Speed Test (11.0 km/h, 0% incline, 2.4 km)',
     FIXED_HR: 'Log Fixed-HR Test (120 bpm, 30 min, 0% incline)',
-    ZONE2_SESSION: 'Log Decoupling Test (steady Z2)'
-  }
+    ZONE2_SESSION: 'Log Decoupling Test (steady Z2)',
+  };
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -870,161 +904,144 @@ function AerobicTestModal({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 // ─── Main CardioTab ─────────────────────────────────────────────────────────
 
 interface CardioTabProps {
-  data: DashboardData
-  onRefresh: () => void
+  data: DashboardData;
+  onRefresh: () => void;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: This tab aggregates several legacy cardio summaries and charts.
 export function CardioTab({ data, onRefresh }: CardioTabProps) {
-  const [modal, setModal] = useState<'FIXED_SPEED' | 'FIXED_HR' | 'ZONE2_SESSION' | null>(null)
-  const ca = data.cardioAnalytics
+  const [modal, setModal] = useState<'FIXED_SPEED' | 'FIXED_HR' | 'ZONE2_SESSION' | null>(null);
+  const ca = data.cardioAnalytics;
   if (!ca)
-    return <p className="text-muted-foreground py-8 text-center">No cardio data available.</p>
+    return <p className="text-muted-foreground py-8 text-center">No cardio data available.</p>;
 
-  const pct = ca.z2_compliance_pct ?? 0
-  const totalZ2 = ca.total_z2 ?? 0
-  const inCap = ca.z2_in_cap ?? 0
-  const aerobicTests: AerobicTest[] = data.aerobicTests || []
+  const pct = ca.z2_compliance_pct ?? 0;
+  const totalZ2 = ca.total_z2 ?? 0;
+  const inCap = ca.z2_in_cap ?? 0;
+  const aerobicTests: AerobicTest[] = data.aerobicTests || [];
 
   // Parse JSON-string arrays
-  const z2Points = parseJsonArray<Z2Point>(ca.z2_points)
-  const z2ScatterRaw = parseJsonArray<Z2ScatterPoint>(ca.z2_scatter_points)
+  const z2Points = parseJsonArray<Z2Point>(ca.z2_points);
+  const z2ScatterRaw = parseJsonArray<Z2ScatterPoint>(ca.z2_scatter_points);
   const z2Efficiency = parseJsonArray<Z2EfficiencyPoint>(ca.z2_efficiency_points)
     .filter((p) => p.efficiency > 0)
-    .sort((a, b) => (a.session_date < b.session_date ? -1 : 1))
+    .sort((a, b) => (a.session_date < b.session_date ? -1 : 1));
   const z2Decoupling = parseJsonArray<Z2DecouplingPoint>(ca.z2_decoupling_points)
     .filter((p) => Number.isFinite(p.decoupling_pct))
-    .sort((a, b) => (a.session_date < b.session_date ? -1 : 1))
-  const vo2Points = parseJsonArray<VO2Point>(ca.vo2_points)
+    .sort((a, b) => (a.session_date < b.session_date ? -1 : 1));
+  const vo2Points = parseJsonArray<VO2Point>(ca.vo2_points);
 
   // Z2 trend from z2_points
   const z2TrendPoints = z2Points
     .map((p) => {
-      const avg = Number(p.avg_hr)
-      const max = Number(p.max_hr)
+      const avg = Number(p.avg_hr);
+      const max = Number(p.max_hr);
       if (Number.isFinite(avg) && avg > 0)
-        return { date: p.session_date, hr: avg, estimated: false }
-      if (Number.isFinite(max) && max > 0) return { date: p.session_date, hr: max, estimated: true }
-      return null
+        return { date: p.session_date, hr: avg, estimated: false };
+      if (Number.isFinite(max) && max > 0)
+        return { date: p.session_date, hr: max, estimated: true };
+      return null;
     })
     .filter((p): p is NonNullable<typeof p> => p !== null && Number.isFinite(p.hr) && p.hr > 0)
-    .sort((a, b) => (a.date < b.date ? -1 : 1))
+    .sort((a, b) => (a.date < b.date ? -1 : 1));
 
-  const speedByDate = new Map(z2Points.map((r) => [r.session_date, Number(r.speed_kmh)]))
+  const speedByDate = new Map(z2Points.map((r) => [r.session_date, Number(r.speed_kmh)]));
 
   // Scatter (last 8 with speed > 0)
   const z2Scatter = z2ScatterRaw
     .map((p) => ({ date: p.session_date, hr: Number(p.avg_hr), speed: Number(p.speed_kmh) }))
     .filter((p) => p.hr > 0 && p.speed > 0)
     .sort((a, b) => (a.date < b.date ? -1 : 1))
-    .slice(-8)
+    .slice(-8);
 
   // Aerobic test categories
   const fixedSpeedTests = aerobicTests.filter(
-    (t) => t.test_type === 'FIXED_SPEED' && Number(t.avg_hr) > 0
-  )
+    (t) => t.test_type === 'FIXED_SPEED' && Number(t.avg_hr) > 0,
+  );
   const fixedHrTests = aerobicTests.filter(
-    (t) => t.test_type === 'FIXED_HR' && Number(t.avg_speed) > 0
-  )
+    (t) => t.test_type === 'FIXED_HR' && Number(t.avg_speed) > 0,
+  );
   const decouplingTests = aerobicTests.filter(
-    (t) => t.test_type === 'ZONE2_SESSION' && Number(t.decoupling_percent) >= 0
-  )
-  const fixedSpeedLast = fixedSpeedTests[fixedSpeedTests.length - 1]
-  const fixedHrLast = fixedHrTests[fixedHrTests.length - 1]
-  const decouplingLast = decouplingTests[decouplingTests.length - 1]
+    (t) => t.test_type === 'ZONE2_SESSION' && Number(t.decoupling_percent) >= 0,
+  );
+  const fixedSpeedLast = fixedSpeedTests[fixedSpeedTests.length - 1];
+  const fixedHrLast = fixedHrTests[fixedHrTests.length - 1];
+  const decouplingLast = decouplingTests[decouplingTests.length - 1];
 
   // AFS scoring
-  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
-  const scoreEff = (hr: number) => clamp((100 * (170 - hr)) / 30, 0, 100)
-  const scoreCap = (spd: number) => clamp((100 * (spd - 5)) / 4, 0, 100)
-  const scoreDur = (d: number) => clamp((100 * (10 - d)) / 10, 0, 100)
-  const afsLabel = (v: number) =>
-    v >= 80
-      ? 'excellent'
-      : v >= 65
-        ? 'strong'
-        : v >= 50
-          ? 'average'
-          : v >= 35
-            ? 'developing'
-            : 'weak base'
-  const afsBandColor = (v: number | null) => {
-    if (v == null || !Number.isFinite(v)) return 'border-border/30'
-    if (v >= 80) return 'border-blue-400/50'
-    if (v >= 65) return 'border-green-400/50'
-    if (v >= 50) return 'border-yellow-400/50'
-    if (v >= 35) return 'border-orange-400/50'
-    return 'border-red-400/50'
-  }
+  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+  const scoreEff = (hr: number) => clamp((100 * (170 - hr)) / 30, 0, 100);
+  const scoreCap = (spd: number) => clamp((100 * (spd - 5)) / 4, 0, 100);
+  const scoreDur = (d: number) => clamp((100 * (10 - d)) / 10, 0, 100);
 
-  const byMonth = new Map<string, Record<string, AerobicTest>>()
+  const byMonth = new Map<string, Record<string, AerobicTest>>();
   for (const t of aerobicTests) {
-    const month = String(t.date || '').slice(0, 7)
-    if (!month) continue
-    const rowsForMonth = byMonth.get(month) ?? {}
-    rowsForMonth[t.test_type] = t
-    byMonth.set(month, rowsForMonth)
+    const month = String(t.date || '').slice(0, 7);
+    if (!month) continue;
+    const rowsForMonth = byMonth.get(month) ?? {};
+    rowsForMonth[t.test_type] = t;
+    byMonth.set(month, rowsForMonth);
   }
   const afsSeries = Array.from(byMonth.entries())
     .sort(([a], [b]) => (a < b ? -1 : 1))
     .map(([month, v]) => {
-      if (!v.FIXED_SPEED || !v.FIXED_HR || !v.ZONE2_SESSION) return null
-      const eff = scoreEff(Number(v.FIXED_SPEED.avg_hr))
-      const cap = scoreCap(Number(v.FIXED_HR.avg_speed))
-      const dur = scoreDur(Number(v.ZONE2_SESSION.decoupling_percent))
-      const afs = 0.4 * cap + 0.35 * eff + 0.25 * dur
-      return { date: `${month}-01`, afs: +afs.toFixed(1), eff, cap, dur }
+      if (!v.FIXED_SPEED || !v.FIXED_HR || !v.ZONE2_SESSION) return null;
+      const eff = scoreEff(Number(v.FIXED_SPEED.avg_hr));
+      const cap = scoreCap(Number(v.FIXED_HR.avg_speed));
+      const dur = scoreDur(Number(v.ZONE2_SESSION.decoupling_percent));
+      const afs = 0.4 * cap + 0.35 * eff + 0.25 * dur;
+      return { date: `${month}-01`, afs: +afs.toFixed(1), eff, cap, dur };
     })
-    .filter(Boolean) as { date: string; afs: number; eff: number; cap: number; dur: number }[]
-  const afsLast = afsSeries[afsSeries.length - 1] || null
-  const afsPrev = afsSeries.length > 1 ? afsSeries[afsSeries.length - 2] : null
-  const afsDelta = afsLast && afsPrev ? afsLast.afs - afsPrev.afs : null
+    .filter(Boolean) as { date: string; afs: number; eff: number; cap: number; dur: number }[];
+  const afsLast = afsSeries[afsSeries.length - 1] || null;
+  const afsPrev = afsSeries.length > 1 ? afsSeries[afsSeries.length - 2] : null;
+  const afsDelta = afsLast && afsPrev ? afsLast.afs - afsPrev.afs : null;
 
   // Adaptation / KPI
-  let adaptState = ''
-  let z2KpiStatus = 'Flat'
-  let efficiencyBlock: React.ReactNode = null
-  let aerobicSnapshot = ''
+  let adaptState = '';
+  let z2KpiStatus = 'Flat';
+  let efficiencyBlock: ReactNode = null;
+  let aerobicSnapshot = '';
 
   if (z2Efficiency.length >= 1) {
-    const recent8 = z2Efficiency.slice(-8)
-    const last = recent8[recent8.length - 1]
-    const first = recent8[0]
-    const baseline = z2Efficiency[0]
-    const rolling4 = z2Efficiency.slice(-4)
-    const rolling4Avg = rolling4.reduce((s, p) => s + p.efficiency, 0) / rolling4.length
-    const deltaRecent = first ? ((last.efficiency - first.efficiency) / first.efficiency) * 100 : 0
+    const recent8 = z2Efficiency.slice(-8);
+    const last = recent8[recent8.length - 1];
+    const first = recent8[0];
+    const baseline = z2Efficiency[0];
+    const rolling4 = z2Efficiency.slice(-4);
+    const rolling4Avg = rolling4.reduce((s, p) => s + p.efficiency, 0) / rolling4.length;
+    const deltaRecent = first ? ((last.efficiency - first.efficiency) / first.efficiency) * 100 : 0;
     const deltaBaseline = baseline
       ? ((last.efficiency - baseline.efficiency) / baseline.efficiency) * 100
-      : 0
+      : 0;
 
-    z2KpiStatus = deltaRecent > 1 ? 'Improving' : deltaRecent < -1 ? 'Regressing' : 'Flat'
+    z2KpiStatus = deltaRecent > 1 ? 'Improving' : deltaRecent < -1 ? 'Regressing' : 'Flat';
     const verdict =
       deltaRecent > 1 && pct >= 70
         ? 'On track'
         : pct < 60
           ? 'Needs consistency'
-          : 'Stable but no gain'
+          : 'Stable but no gain';
 
-    const recentVo2 = vo2Points.slice(-6).filter((p) => (p.avg_speed_kmh || p.max_speed_kmh) > 0)
-    const vo2Stim = recentVo2.length >= 2 ? 'Adequate' : 'Low'
+    const recentVo2 = vo2Points.slice(-6).filter((p) => (p.avg_speed_kmh || p.max_speed_kmh) > 0);
+    const vo2Stim = recentVo2.length >= 2 ? 'Adequate' : 'Low';
     adaptState =
       deltaRecent > 1 && pct >= 70 && vo2Stim === 'Adequate'
         ? 'Adapting'
         : pct < 60 || deltaRecent < -1
           ? 'Off track'
-          : 'In progress'
-    const adaptEmoji = adaptState === 'Adapting' ? '🟢' : adaptState === 'Off track' ? '🔴' : '🟡'
+          : 'In progress';
 
     const recommendation =
       deltaRecent > 1
         ? 'Keep current Z2 structure.'
-        : 'Increase Z2 volume by +20 min/week or progress treadmill speed slightly.'
+        : 'Increase Z2 volume by +20 min/week or progress treadmill speed slightly.';
 
     efficiencyBlock = (
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -1071,27 +1088,27 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
           </CardContent>
         </Card>
       </div>
-    )
+    );
 
-    aerobicSnapshot = `Efficiency: ${z2KpiStatus} · Compliance: ${pct}% · Drift data: ${z2Decoupling.length ? 'Available' : 'Missing'}\nRecommendation: ${recommendation}`
+    aerobicSnapshot = `Efficiency: ${z2KpiStatus} · Compliance: ${pct}% · Drift data: ${z2Decoupling.length ? 'Available' : 'Missing'}\nRecommendation: ${recommendation}`;
   }
 
-  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' })
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' });
 
   const daysSince = (date?: string) => {
-    if (!date) return 999
+    if (!date) return 999;
     return Math.floor(
-      (new Date(`${today}T00:00:00`).getTime() - new Date(`${date}T00:00:00`).getTime()) / 86400000
-    )
-  }
+      (new Date(`${today}T00:00:00`).getTime() - new Date(`${date}T00:00:00`).getTime()) / 86400000,
+    );
+  };
   const dueLine = (name: string, date?: string) => {
-    const d = daysSince(date)
-    if (d > 35) return `${name}: overdue (${d}d)`
-    if (d > 27) return `${name}: due soon (${d}d)`
-    return `${name}: ok (${d}d)`
-  }
+    const d = daysSince(date);
+    if (d > 35) return `${name}: overdue (${d}d)`;
+    if (d > 27) return `${name}: due soon (${d}d)`;
+    return `${name}: ok (${d}d)`;
+  };
 
-  const pctClamped = Math.min(100, Math.round(pct))
+  const pctClamped = Math.min(100, Math.round(pct));
 
   return (
     <div className="space-y-4 py-4">
@@ -1131,7 +1148,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
                     ? 'var(--ok)'
                     : pctClamped >= 50
                       ? 'var(--warn)'
-                      : 'var(--danger)'
+                      : 'var(--danger)',
               }}
             >
               {pctClamped}%
@@ -1152,22 +1169,15 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
             {z2Decoupling.length > 0 ? (
               <div className="space-y-1">
                 {z2Decoupling.slice(-5).map((p) => {
-                  const tag =
-                    p.decoupling_pct < 5 ? 'good' : p.decoupling_pct <= 7 ? 'watch' : 'high'
-                  const col =
-                    p.decoupling_pct < 5
-                      ? 'var(--ok)'
-                      : p.decoupling_pct <= 7
-                        ? 'var(--warn)'
-                        : 'var(--danger)'
+                  const state = getDecouplingState(p.decoupling_pct);
                   return (
                     <div key={p.session_date} className="flex justify-between text-xs font-mono">
                       <span className="text-muted-foreground">{p.session_date}</span>
-                      <span style={{ color: col }}>
-                        {p.decoupling_pct.toFixed(1)}% ({tag})
+                      <span style={{ color: state.color }}>
+                        {p.decoupling_pct.toFixed(1)}% ({state.label})
                       </span>
                     </div>
-                  )
+                  );
                 })}
                 <p className="text-xs text-muted-foreground pt-1">
                   {'<5% good · 5–7% watch · >7% high drift'}
@@ -1221,14 +1231,14 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
         <CardContent className="space-y-4">
           {/* AFS + metric cards */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-            <Card className={cn('border', afsBandColor(afsLast?.afs ?? null))}>
+            <Card className={cn('border', getAfsBandColor(afsLast?.afs ?? null))}>
               <CardContent className="p-3">
                 <p className="text-xs text-muted-foreground">AFS</p>
                 <p className="font-display text-2xl font-bold">
                   {afsLast ? afsLast.afs.toFixed(1) : '—'}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {afsLast ? afsLabel(afsLast.afs) : 'need all 3 tests'}
+                  {afsLast ? getAfsLabel(afsLast.afs) : 'need all 3 tests'}
                   {afsDelta != null
                     ? ` · ${afsDelta >= 0 ? '↑' : '↓'}${Math.abs(afsDelta).toFixed(1)}`
                     : ''}
@@ -1405,5 +1415,5 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
         onSaved={onRefresh}
       />
     </div>
-  )
+  );
 }
