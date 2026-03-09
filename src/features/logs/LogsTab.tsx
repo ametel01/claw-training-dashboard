@@ -26,7 +26,7 @@ function getEntryKey(entry: AuditRow) {
 }
 
 function AuditEntryChange({ entry }: { entry: AuditRow }) {
-  if (!entry.old_value && !entry.new_value) return null;
+  if (!(entry.old_value || entry.new_value)) return null;
 
   return (
     <div className="flex items-center gap-2 pl-2 font-mono text-xs">

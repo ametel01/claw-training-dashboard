@@ -26,7 +26,7 @@ function UploadBox({ title, kind, accept, description, onSuccess }: UploadBoxPro
     try {
       const res = await fetch('/api/upload-health', { method: 'POST', body: form });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json.ok) throw new Error(json.error || `upload failed (${res.status})`);
+      if (!(res.ok && json.ok)) throw new Error(json.error || `upload failed (${res.status})`);
       setStatus('done');
       setStatusText(`Uploaded: ${json.path || file.name}`);
       onSuccess?.();

@@ -73,7 +73,7 @@ export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
         </CardHeader>
         <CardContent className="space-y-2">
           <p className="text-xs text-muted-foreground">
-            Current:{' '}
+            Current:
             <span className="text-foreground">
               #{latest.block_no || '—'} · {latest.block_type || '—'}
             </span>

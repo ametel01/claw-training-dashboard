@@ -138,7 +138,7 @@ export function TodayGlance({ tiles, details, onStartSession }: TodayGlanceProps
           </span>
         </div>
         <p className="mb-3 text-xs text-muted-foreground">
-          Status: <strong className="text-foreground">{summary.status}</strong> · Planned time:{' '}
+          Status: <strong className="text-foreground">{summary.status}</strong> · Planned time:
           <strong className="text-foreground">
             {Math.floor(summary.estimatedMinutes / 60)}h {summary.estimatedMinutes % 60}m
           </strong>

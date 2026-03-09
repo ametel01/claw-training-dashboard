@@ -76,7 +76,7 @@ export function Est1RMCard({ row }: Est1RMCardProps) {
             {row.strength_level} · {row.bw_ratio}x BW
           </p>
           <p className="font-mono text-xs text-muted-foreground">
-            4w: {getTrendArrow(delta4w)} {Math.abs(delta4w).toFixed(1)} kg · Cycle:{' '}
+            4w: {getTrendArrow(delta4w)} {Math.abs(delta4w).toFixed(1)} kg · Cycle:
             {Number(row.delta_cycle_kg || 0).toFixed(1)} kg
           </p>
         </div>
@@ -84,7 +84,7 @@ export function Est1RMCard({ row }: Est1RMCardProps) {
         <p className="font-mono text-xs text-muted-foreground">
           {row.next_level !== '—'
             ? `Next: ${row.next_level} at ${row.next_level_kg} kg`
-            : 'Top level reached'}{' '}
+            : 'Top level reached'}
           · BW {row.bodyweight_kg} kg
         </p>
         <div className="relative h-1 overflow-hidden rounded-full bg-border">
