@@ -1,7 +1,7 @@
 # gym531 helper usage (separated tracks)
 
 DB: `training_dashboard.db`
-Script: `gym531.py`
+Script: `bun run gym531 --`
 
 Tracks are separated in DB:
 - Barbell AM: `barbell_sessions`, `barbell_set_logs`
@@ -12,40 +12,40 @@ Tracks are separated in DB:
 
 Show workout:
 ```bash
-python3 gym531.py today --date 2026-02-16
+bun run gym531 -- today --date 2026-02-16
 ```
 
 Log easy mode:
 ```bash
-python3 gym531.py log --date 2026-02-16 --main-reps 5,5,4 --supp-completed --notes "Missed 1 rep top set"
+bun run gym531 -- log --date 2026-02-16 --main-reps 5,5,4 --supp-completed --notes "Missed 1 rep top set"
 ```
 
 ## Rings (PM)
 
 Show template:
 ```bash
-python3 gym531.py rings-today --date 2026-02-16
+bun run gym531 -- rings-today --date 2026-02-16
 ```
 
 Log:
 ```bash
-python3 gym531.py rings-log --date 2026-02-16 --template A --completed --notes "solid"
+bun run gym531 -- rings-log --date 2026-02-16 --template A --completed --notes "solid"
 ```
 
 ## Cardio
 
 Show daily cardio plan:
 ```bash
-python3 gym531.py cardio-today --date 2026-02-18
+bun run gym531 -- cardio-today --date 2026-02-18
 ```
 
 Log cardio:
 ```bash
-python3 gym531.py cardio-log --date 2026-02-18 --protocol VO2_4x4 --duration 40 --avg-hr 151 --max-hr 170 --notes "good intervals"
+bun run gym531 -- cardio-log --date 2026-02-18 --protocol VO2_4x4 --duration 40 --avg-hr 151 --max-hr 170 --notes "good intervals"
 ```
 
 Track cardio benchmark progress (separate table):
 ```bash
-python3 gym531.py cardio-progress-add --date 2026-02-14 --duration 30 --speed 6.5 --incline 1 --final-bpm 130 --notes "baseline"
-python3 gym531.py cardio-progress-show
+bun run gym531 -- cardio-progress-add --date 2026-02-14 --duration 30 --speed 6.5 --incline 1 --final-bpm 130 --notes "baseline"
+bun run gym531 -- cardio-progress-show
 ```

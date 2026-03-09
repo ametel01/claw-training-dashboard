@@ -42,7 +42,7 @@ The pipeline scans recursively, so dated folders still work too.
 ## Run
 
 ```bash
-python3 health_pipeline/run_pipeline.py \
+bun run health:pipeline -- \
   --user-id 00000000-0000-0000-0000-000000000001 \
   --input-root imports/raw \
   --output-root imports
@@ -51,7 +51,7 @@ python3 health_pipeline/run_pipeline.py \
 Optional config:
 
 ```bash
-python3 health_pipeline/run_pipeline.py ... --config health_pipeline/config.example.json
+bun run health:pipeline -- ... --config health_pipeline/config.example.json
 ```
 
 ## Notes

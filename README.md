@@ -7,19 +7,20 @@ Standalone training dashboard repository.
 ```bash
 bun install
 bun run build
-bun run export:data
 PORT=8090 ./scripts/start_training_dashboard.sh
-# or: PORT=8080 PYTHON_BIN=python3 python3 dashboard/server.py
+# or: PORT=8080 bun run start
 ```
 
 Open:
 
+- http://127.0.0.1:8080/
 - http://127.0.0.1:8080/dashboard/
 
 ## Included
 
-- `dashboard/` UI + API server
+- `dashboard/` legacy dashboard UI
 - `dashboard/src/` TypeScript sources for the browser app and exporter
-- `health_pipeline/` data ingestion pipeline
+- `server/src/` unified TypeScript Node backend + CLI tools
+- `health_pipeline/` health pipeline config/docs
 - `training_dashboard.db` + SQL/bootstrap helpers
-- `gym531.py` utilities
+- `gym531_USAGE.md` CLI usage

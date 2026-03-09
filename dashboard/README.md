@@ -28,11 +28,12 @@ From workspace root:
 
 ```bash
 bun run build
-python3 dashboard/server.py
+bun run start
 ```
 
 Then open:
 
+- http://localhost:8080/
 - http://localhost:8080/dashboard/
 
 ## Notes
