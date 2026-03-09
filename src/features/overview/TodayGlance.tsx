@@ -1,136 +1,155 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { currentDateInDashboardTZ } from '@/lib/time'
-import type { DailyTile, Details } from '@/types/dashboard'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { currentDateInDashboardTZ } from '@/lib/time';
+import { cn } from '@/lib/utils';
+import type { DailyTile, Details } from '@/types/dashboard';
 
 interface TodayGlanceProps {
-  tiles: DailyTile[]
-  details: Details
-  onStartSession: (date: string) => void
+  tiles: DailyTile[];
+  details: Details;
+  onStartSession: (date: string) => void;
+}
+
+interface TodayTask {
+  done: boolean;
+  key: string;
+  label: string;
+}
+
+interface TodaySummary {
+  doneCount: number;
+  dotColor: string;
+  estimatedMinutes: number;
+  pct: number;
+  plannedCount: number;
+  status: string;
+  tasks: TodayTask[];
+}
+
+function getTodayStatus(doneCount: number, plannedCount: number) {
+  if (doneCount === 0) return 'Not Started';
+  if (doneCount === plannedCount) return 'Completed';
+  return 'In Progress';
+}
+
+function getPainDotColor(painLevel?: string) {
+  if (painLevel === 'red') return 'var(--danger)';
+  if (painLevel === 'yellow') return 'var(--warn)';
+  return 'var(--ok)';
+}
+
+function buildTodaySummary(day: DailyTile, details: Details, today: string): TodaySummary {
+  const barbellRows = details?.barbellByDate?.[today] || [];
+  const hasMain = barbellRows.some((row) => row.category === 'main');
+  const hasSupp = barbellRows.some((row) => row.category === 'supplemental');
+  const tasks = [
+    {
+      key: 'main',
+      label: day.planned_barbell_main || '',
+      done: hasMain,
+      planned: Boolean(day.planned_barbell_main),
+    },
+    {
+      key: 'supp',
+      label: `Supp: ${day.planned_barbell_supp}`,
+      done: hasSupp,
+      planned: Boolean(day.planned_barbell_supp),
+    },
+    {
+      key: 'cardio',
+      label: day.planned_cardio || '',
+      done: Boolean(day.has_cardio),
+      planned: Boolean(day.planned_cardio && day.planned_cardio !== 'OFF'),
+    },
+    {
+      key: 'rings',
+      label: `Rings: ${day.planned_rings}`,
+      done: Boolean(day.has_rings),
+      planned: Boolean(day.planned_rings),
+    },
+  ].filter((task) => task.planned);
+  const plannedCount = tasks.length;
+  const doneCount = tasks.filter((task) => task.done).length;
+
+  return {
+    doneCount,
+    dotColor: getPainDotColor(day.pain_level),
+    estimatedMinutes:
+      (day.planned_barbell_main || day.planned_barbell_supp ? 60 : 0) +
+      (day.planned_cardio && day.planned_cardio !== 'OFF' ? 30 : 0) +
+      (day.planned_rings ? 20 : 0),
+    pct: plannedCount ? Math.round((doneCount / plannedCount) * 100) : 0,
+    plannedCount,
+    status: getTodayStatus(doneCount, plannedCount),
+    tasks,
+  };
+}
+
+function TodayTaskList({ tasks }: { tasks: TodayTask[] }) {
+  return (
+    <div className="mb-3 grid grid-cols-2 gap-1.5 text-xs">
+      {tasks.map((task) => (
+        <div
+          key={task.key}
+          className={cn(
+            'flex items-center gap-1',
+            task.done ? 'text-[var(--ok)]' : 'text-muted-foreground',
+          )}
+        >
+          <span>{task.done ? '✓' : '○'}</span>
+          <span>{task.label}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export function TodayGlance({ tiles, details, onStartSession }: TodayGlanceProps) {
-  const today = currentDateInDashboardTZ()
-  const day = tiles.find((t) => t.session_date === today)
+  const today = currentDateInDashboardTZ();
+  const day = tiles.find((tile) => tile.session_date === today);
 
   if (!day) {
     return (
       <Card className="border-border/50">
         <CardContent className="p-4">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+          <p className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
             Today — {today}
           </p>
           <p className="text-sm text-muted-foreground">No data for today yet.</p>
         </CardContent>
       </Card>
-    )
+    );
   }
 
-  const barbellRows = details?.barbellByDate?.[today] || []
-  const hasMain = barbellRows.some((r) => r.category === 'main')
-  const hasSupp = barbellRows.some((r) => r.category === 'supplemental')
-  const plannedMain = !!day.planned_barbell_main
-  const plannedSupp = !!day.planned_barbell_supp
-  const plannedCardio = !!day.planned_cardio && day.planned_cardio !== 'OFF'
-  const plannedRings = !!day.planned_rings
-  const plannedCount = [plannedMain, plannedSupp, plannedCardio, plannedRings].filter(
-    Boolean
-  ).length
-  const doneCount = [
-    plannedMain && hasMain,
-    plannedSupp && hasSupp,
-    plannedCardio && !!day.has_cardio,
-    plannedRings && !!day.has_rings
-  ].filter(Boolean).length
-  const pct = plannedCount ? Math.round((doneCount / plannedCount) * 100) : 0
-  const status =
-    doneCount === 0 ? 'Not Started' : doneCount === plannedCount ? 'Completed' : 'In Progress'
-  const estimatedMinutes =
-    (plannedMain || plannedSupp ? 60 : 0) + (plannedCardio ? 30 : 0) + (plannedRings ? 20 : 0)
-
-  const dotColor =
-    day.pain_level === 'red'
-      ? 'var(--danger)'
-      : day.pain_level === 'yellow'
-        ? 'var(--warn)'
-        : 'var(--ok)'
+  const summary = buildTodaySummary(day, details, today);
 
   return (
     <Card className="border-border/50">
       <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: dotColor }} />
+            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: summary.dotColor }} />
             <p className="text-xs uppercase tracking-widest text-muted-foreground">
               Today — {today}
             </p>
           </div>
           <span className="font-mono text-sm text-foreground">
-            {doneCount}/{plannedCount} · {pct}%
+            {summary.doneCount}/{summary.plannedCount} · {summary.pct}%
           </span>
         </div>
-        <p className="text-xs text-muted-foreground mb-3">
-          Status: <strong className="text-foreground">{status}</strong> · Planned time:{' '}
+        <p className="mb-3 text-xs text-muted-foreground">
+          Status: <strong className="text-foreground">{summary.status}</strong> · Planned time:{' '}
           <strong className="text-foreground">
-            {Math.floor(estimatedMinutes / 60)}h {estimatedMinutes % 60}m
+            {Math.floor(summary.estimatedMinutes / 60)}h {summary.estimatedMinutes % 60}m
           </strong>
         </p>
-        <div className="grid grid-cols-2 gap-1.5 text-xs mb-3">
-          {plannedMain && (
-            <div
-              className={cn(
-                'flex items-center gap-1',
-                hasMain ? 'text-[var(--ok)]' : 'text-muted-foreground'
-              )}
-            >
-              <span>{hasMain ? '✓' : '○'}</span>
-              <span>{day.planned_barbell_main}</span>
-            </div>
-          )}
-          {plannedSupp && (
-            <div
-              className={cn(
-                'flex items-center gap-1',
-                hasSupp ? 'text-[var(--ok)]' : 'text-muted-foreground'
-              )}
-            >
-              <span>{hasSupp ? '✓' : '○'}</span>
-              <span>Supp: {day.planned_barbell_supp}</span>
-            </div>
-          )}
-          {plannedCardio && (
-            <div
-              className={cn(
-                'flex items-center gap-1',
-                day.has_cardio ? 'text-[var(--ok)]' : 'text-muted-foreground'
-              )}
-            >
-              <span>{day.has_cardio ? '✓' : '○'}</span>
-              <span>{day.planned_cardio}</span>
-            </div>
-          )}
-          {plannedRings && (
-            <div
-              className={cn(
-                'flex items-center gap-1',
-                day.has_rings ? 'text-[var(--ok)]' : 'text-muted-foreground'
-              )}
-            >
-              <span>{day.has_rings ? '✓' : '○'}</span>
-              <span>Rings: {day.planned_rings}</span>
-            </div>
-          )}
-        </div>
-        {status === 'Not Started' && (
+        <TodayTaskList tasks={summary.tasks} />
+        {summary.status === 'Not Started' ? (
           <Button size="sm" onClick={() => onStartSession(today)} className="text-xs">
             Start Session
           </Button>
-        )}
+        ) : null}
       </CardContent>
     </Card>
-  )
-}
-
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(' ')
+  );
 }

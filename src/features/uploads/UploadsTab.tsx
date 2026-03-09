@@ -1,57 +1,57 @@
-import { useState, useRef } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import { useRef, useState, type DragEvent } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface UploadBoxProps {
-  title: string
-  kind: string
-  accept: string
-  description: string
-  onSuccess?: () => void
+  title: string;
+  kind: string;
+  accept: string;
+  description: string;
+  onSuccess?: () => void;
 }
 
 function UploadBox({ title, kind, accept, description, onSuccess }: UploadBoxProps) {
-  const [dragging, setDragging] = useState(false)
-  const [status, setStatus] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
-  const [statusText, setStatusText] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [dragging, setDragging] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle');
+  const [statusText, setStatusText] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function upload(file: File) {
-    setStatus('uploading')
-    setStatusText(`Uploading ${file.name}…`)
-    const form = new FormData()
-    form.append('kind', kind)
-    form.append('file', file)
+    setStatus('uploading');
+    setStatusText(`Uploading ${file.name}…`);
+    const form = new FormData();
+    form.append('kind', kind);
+    form.append('file', file);
     try {
-      const res = await fetch('/api/upload-health', { method: 'POST', body: form })
-      const json = await res.json().catch(() => ({}))
-      if (!res.ok || !json.ok) throw new Error(json.error || `upload failed (${res.status})`)
-      setStatus('done')
-      setStatusText(`Uploaded: ${json.path || file.name}`)
-      onSuccess?.()
+      const res = await fetch('/api/upload-health', { method: 'POST', body: form });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.ok) throw new Error(json.error || `upload failed (${res.status})`);
+      setStatus('done');
+      setStatusText(`Uploaded: ${json.path || file.name}`);
+      onSuccess?.();
     } catch (e) {
-      setStatus('error')
-      setStatusText(e instanceof Error ? e.message : 'Upload failed')
+      setStatus('error');
+      setStatusText(e instanceof Error ? e.message : 'Upload failed');
     }
   }
 
-  function onDrop(e: React.DragEvent) {
-    e.preventDefault()
-    setDragging(false)
-    const file = e.dataTransfer.files[0]
-    if (file) upload(file)
+  function onDrop(e: DragEvent<HTMLElement>) {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) upload(file);
   }
 
   return (
     <Card
       className={cn(
         'border-2 border-dashed transition-colors cursor-pointer',
-        dragging ? 'border-primary bg-primary/5' : 'border-border/50 hover:border-border'
+        dragging ? 'border-primary bg-primary/5' : 'border-border/50 hover:border-border',
       )}
       onDragOver={(e) => {
-        e.preventDefault()
-        setDragging(true)
+        e.preventDefault();
+        setDragging(true);
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
@@ -76,17 +76,17 @@ function UploadBox({ title, kind, accept, description, onSuccess }: UploadBoxPro
           className="hidden"
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => {
-            const f = e.target.files?.[0]
-            if (f) upload(f)
+            const f = e.target.files?.[0];
+            if (f) upload(f);
           }}
         />
       </CardContent>
     </Card>
-  )
+  );
 }
 
 interface UploadsTabProps {
-  onRefresh: () => void
+  onRefresh: () => void;
 }
 
 export function UploadsTab({ onRefresh }: UploadsTabProps) {
@@ -109,5 +109,5 @@ export function UploadsTab({ onRefresh }: UploadsTabProps) {
         />
       </div>
     </div>
-  )
+  );
 }

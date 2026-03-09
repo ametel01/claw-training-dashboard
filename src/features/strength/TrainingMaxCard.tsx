@@ -1,43 +1,43 @@
-import { useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { updateTM, updateTMDelta } from '@/hooks/useApi'
-import type { TMRow } from '@/types/dashboard'
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { updateTM, updateTMDelta } from '@/hooks/useApi';
+import type { TMRow } from '@/types/dashboard';
 
 interface TrainingMaxCardProps {
-  tm: TMRow
-  onRefresh: () => void
+  tm: TMRow;
+  onRefresh: () => void;
 }
 
 export function TrainingMaxCard({ tm, onRefresh }: TrainingMaxCardProps) {
-  const [customVal, setCustomVal] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [customVal, setCustomVal] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function adjustDelta(delta: number) {
-    setLoading(true)
+    setLoading(true);
     try {
-      await updateTMDelta(tm.lift, delta)
-      onRefresh()
-    } catch (e) {
-      console.error(e)
+      await updateTMDelta(tm.lift, delta);
+      onRefresh();
+    } catch {
+      // Keep the control responsive if the update fails.
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function setExact() {
-    const val = parseFloat(customVal)
-    if (Number.isNaN(val) || val <= 0) return
-    setLoading(true)
+    const val = Number.parseFloat(customVal);
+    if (Number.isNaN(val) || val <= 0) return;
+    setLoading(true);
     try {
-      await updateTM(tm.lift, val)
-      setCustomVal('')
-      onRefresh()
-    } catch (e) {
-      console.error(e)
+      await updateTM(tm.lift, val);
+      setCustomVal('');
+      onRefresh();
+    } catch {
+      // Keep the control responsive if the update fails.
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -99,5 +99,5 @@ export function TrainingMaxCard({ tm, onRefresh }: TrainingMaxCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

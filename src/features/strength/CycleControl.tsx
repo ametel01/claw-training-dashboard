@@ -1,53 +1,65 @@
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { startCycle, applyDeload } from '@/hooks/useApi'
-import type { CycleControl as CycleControlData } from '@/types/dashboard'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { applyDeload, startCycle } from '@/hooks/useApi';
+import type { CycleControl as CycleControlData } from '@/types/dashboard';
 
 interface CycleControlProps {
-  cycleControl: CycleControlData
-  onRefresh: () => void
+  cycleControl: CycleControlData;
+  onRefresh: () => void;
+}
+
+async function runCycleControlAction(action: () => Promise<void>, onRefresh: () => void) {
+  await action();
+  onRefresh();
+}
+
+function getActiveDeloadText(active: CycleControlData['activeDeload']) {
+  if (!active) return 'none';
+  return `${active.name || active.deload_code} (${active.start_date} → ${active.end_date})`;
 }
 
 export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
-  const [loading, setLoading] = useState(false)
-  const [startDate, setStartDate] = useState('')
-  const [blockType, setBlockType] = useState('Leader')
-  const [deloadCode, setDeloadCode] = useState(cycleControl.profiles?.[0]?.code || '')
-  const [deloadStart, setDeloadStart] = useState('')
-  const [deloadDays, setDeloadDays] = useState('7')
+  const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [blockType, setBlockType] = useState('Leader');
+  const [deloadCode, setDeloadCode] = useState(cycleControl.profiles?.[0]?.code || '');
+  const [deloadStart, setDeloadStart] = useState('');
+  const [deloadDays, setDeloadDays] = useState('7');
 
-  const latest = cycleControl.latestBlock || {}
-  const active = cycleControl.activeDeload || null
-  const profiles = cycleControl.profiles || []
-  const events = cycleControl.recentEvents || []
+  const latest = cycleControl.latestBlock || {};
+  const active = cycleControl.activeDeload || null;
+  const profiles = cycleControl.profiles || [];
+  const events = cycleControl.recentEvents || [];
 
   async function handleNewCycle() {
-    setLoading(true)
+    setLoading(true);
     try {
-      await startCycle({ startDate, blockType })
-      onRefresh()
-    } catch (e) {
-      console.error(e)
+      await runCycleControlAction(() => startCycle({ startDate, blockType }), onRefresh);
+    } catch {
+      // Leave the controls usable if the request fails.
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleDeload() {
-    setLoading(true)
+    setLoading(true);
     try {
-      await applyDeload({
-        deloadCode,
-        startDate: deloadStart,
-        durationDays: parseInt(deloadDays, 10) || 7
-      })
-      onRefresh()
-    } catch (e) {
-      console.error(e)
+      await runCycleControlAction(
+        () =>
+          applyDeload({
+            deloadCode,
+            startDate: deloadStart,
+            durationDays: Number.parseInt(deloadDays, 10) || 7,
+          }),
+        onRefresh,
+      );
+    } catch {
+      // Leave the controls usable if the request fails.
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -55,7 +67,7 @@ export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Card className="border-border/50">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+          <CardTitle className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
             Cycle
           </CardTitle>
         </CardHeader>
@@ -66,23 +78,23 @@ export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
               #{latest.block_no || '—'} · {latest.block_type || '—'}
             </span>
           </p>
-          {latest.start_date && (
+          {latest.start_date ? (
             <p className="text-xs text-muted-foreground">
               Start: <span className="text-foreground">{latest.start_date}</span>
             </p>
-          )}
+          ) : null}
           <div className="flex flex-col gap-2">
             <Input
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={(event) => setStartDate(event.target.value)}
               className="h-8 text-xs"
               placeholder="Start date"
             />
             <select
               value={blockType}
-              onChange={(e) => setBlockType(e.target.value)}
-              className="h-8 text-xs rounded-md border border-input bg-background px-2 text-foreground"
+              onChange={(event) => setBlockType(event.target.value)}
+              className="h-8 rounded-md border border-input bg-background px-2 text-xs text-foreground"
             >
               <option value="Leader">Leader</option>
               <option value="Anchor">Anchor</option>
@@ -91,56 +103,51 @@ export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
               Start New Cycle
             </Button>
           </div>
-          {events.length > 0 && (
-            <div className="pt-2 border-t border-border/30">
-              <p className="text-xs text-muted-foreground mb-1 uppercase tracking-widest">
+          {events.length > 0 ? (
+            <div className="border-t border-border/30 pt-2">
+              <p className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
                 Recent events
               </p>
-              {events.slice(0, 5).map((ev) => (
+              {events.slice(0, 5).map((event) => (
                 <p
-                  key={`${ev.event_date}:${ev.event_type}:${ev.deload_code || ''}`}
-                  className="text-xs font-mono text-muted-foreground"
+                  key={`${event.event_date}:${event.event_type}:${event.deload_code || ''}`}
+                  className="font-mono text-xs text-muted-foreground"
                 >
-                  {ev.event_date} · {ev.event_type}
-                  {ev.deload_code ? ` (${ev.deload_code})` : ''}
+                  {event.event_date} · {event.event_type}
+                  {event.deload_code ? ` (${event.deload_code})` : ''}
                 </p>
               ))}
             </div>
-          )}
+          ) : null}
         </CardContent>
       </Card>
 
       <Card className="border-border/50">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+          <CardTitle className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
             Deload
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <p className="text-xs text-muted-foreground">
-            Active:{' '}
-            <span className="text-foreground">
-              {active
-                ? `${active.name || active.deload_code} (${active.start_date} → ${active.end_date})`
-                : 'none'}
-            </span>
+            Active: <span className="text-foreground">{getActiveDeloadText(active)}</span>
           </p>
           <div className="flex flex-col gap-2">
             <select
               value={deloadCode}
-              onChange={(e) => setDeloadCode(e.target.value)}
-              className="h-8 text-xs rounded-md border border-input bg-background px-2 text-foreground"
+              onChange={(event) => setDeloadCode(event.target.value)}
+              className="h-8 rounded-md border border-input bg-background px-2 text-xs text-foreground"
             >
-              {profiles.map((p) => (
-                <option key={p.code} value={p.code}>
-                  {p.name}
+              {profiles.map((profile) => (
+                <option key={profile.code} value={profile.code}>
+                  {profile.name}
                 </option>
               ))}
             </select>
             <Input
               type="date"
               value={deloadStart}
-              onChange={(e) => setDeloadStart(e.target.value)}
+              onChange={(event) => setDeloadStart(event.target.value)}
               className="h-8 text-xs"
             />
             <Input
@@ -149,7 +156,7 @@ export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
               step={1}
               placeholder="Days (default 7)"
               value={deloadDays}
-              onChange={(e) => setDeloadDays(e.target.value)}
+              onChange={(event) => setDeloadDays(event.target.value)}
               className="h-8 text-xs"
             />
             <Button
@@ -165,5 +172,5 @@ export function CycleControl({ cycleControl, onRefresh }: CycleControlProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
