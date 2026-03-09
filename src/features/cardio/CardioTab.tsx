@@ -42,16 +42,61 @@ function parseJsonArray<T>(val: T[] | string | undefined | null): T[] {
   return []
 }
 
+function formatAxisDate(date: string) {
+  const parsed = new Date(`${date}T00:00:00`)
+  if (Number.isNaN(parsed.getTime())) return date
+  return parsed.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'Asia/Manila'
+  })
+}
+
+function buildValueTicks(min: number, max: number, steps = 4) {
+  const span = max - min
+  return Array.from({ length: steps + 1 }, (_, index) => {
+    const ratio = index / steps
+    return {
+      ratio,
+      value: min + span * ratio
+    }
+  })
+}
+
+function buildDateTicks<T extends { x: number; date?: string; session_date?: string }>(
+  points: T[]
+) {
+  if (points.length === 0) return []
+  if (points.length === 1)
+    return [
+      {
+        x: points[0].x,
+        date: points[0].date ?? points[0].session_date ?? ''
+      }
+    ]
+
+  const indexes = Array.from(new Set([0, Math.floor((points.length - 1) / 2), points.length - 1]))
+  return indexes
+    .map((index) => points[index])
+    .filter(Boolean)
+    .map((point) => ({
+      x: point.x,
+      date: point.date ?? point.session_date ?? ''
+    }))
+}
+
 // ─── Reusable mini line chart ────────────────────────────────────────────────
 
 function MiniSeriesChart({
   rows,
   getValue,
-  formatLabel
+  formatLabel,
+  yAxisLabel
 }: {
   rows: { date?: string; session_date?: string }[]
   getValue: (row: Record<string, unknown>) => number
   formatLabel: (v: number) => string
+  yAxisLabel: string
 }) {
   const values = rows
     .map((r) => getValue(r as Record<string, unknown>))
@@ -60,16 +105,20 @@ function MiniSeriesChart({
     return <p className="text-xs text-muted-foreground">Need at least 2 tests.</p>
 
   const W = 320,
-    H = 120,
-    L = 30,
+    H = 130,
+    L = 40,
     R = 8,
     T = 10,
-    B = 18
+    B = 26
   const min = Math.min(...values),
     max = Math.max(...values)
   const span = Math.max(1, max - min)
   const pw = W - L - R,
     ph = H - T - B
+  const yTicks = buildValueTicks(min, max).map((tick) => ({
+    ...tick,
+    y: T + (1 - (tick.value - min) / span) * ph
+  }))
   const pts = rows.map((r, i) => {
     const v = getValue(r as Record<string, unknown>)
     return {
@@ -84,10 +133,26 @@ function MiniSeriesChart({
     }
   })
   const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ')
+  const xTicks = buildDateTicks(pts)
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-24">
       <title>Mini performance trend chart</title>
+      {yTicks.map((tick) => (
+        <g key={`mini-y-${tick.ratio}`}>
+          <line
+            x1={L}
+            y1={tick.y}
+            x2={W - R}
+            y2={tick.y}
+            stroke={CHART_COLORS.grid}
+            strokeWidth="0.6"
+          />
+          <text x={L - 4} y={tick.y + 3} fontSize="8" fill={CHART_COLORS.label} textAnchor="end">
+            {formatLabel(tick.value)}
+          </text>
+        </g>
+      ))}
       <line x1={L} y1={H - B} x2={W - R} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
       <line x1={L} y1={T} x2={L} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
       <polyline
@@ -103,6 +168,31 @@ function MiniSeriesChart({
             {p.date}: {formatLabel(p.v)}
           </title>
         </circle>
+      ))}
+      <text x={W / 2} y={H - 5} fontSize="8" fill={CHART_COLORS.label} textAnchor="middle">
+        Test date
+      </text>
+      <text
+        x={12}
+        y={H / 2}
+        fontSize="8"
+        fill={CHART_COLORS.label}
+        textAnchor="middle"
+        transform={`rotate(-90 12 ${H / 2})`}
+      >
+        {yAxisLabel}
+      </text>
+      {xTicks.map((tick, index) => (
+        <text
+          key={`mini-x-${tick.date}-${index}`}
+          x={tick.x}
+          y={H - 14}
+          fontSize="7"
+          fill={CHART_COLORS.label}
+          textAnchor={index === 0 ? 'start' : index === xTicks.length - 1 ? 'end' : 'middle'}
+        >
+          {formatAxisDate(tick.date)}
+        </text>
       ))}
     </svg>
   )
@@ -122,11 +212,11 @@ function Z2HrTrendChart({
     return <p className="text-xs text-muted-foreground">No Z2 HR data in last 12 weeks.</p>
 
   const W = 320,
-    H = 120,
-    L = 32,
+    H = 132,
+    L = 40,
     R = 10,
     T = 10,
-    B = 18
+    B = 26
   const hrs = recent.map((p) => p.hr)
   const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5
   const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5
@@ -144,10 +234,11 @@ function Z2HrTrendChart({
   }))
 
   const z2CapY = T + (1 - (Z2_CAP - minHr) / span) * ph
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map((v) => ({
-    hr: Math.round(minHr + v * span),
-    y: T + (1 - v) * ph
+  const ticks = buildValueTicks(minHr, maxHr).map((tick) => ({
+    hr: Math.round(tick.value),
+    y: T + (1 - tick.ratio) * ph
   }))
+  const xTicks = buildDateTicks(points)
 
   // Efficiency overlay
   const effTrend = points
@@ -257,12 +348,31 @@ function Z2HrTrendChart({
             </title>
           </circle>
         ))}
-        <text x={L} y={H - 3} fontSize="7" fill={CHART_COLORS.label}>
-          {points[0]?.date || ''}
+        <text x={W / 2} y={H - 5} fontSize="8" fill={CHART_COLORS.label} textAnchor="middle">
+          Session date
         </text>
-        <text x={W - R} y={H - 3} fontSize="7" fill={CHART_COLORS.label} textAnchor="end">
-          {points[points.length - 1]?.date || ''}
+        <text
+          x={12}
+          y={H / 2}
+          fontSize="8"
+          fill={CHART_COLORS.label}
+          textAnchor="middle"
+          transform={`rotate(-90 12 ${H / 2})`}
+        >
+          Avg HR (bpm)
         </text>
+        {xTicks.map((tick, index) => (
+          <text
+            key={`z2hr-x-${tick.date}-${index}`}
+            x={tick.x}
+            y={H - 14}
+            fontSize="7"
+            fill={CHART_COLORS.label}
+            textAnchor={index === 0 ? 'start' : index === xTicks.length - 1 ? 'end' : 'middle'}
+          >
+            {formatAxisDate(tick.date)}
+          </text>
+        ))}
       </svg>
       <p className="text-xs text-muted-foreground mt-1">
         Last {recent.length} Z2 sessions · HR Δ {deltaHr} bpm
@@ -294,7 +404,7 @@ function Z2ScatterChart({
 
   const W = 320,
     H = 180,
-    L = 36,
+    L = 40,
     R = 12,
     T = 12,
     B = 24
@@ -319,6 +429,10 @@ function Z2ScatterChart({
   const yTicks = [0, 0.25, 0.5, 0.75, 1].map((v) => ({
     hr: Math.round(minY + v * ySpan),
     y: T + (1 - v) * ph
+  }))
+  const xTicks = buildValueTicks(minX, maxX).map((tick) => ({
+    value: tick.value,
+    x: L + ((tick.value - minX) / xSpan) * pw
   }))
 
   // Linear regression trendline
@@ -402,6 +516,18 @@ function Z2ScatterChart({
         >
           Avg HR
         </text>
+        {xTicks.map((tick, index) => (
+          <text
+            key={`scatter-x-${tick.value.toFixed(2)}`}
+            x={tick.x}
+            y={H - 12}
+            fontSize="7"
+            fill={CHART_COLORS.label}
+            textAnchor={index === 0 ? 'start' : index === xTicks.length - 1 ? 'end' : 'middle'}
+          >
+            {tick.value.toFixed(1)}
+          </text>
+        ))}
       </svg>
       <p className="text-xs text-muted-foreground mt-1">
         Older = lighter dot · newer = darker dot · {trendNote}
@@ -437,20 +563,20 @@ function VO2ProtocolChart({
   if (!series.length) return <p className="text-xs text-muted-foreground mb-2">{label}: no data.</p>
 
   const W = 320,
-    H = 120,
-    L = 32,
+    H = 132,
+    L = 40,
     R = 22,
     T = 10,
-    B = 18
+    B = 26
   const hrs = series.map((r) => r.hr)
   const minHr = Math.floor((Math.min(...hrs) - 3) / 5) * 5
   const maxHr = Math.ceil((Math.max(...hrs) + 3) / 5) * 5
   const span = Math.max(5, maxHr - minHr)
   const pw = W - L - R,
     ph = H - T - B
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map((v) => ({
-    hr: Math.round(minHr + v * span),
-    y: T + (1 - v) * ph
+  const ticks = buildValueTicks(minHr, maxHr).map((tick) => ({
+    hr: Math.round(tick.value),
+    y: T + (1 - tick.ratio) * ph
   }))
   const pts = series.map((r, i) => ({
     key: `${r.session_date}-${protocol}-${r.hr}-${r.speed}`,
@@ -460,6 +586,7 @@ function VO2ProtocolChart({
   }))
   const polyline = pts.length >= 2 ? pts.map((p) => `${p.x},${p.y}`).join(' ') : ''
   const strokeColor = protocol === 'VO2_4x4' ? CHART_COLORS.vo2FourByFour : CHART_COLORS.vo2OneMin
+  const xTicks = buildDateTicks(pts)
 
   // Efficiency trend
   const effRows = series
@@ -540,6 +667,31 @@ function VO2ProtocolChart({
             </g>
           )
         })}
+        <text x={W / 2} y={H - 5} fontSize="8" fill={CHART_COLORS.label} textAnchor="middle">
+          Session date
+        </text>
+        <text
+          x={12}
+          y={H / 2}
+          fontSize="8"
+          fill={CHART_COLORS.label}
+          textAnchor="middle"
+          transform={`rotate(-90 12 ${H / 2})`}
+        >
+          HR (bpm)
+        </text>
+        {xTicks.map((tick, index) => (
+          <text
+            key={`vo2-x-${tick.date}-${index}`}
+            x={tick.x}
+            y={H - 14}
+            fontSize="7"
+            fill={CHART_COLORS.label}
+            textAnchor={index === 0 ? 'start' : index === xTicks.length - 1 ? 'end' : 'middle'}
+          >
+            {formatAxisDate(tick.date)}
+          </text>
+        ))}
       </svg>
       <p className="text-xs text-muted-foreground">{trendText}</p>
     </div>
@@ -1165,6 +1317,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
                   rows={afsSeries}
                   getValue={(r) => (r as { afs: number }).afs}
                   formatLabel={(v) => v.toFixed(1)}
+                  yAxisLabel="AFS score"
                 />
               </div>
             )}
@@ -1175,6 +1328,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
                   rows={fixedSpeedTests}
                   getValue={(r) => Number((r as unknown as AerobicTest).avg_hr)}
                   formatLabel={(v) => `${v} bpm`}
+                  yAxisLabel="Avg HR (bpm)"
                 />
               </div>
             )}
@@ -1185,6 +1339,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
                   rows={fixedHrTests}
                   getValue={(r) => Number((r as unknown as AerobicTest).avg_speed)}
                   formatLabel={(v) => `${v.toFixed(2)} km/h`}
+                  yAxisLabel="Speed (km/h)"
                 />
               </div>
             )}
@@ -1195,6 +1350,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
                   rows={decouplingTests}
                   getValue={(r) => Number((r as unknown as AerobicTest).decoupling_percent)}
                   formatLabel={(v) => `${v.toFixed(1)}%`}
+                  yAxisLabel="Decoupling (%)"
                 />
               </div>
             )}
