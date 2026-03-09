@@ -46,7 +46,7 @@ export function Est1RMCard({ row }: Est1RMCardProps) {
         <polyline
           points={points}
           fill="none"
-          stroke="hsl(var(--primary))"
+          stroke="var(--color-primary)"
           strokeWidth="1.5"
           strokeLinejoin="round"
         />

@@ -17,6 +17,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { cn } from '@/lib/utils'
 
 const Z2_CAP = 125
+const CHART_COLORS = {
+  axis: 'rgba(148, 163, 184, 0.55)',
+  grid: 'rgba(148, 163, 184, 0.28)',
+  label: 'rgba(226, 232, 240, 0.88)',
+  primary: 'var(--color-primary)',
+  primaryDim: 'rgba(0, 212, 255, 0.55)',
+  scatter: '#7cc6ff',
+  efficiency: '#ff9ed1',
+  z2Cap: '#ffd166',
+  vo2FourByFour: '#ffb454',
+  vo2OneMin: '#8ae6ff'
+} as const
 
 function parseJsonArray<T>(val: T[] | string | undefined | null): T[] {
   if (Array.isArray(val)) return val
@@ -76,17 +88,17 @@ function MiniSeriesChart({
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-24">
       <title>Mini performance trend chart</title>
-      <line x1={L} y1={H - B} x2={W - R} y2={H - B} stroke="hsl(var(--border))" strokeWidth="0.8" />
-      <line x1={L} y1={T} x2={L} y2={H - B} stroke="hsl(var(--border))" strokeWidth="0.8" />
+      <line x1={L} y1={H - B} x2={W - R} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
+      <line x1={L} y1={T} x2={L} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
       <polyline
         points={polyline}
         fill="none"
-        stroke="hsl(var(--primary))"
+        stroke={CHART_COLORS.primary}
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
       {pts.map((p) => (
-        <circle key={p.key} cx={p.x} cy={p.y} r={2.6} fill="hsl(var(--primary))">
+        <circle key={p.key} cx={p.x} cy={p.y} r={2.6} fill={CHART_COLORS.primary}>
           <title>
             {p.date}: {formatLabel(p.v)}
           </title>
@@ -176,16 +188,10 @@ function Z2HrTrendChart({
               y1={t.y}
               x2={W - R}
               y2={t.y}
-              stroke="hsl(var(--border)/0.4)"
+              stroke={CHART_COLORS.grid}
               strokeWidth="0.6"
             />
-            <text
-              x={L - 4}
-              y={t.y + 3}
-              fontSize="8"
-              fill="hsl(var(--muted-foreground))"
-              textAnchor="end"
-            >
+            <text x={L - 4} y={t.y + 3} fontSize="8" fill={CHART_COLORS.label} textAnchor="end">
               {t.hr}
             </text>
           </g>
@@ -195,28 +201,34 @@ function Z2HrTrendChart({
           y1={H - B}
           x2={W - R}
           y2={H - B}
-          stroke="hsl(var(--border))"
+          stroke={CHART_COLORS.axis}
           strokeWidth="0.8"
         />
-        <line x1={L} y1={T} x2={L} y2={H - B} stroke="hsl(var(--border))" strokeWidth="0.8" />
+        <line x1={L} y1={T} x2={L} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
         {/* Z2 cap line */}
         <line
           x1={L}
           y1={z2CapY}
           x2={W - R}
           y2={z2CapY}
-          stroke="#ffc15a"
+          stroke={CHART_COLORS.z2Cap}
           strokeDasharray="3 2"
           strokeWidth="1.2"
         />
-        <text x={W - R} y={Math.max(8, z2CapY - 3)} fontSize="8" fill="#ffc15a" textAnchor="end">
+        <text
+          x={W - R}
+          y={Math.max(8, z2CapY - 3)}
+          fontSize="8"
+          fill={CHART_COLORS.z2Cap}
+          textAnchor="end"
+        >
           Z2 cap {Z2_CAP}
         </text>
         {/* HR trend line */}
         <polyline
           points={points.map((p) => `${p.x},${p.y}`).join(' ')}
           fill="none"
-          stroke="hsl(var(--primary))"
+          stroke={CHART_COLORS.primary}
           strokeWidth="1.5"
           strokeLinejoin="round"
         />
@@ -225,7 +237,7 @@ function Z2HrTrendChart({
           <polyline
             points={effPolyline}
             fill="none"
-            stroke="#ff8cc6"
+            stroke={CHART_COLORS.efficiency}
             strokeWidth="2"
             strokeDasharray="4 2"
           />
@@ -236,7 +248,7 @@ function Z2HrTrendChart({
             cx={p.x}
             cy={p.y}
             r={2.8}
-            fill="hsl(var(--primary))"
+            fill={CHART_COLORS.primary}
             opacity={p.estimated ? 0.65 : 1}
           >
             <title>
@@ -245,10 +257,10 @@ function Z2HrTrendChart({
             </title>
           </circle>
         ))}
-        <text x={L} y={H - 3} fontSize="7" fill="hsl(var(--muted-foreground))">
+        <text x={L} y={H - 3} fontSize="7" fill={CHART_COLORS.label}>
           {points[0]?.date || ''}
         </text>
-        <text x={W - R} y={H - 3} fontSize="7" fill="hsl(var(--muted-foreground))" textAnchor="end">
+        <text x={W - R} y={H - 3} fontSize="7" fill={CHART_COLORS.label} textAnchor="end">
           {points[points.length - 1]?.date || ''}
         </text>
       </svg>
@@ -304,6 +316,10 @@ function Z2ScatterChart({
     opacity: (0.35 + (0.65 * (i + 1)) / points.length).toFixed(2),
     ...p
   }))
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((v) => ({
+    hr: Math.round(minY + v * ySpan),
+    y: T + (1 - v) * ph
+  }))
 
   // Linear regression trendline
   let trendLine: React.ReactNode = null
@@ -322,7 +338,7 @@ function Z2ScatterChart({
         y1={toY(slope * minX + intercept)}
         x2={W - R}
         y2={toY(slope * maxX + intercept)}
-        stroke="hsl(var(--primary)/0.5)"
+        stroke={CHART_COLORS.primaryDim}
         strokeWidth="1.2"
         strokeDasharray="4 2"
       />
@@ -334,37 +350,53 @@ function Z2ScatterChart({
     <div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40">
         <title>Zone 2 speed versus heart rate scatter plot</title>
+        {yTicks.map((tick) => (
+          <g key={`scatter-tick-${tick.hr}-${tick.y}`}>
+            <line
+              x1={L}
+              y1={tick.y}
+              x2={W - R}
+              y2={tick.y}
+              stroke={CHART_COLORS.grid}
+              strokeWidth="0.6"
+            />
+            <text x={L - 4} y={tick.y + 3} fontSize="8" fill={CHART_COLORS.label} textAnchor="end">
+              {tick.hr}
+            </text>
+          </g>
+        ))}
         <line
           x1={L}
           y1={H - B}
           x2={W - R}
           y2={H - B}
-          stroke="hsl(var(--border))"
+          stroke={CHART_COLORS.axis}
           strokeWidth="0.8"
         />
-        <line x1={L} y1={T} x2={L} y2={H - B} stroke="hsl(var(--border))" strokeWidth="0.8" />
+        <line x1={L} y1={T} x2={L} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
         {trendLine}
         {svgPts.map((p) => (
-          <circle key={p.key} cx={p.x} cy={p.y} r={3.2} fill="#59a8ff" opacity={Number(p.opacity)}>
+          <circle
+            key={p.key}
+            cx={p.x}
+            cy={p.y}
+            r={3.2}
+            fill={CHART_COLORS.scatter}
+            opacity={Number(p.opacity)}
+          >
             <title>
               {p.date}: {p.speed.toFixed(1)} km/h · HR {p.hr}
             </title>
           </circle>
         ))}
-        <text
-          x={W / 2}
-          y={H - 4}
-          fontSize="8"
-          fill="hsl(var(--muted-foreground))"
-          textAnchor="middle"
-        >
+        <text x={W / 2} y={H - 4} fontSize="8" fill={CHART_COLORS.label} textAnchor="middle">
           Speed (km/h)
         </text>
         <text
           x={12}
           y={H / 2}
           fontSize="8"
-          fill="hsl(var(--muted-foreground))"
+          fill={CHART_COLORS.label}
           textAnchor="middle"
           transform={`rotate(-90 12 ${H / 2})`}
         >
@@ -427,7 +459,7 @@ function VO2ProtocolChart({
     ...r
   }))
   const polyline = pts.length >= 2 ? pts.map((p) => `${p.x},${p.y}`).join(' ') : ''
-  const strokeColor = protocol === 'VO2_4x4' ? '#f0a030' : '#a0e0ff'
+  const strokeColor = protocol === 'VO2_4x4' ? CHART_COLORS.vo2FourByFour : CHART_COLORS.vo2OneMin
 
   // Efficiency trend
   const effRows = series
@@ -456,16 +488,10 @@ function VO2ProtocolChart({
               y1={t.y}
               x2={W - R}
               y2={t.y}
-              stroke="hsl(var(--border)/0.4)"
+              stroke={CHART_COLORS.grid}
               strokeWidth="0.6"
             />
-            <text
-              x={L - 4}
-              y={t.y + 3}
-              fontSize="8"
-              fill="hsl(var(--muted-foreground))"
-              textAnchor="end"
-            >
+            <text x={L - 4} y={t.y + 3} fontSize="8" fill={CHART_COLORS.label} textAnchor="end">
               {t.hr}
             </text>
           </g>
@@ -475,10 +501,10 @@ function VO2ProtocolChart({
           y1={H - B}
           x2={W - R}
           y2={H - B}
-          stroke="hsl(var(--border))"
+          stroke={CHART_COLORS.axis}
           strokeWidth="0.8"
         />
-        <line x1={L} y1={T} x2={L} y2={H - B} stroke="hsl(var(--border))" strokeWidth="0.8" />
+        <line x1={L} y1={T} x2={L} y2={H - B} stroke={CHART_COLORS.axis} strokeWidth="0.8" />
         {polyline && (
           <polyline
             points={polyline}
@@ -505,7 +531,7 @@ function VO2ProtocolChart({
                   x={p.x}
                   y={p.y + dy}
                   fontSize="7"
-                  fill="hsl(var(--muted-foreground))"
+                  fill={CHART_COLORS.label}
                   textAnchor="middle"
                 >
                   {spd}
