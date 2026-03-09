@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(210 60% 4%);
+  --color-foreground: hsl(210 30% 85%);
+  --color-card: hsl(210 50% 8%);
+  --color-card-foreground: hsl(210 30% 85%);
+  --color-popover: hsl(210 50% 8%);
+  --color-popover-foreground: hsl(210 30% 85%);
+  --color-primary: hsl(191 100% 50%);
+  --color-primary-foreground: hsl(210 60% 4%);
+  --color-secondary: hsl(210 40% 12%);
+  --color-secondary-foreground: hsl(210 30% 85%);
+  --color-muted: hsl(210 40% 10%);
+  --color-muted-foreground: hsl(210 20% 40%);
+  --color-accent: hsl(191 100% 50%);
+  --color-accent-foreground: hsl(210 60% 4%);
+  --color-destructive: hsl(350 70% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(210 30% 15%);
+  --color-input: hsl(210 40% 12%);
+  --color-ring: hsl(191 100% 50%);
+  --radius: 0.5rem;
+  --font-sans: "DM Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Barlow Condensed", sans-serif;
+}
+
+:root {
+  --ok: #00c87a;
+  --warn: #f0a030;
+  --danger: #e05060;
+  --dim: #243040;
+  --muted-text: #4a6275;
+}
+
+* {
+  border-color: hsl(210 30% 15%);
+}
+
+body {
+  background-color: hsl(210 60% 4%);
+  color: hsl(210 30% 85%);
+  min-height: 100vh;
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

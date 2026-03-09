@@ -34,9 +34,11 @@ def _resolve_bun_bin():
 BUN_BIN = _resolve_bun_bin()
 PYTHON_BIN = os.environ.get("PYTHON_BIN", sys.executable or "python3")
 
+DIST = ROOT / "dist"
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=str(ROOT), **kwargs)
+        super().__init__(*args, directory=str(DIST), **kwargs)
 
     def _proxy_money_api(self, method: str):
         target_port = int(os.environ.get("MONEY_API_PORT", "8081"))
@@ -678,6 +680,20 @@ FROM v_planned_barbell_sets p;
                     self._send_json(200, [dict(r) for r in rows])
             except Exception as e:
                 self._send_json(500, {"ok": False, "error": str(e)})
+            return
+
+        if parsed.path == "/data.json":
+            data_file = ROOT / "dashboard" / "data.json"
+            if data_file.exists():
+                body = data_file.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            else:
+                self.send_response(404)
+                self.end_headers()
             return
 
         return super().do_GET()
