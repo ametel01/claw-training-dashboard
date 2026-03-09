@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { DashboardData, PlannedCardioRow } from '@/types/dashboard';
+import type { DashboardData, PlannedBarbellRow, PlannedCardioRow } from '@/types/dashboard';
 import { logAction } from '@/hooks/useApi';
 
 interface DetailDialogProps {
@@ -46,7 +46,7 @@ const INITIAL_FORM: DetailFormState = {
 };
 
 function applyMainOverrides(
-  rows: DashboardData['details']['plannedBarbellByDate'][string] | undefined,
+  rows: PlannedBarbellRow[] | undefined,
   mainWeight: number,
   mainReps: number,
   mainRpe: number | null,
@@ -396,7 +396,6 @@ export function DetailDialog({ date, data, open, onClose, onRefresh }: DetailDia
         window.alert('Monthly Z2 fixed-HR test saved.');
       }
     } catch (error) {
-      console.error(error);
       window.alert(
         `Could not save action: ${error instanceof Error ? error.message : String(error)}`,
       );
@@ -420,14 +419,14 @@ export function DetailDialog({ date, data, open, onClose, onRefresh }: DetailDia
             <p className="mt-2 text-sm">
               <strong>Main - {mainTop?.lift || '—'}</strong>
               <br />
-              Working sets prescribed:{' '}
+              Working sets prescribed:
               {mainPlan.length
                 ? mainPlan
                     .map((row) => `${row.planned_weight_kg}×${row.prescribed_reps}`)
                     .join(' · ')
                 : '—'}
               <br />
-              Top set prescribed: {mainTop?.planned_weight_kg || '—'} ×{' '}
+              Top set prescribed: {mainTop?.planned_weight_kg || '—'} ×
               {mainTop?.prescribed_reps || '—'}
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -477,7 +476,7 @@ export function DetailDialog({ date, data, open, onClose, onRefresh }: DetailDia
             <p className="mt-2 text-sm">
               <strong>{supplementalTop?.lift || '—'}</strong>
               <br />
-              Prescribed:{' '}
+              Prescribed:
               {supplementalPlan.length
                 ? `${supplementalPlan.length}×${supplementalTop?.prescribed_reps ?? '-'} @ ${supplementalTop?.planned_weight_kg ?? '-'} kg`
                 : '—'}
