@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.5/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -7,22 +7,20 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": [
-      "dashboard/app.js",
-      "dashboard/data.json",
-      "imports/**",
-      "training_dashboard.db",
-      "dist/**",
-      "build/**",
-      "coverage/**",
-      "node_modules/**"
-    ],
-    "include": [
+    "includes": [
       "src/**/*",
       "index.html",
       "package.json",
       "vite.config.*",
-      "vitest.config.*"
+      "vitest.config.*",
+      "!dashboard/app.js",
+      "!dashboard/data.json",
+      "!imports/**",
+      "!training_dashboard.db",
+      "!dist/**",
+      "!build/**",
+      "!coverage/**",
+      "!node_modules/**"
     ]
   },
   "formatter": {
@@ -38,6 +36,11 @@
       "trailingCommas": "all",
       "arrowParentheses": "always",
       "bracketSpacing": true
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   },
   "linter": {
@@ -72,7 +75,8 @@
       },
       "suspicious": {
         "noExplicitAny": "error",
-        "noConsole": "warn"
+        "noConsole": "warn",
+        "useStrictMode": "error"
       },
       "style": {
         "noParameterAssign": "error",
@@ -80,7 +84,11 @@
         "useNumberNamespace": "error",
         "useSingleVarDeclarator": "warn",
         "noUselessElse": "error",
-        "useImportType": "error"
+        "useImportType": "error",
+        "noNestedTernary": "warn",
+        "noProcessEnv": "warn",
+        "useCollapsedIf": "warn",
+        "useConsistentCurlyBraces": "warn"
       },
       "performance": {
         "noAccumulatingSpread": "warn"
@@ -88,7 +96,8 @@
       "security": {
         "noDangerouslySetInnerHtml": "warn",
         "noDangerouslySetInnerHtmlWithChildren": "error",
-        "noGlobalEval": "error"
+        "noGlobalEval": "error",
+        "noSecrets": "warn"
       },
       "a11y": {
         "useButtonType": "error",
@@ -102,25 +111,19 @@
         "useValidAriaValues": "error"
       },
       "nursery": {
-        "recommended": true,
-        "noNestedTernary": "warn",
-        "noProcessEnv": "warn",
-        "noSecrets": "warn",
-        "useCollapsedIf": "warn",
-        "useConsistentCurlyBraces": "warn",
-        "useStrictMode": "error"
+        "recommended": true
       }
     }
   },
   "overrides": [
     {
-      "include": ["**/*.test.*", "**/*.spec.*", "**/__tests__/**"],
+      "includes": ["**/*.test.*", "**/*.spec.*", "**/__tests__/**"],
       "linter": {
         "rules": {
           "suspicious": {
             "noConsole": "off"
           },
-          "nursery": {
+          "security": {
             "noSecrets": "off"
           }
         }

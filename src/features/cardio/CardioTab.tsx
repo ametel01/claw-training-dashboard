@@ -231,7 +231,7 @@ function MiniSeriesChart({
       </text>
       {xTicks.map((tick, index) => (
         <text
-          key={`mini-x-${tick.date}-${index}`}
+          key={`mini-x-${tick.date}-${tick.x}`}
           x={tick.x}
           y={H - 14}
           fontSize="7"
@@ -410,7 +410,7 @@ function Z2HrTrendChart({
         </text>
         {xTicks.map((tick, index) => (
           <text
-            key={`z2hr-x-${tick.date}-${index}`}
+            key={`z2hr-x-${tick.date}-${tick.x}`}
             x={tick.x}
             y={H - 14}
             fontSize="7"
@@ -431,11 +431,7 @@ function Z2HrTrendChart({
 
 // ─── Z2 scatter plot (speed vs HR with trendline) ───────────────────────────
 
-function Z2ScatterChart({
-  points,
-}: {
-  points: { date: string; hr: number; speed: number }[];
-}) {
+function Z2ScatterChart({ points }: { points: { date: string; hr: number; speed: number }[] }) {
   if (points.length < 2) {
     return (
       <div className="rounded border border-border/30 bg-muted/10 p-4 text-center">
@@ -728,7 +724,7 @@ function VO2ProtocolChart({
         </text>
         {xTicks.map((tick, index) => (
           <text
-            key={`vo2-x-${tick.date}-${index}`}
+            key={`vo2-x-${tick.date}-${tick.x}`}
             x={tick.x}
             y={H - 14}
             fontSize="7"

@@ -51,8 +51,8 @@ export function WeekHeaderBanner({ weekHeader }: WeekHeaderBannerProps) {
       </div>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-4">
-        {mainNumbers.map((value, index) => (
-          <div key={`main-${index}-${value}`} className="space-y-1">
+        {mainNumbers.map((value) => (
+          <div key={`main-${value}`} className="space-y-1">
             <div className="h-2 overflow-hidden rounded-full bg-border/60">
               <div
                 className="h-full rounded-full"
