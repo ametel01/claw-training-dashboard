@@ -5,27 +5,46 @@ var __getProtoOf = Object.getPrototypeOf;
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+function __accessProp(key) {
+  return this[key];
+}
+var __toESMCache_node;
+var __toESMCache_esm;
 var __toESM = (mod, isNodeMode, target) => {
+  var canCache = mod != null && typeof mod === "object";
+  if (canCache) {
+    var cache = isNodeMode ? __toESMCache_node ??= new WeakMap : __toESMCache_esm ??= new WeakMap;
+    var cached = cache.get(mod);
+    if (cached)
+      return cached;
+  }
   target = mod != null ? __create(__getProtoOf(mod)) : {};
   const to = isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target;
   for (let key of __getOwnPropNames(mod))
     if (!__hasOwnProp.call(to, key))
       __defProp(to, key, {
-        get: () => mod[key],
+        get: __accessProp.bind(mod, key),
         enumerable: true
       });
+  if (canCache)
+    cache.set(mod, to);
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
 var __require = /* @__PURE__ */ createRequire(import.meta.url);
 
 // server/src/lib/db.ts
+import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { dirname, resolve as resolve2 } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 // server/src/lib/paths.ts
+import { homedir } from "node:os";
 import { resolve } from "node:path";
 var repoRoot = resolve(process.env.CLAW_REPO_ROOT ?? process.cwd());
-var dbPath = resolve(repoRoot, "training_dashboard.db");
+var trackedDbPath = resolve(repoRoot, "training_dashboard.db");
+var dbStateRoot = resolve(process.env.CLAW_DB_STATE_ROOT ?? resolve(homedir(), ".openclaw", "state", "claw-training-dashboard"));
+var dbPath = resolve(process.env.CLAW_DB_PATH ?? resolve(dbStateRoot, "training_dashboard.db"));
 var distRoot = resolve(repoRoot, "dist");
 var dashboardRoot = resolve(repoRoot, "dashboard");
 var dashboardDataPath = resolve(dashboardRoot, "data.json");
@@ -33,6 +52,18 @@ var serverDistRoot = resolve(repoRoot, "server", "dist");
 
 // server/src/lib/db.ts
 function openDatabase() {
+  mkdirSync(dirname(dbPath), { recursive: true });
+  if (!existsSync(dbPath) && existsSync(trackedDbPath)) {
+    copyFileSync(trackedDbPath, dbPath);
+  }
+  try {
+    const backupDir = resolve2(dbStateRoot, "backups");
+    mkdirSync(backupDir, { recursive: true });
+    if (existsSync(dbPath)) {
+      const stamp = new Date().toISOString().replaceAll(":", "-").slice(0, 19);
+      copyFileSync(dbPath, resolve2(backupDir, `training_dashboard.${stamp}.db`));
+    }
+  } catch {}
   const db = new DatabaseSync(dbPath);
   db.exec("PRAGMA foreign_keys = ON");
   return db;

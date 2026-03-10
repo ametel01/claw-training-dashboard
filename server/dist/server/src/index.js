@@ -5,15 +5,29 @@ var __getProtoOf = Object.getPrototypeOf;
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+function __accessProp(key) {
+  return this[key];
+}
+var __toESMCache_node;
+var __toESMCache_esm;
 var __toESM = (mod, isNodeMode, target) => {
+  var canCache = mod != null && typeof mod === "object";
+  if (canCache) {
+    var cache = isNodeMode ? __toESMCache_node ??= new WeakMap : __toESMCache_esm ??= new WeakMap;
+    var cached = cache.get(mod);
+    if (cached)
+      return cached;
+  }
   target = mod != null ? __create(__getProtoOf(mod)) : {};
   const to = isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target;
   for (let key of __getOwnPropNames(mod))
     if (!__hasOwnProp.call(to, key))
       __defProp(to, key, {
-        get: () => mod[key],
+        get: __accessProp.bind(mod, key),
         enumerable: true
       });
+  if (canCache)
+    cache.set(mod, to);
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
@@ -39977,16 +39991,21 @@ var import_express = __toESM(require_express(), 1);
 var import_multer = __toESM(require_multer(), 1);
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { basename, extname, resolve as resolve2 } from "node:path";
+import { existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync, writeFileSync } from "node:fs";
+import { basename, extname, resolve as resolve3 } from "node:path";
 
 // server/src/lib/db.ts
+import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { dirname, resolve as resolve2 } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 // server/src/lib/paths.ts
+import { homedir } from "node:os";
 import { resolve } from "node:path";
 var repoRoot = resolve(process.env.CLAW_REPO_ROOT ?? process.cwd());
-var dbPath = resolve(repoRoot, "training_dashboard.db");
+var trackedDbPath = resolve(repoRoot, "training_dashboard.db");
+var dbStateRoot = resolve(process.env.CLAW_DB_STATE_ROOT ?? resolve(homedir(), ".openclaw", "state", "claw-training-dashboard"));
+var dbPath = resolve(process.env.CLAW_DB_PATH ?? resolve(dbStateRoot, "training_dashboard.db"));
 var distRoot = resolve(repoRoot, "dist");
 var dashboardRoot = resolve(repoRoot, "dashboard");
 var dashboardDataPath = resolve(dashboardRoot, "data.json");
@@ -39994,6 +40013,18 @@ var serverDistRoot = resolve(repoRoot, "server", "dist");
 
 // server/src/lib/db.ts
 function openDatabase() {
+  mkdirSync(dirname(dbPath), { recursive: true });
+  if (!existsSync(dbPath) && existsSync(trackedDbPath)) {
+    copyFileSync(trackedDbPath, dbPath);
+  }
+  try {
+    const backupDir = resolve2(dbStateRoot, "backups");
+    mkdirSync(backupDir, { recursive: true });
+    if (existsSync(dbPath)) {
+      const stamp = new Date().toISOString().replaceAll(":", "-").slice(0, 19);
+      copyFileSync(dbPath, resolve2(backupDir, `training_dashboard.${stamp}.db`));
+    }
+  } catch {}
   const db = new DatabaseSync(dbPath);
   db.exec("PRAGMA foreign_keys = ON");
   return db;
@@ -40127,8 +40158,8 @@ function sendJson(res, status, payload) {
 }
 function requireBuiltScript(name) {
   const relativePath = name === "export-data" ? "dashboard/src/export-data.js" : "server/src/cli/health-pipeline.js";
-  const scriptPath = resolve2(serverDistRoot, relativePath);
-  if (!existsSync(scriptPath)) {
+  const scriptPath = resolve3(serverDistRoot, relativePath);
+  if (!existsSync2(scriptPath)) {
     throw new Error(`missing built server artifact: ${scriptPath}`);
   }
   return scriptPath;
@@ -40153,7 +40184,7 @@ function runHealthPipeline() {
     args.push("--config", configPath);
   }
   const stdout = runNodeScript("health-pipeline", args);
-  const outputBase = resolve2(repoRoot, outputRoot);
+  const outputBase = resolve3(repoRoot, outputRoot);
   const required = [
     "normalized/workouts.ndjson",
     "normalized/hr_samples.ndjson",
@@ -40162,21 +40193,21 @@ function runHealthPipeline() {
     "normalized/daily_activity.ndjson",
     "normalized/workout_metrics.ndjson",
     "sql/upserts.sql"
-  ].map((relativePath) => resolve2(outputBase, relativePath));
-  const missing = required.filter((path) => !existsSync(path));
+  ].map((relativePath) => resolve3(outputBase, relativePath));
+  const missing = required.filter((path) => !existsSync2(path));
   if (missing.length) {
     throw new Error(`health pipeline missing artifacts: ${missing.join(", ")}`);
   }
-  const logsDir = resolve2(outputBase, "logs");
-  if (!existsSync(logsDir)) {
+  const logsDir = resolve3(outputBase, "logs");
+  if (!existsSync2(logsDir)) {
     throw new Error("health pipeline missing anomaly log");
   }
   return stdout;
 }
 function saveUpload(filename, content, destDir) {
   const safeName = basename(filename || "upload.bin");
-  mkdirSync(destDir, { recursive: true });
-  const outPath = resolve2(destDir, safeName || "upload.bin");
+  mkdirSync2(destDir, { recursive: true });
+  const outPath = resolve3(destDir, safeName || "upload.bin");
   writeFileSync(outPath, content);
   return outPath;
 }
@@ -40628,7 +40659,7 @@ app.post("/api/expenses/import-pdf", upload.single("file"), async (req, res) => 
       return;
     }
     const accountName = String(req.body.accountName ?? "Default Account").trim();
-    const pdfPath = saveUpload(req.file.originalname, req.file.buffer, resolve2(repoRoot, "imports", "raw", "bank", "latest"));
+    const pdfPath = saveUpload(req.file.originalname, req.file.buffer, resolve3(repoRoot, "imports", "raw", "bank", "latest"));
     const lines = extractPdfText(pdfPath).split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
     const parsedEntries = parsePdfLines(lines);
     const account = getOrCreateAccount(accountName);
@@ -40688,10 +40719,10 @@ app.post("/api/upload-health", upload.single("file"), (req, res) => {
     let dest;
     let allowed;
     if (kind === "apple") {
-      dest = resolve2(repoRoot, "imports", "raw", "apple", "latest");
+      dest = resolve3(repoRoot, "imports", "raw", "apple", "latest");
       allowed = new Set([".xml", ".zip"]);
     } else if (kind === "polar") {
-      dest = resolve2(repoRoot, "imports", "raw", "polar", "latest");
+      dest = resolve3(repoRoot, "imports", "raw", "polar", "latest");
       allowed = new Set([".tcx", ".csv", ".fit"]);
     } else {
       sendJson(res, 400, { ok: false, error: "kind must be apple or polar" });
@@ -41116,16 +41147,29 @@ app.post("/api/log-action", (req, res) => {
   }
 });
 app.get("/data.json", (_req, res) => {
-  res.sendFile(dashboardDataPath);
+  try {
+    if (!existsSync2(dashboardDataPath)) {
+      refreshDashboardData();
+    }
+    const raw = readFileSync(dashboardDataPath, "utf8");
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.type("application/json").send(raw);
+  } catch (error) {
+    sendJson(res, 500, { ok: false, error: error instanceof Error ? error.message : String(error) });
+  }
 });
-app.use("/dashboard", import_express.default.static(dashboardRoot, { index: "index.html" }));
+var expensesRoot = resolve3(repoRoot, "expenses");
+app.use("/dashboard", import_express.default.static(distRoot, { index: "index.html" }));
+app.use("/expenses", import_express.default.static(expensesRoot, { index: "index.html" }));
 app.use(import_express.default.static(distRoot));
 app.get(/^(?!\/api\/).*/, (req, res) => {
-  if (req.path.startsWith("/dashboard")) {
-    res.sendFile(resolve2(dashboardRoot, "index.html"));
+  if (req.path.startsWith("/expenses")) {
+    res.sendFile(resolve3(expensesRoot, "index.html"));
     return;
   }
-  res.sendFile(resolve2(distRoot, "index.html"));
+  res.sendFile(resolve3(distRoot, "index.html"));
 });
 app.use("/api", (_req, res) => {
   sendJson(res, 404, { ok: false, error: "Not found" });

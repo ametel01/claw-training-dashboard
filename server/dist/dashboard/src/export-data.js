@@ -2,10 +2,12 @@
 
 // dashboard/src/export-data.ts
 import { execSync } from "node:child_process";
+import { homedir } from "node:os";
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 var repoRoot = resolve(process.env.CLAW_REPO_ROOT ?? process.cwd());
-var dbPath = resolve(repoRoot, "training_dashboard.db");
+var dbStateRoot = resolve(process.env.CLAW_DB_STATE_ROOT ?? resolve(homedir(), ".openclaw", "state", "claw-training-dashboard"));
+var dbPath = resolve(process.env.CLAW_DB_PATH ?? resolve(dbStateRoot, "training_dashboard.db"));
 var outPath = resolve(repoRoot, "dashboard", "data.json");
 function sqlJson(sql) {
   const escaped = sql.replace(/"/g, "\\\"").replace(/\n/g, " ");

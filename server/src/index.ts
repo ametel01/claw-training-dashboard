@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, extname, resolve } from 'node:path'
 import type { DatabaseSync } from 'node:sqlite'
 import express from 'express'
@@ -1456,15 +1456,29 @@ app.post('/api/log-action', (req, res) => {
 })
 
 app.get('/data.json', (_req, res) => {
-  res.sendFile(dashboardDataPath)
+  try {
+    if (!existsSync(dashboardDataPath)) {
+      refreshDashboardData()
+    }
+    const raw = readFileSync(dashboardDataPath, 'utf8')
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    res.setHeader('Pragma', 'no-cache')
+    res.setHeader('Expires', '0')
+    res.type('application/json').send(raw)
+  } catch (error) {
+    sendJson(res, 500, { ok: false, error: error instanceof Error ? error.message : String(error) })
+  }
 })
 
-app.use('/dashboard', express.static(dashboardRoot, { index: 'index.html' }))
+const expensesRoot = resolve(repoRoot, 'expenses')
+
+app.use('/dashboard', express.static(distRoot, { index: 'index.html' }))
+app.use('/expenses', express.static(expensesRoot, { index: 'index.html' }))
 app.use(express.static(distRoot))
 
 app.get(/^(?!\/api\/).*/, (req, res) => {
-  if (req.path.startsWith('/dashboard')) {
-    res.sendFile(resolve(dashboardRoot, 'index.html'))
+  if (req.path.startsWith('/expenses')) {
+    res.sendFile(resolve(expensesRoot, 'index.html'))
     return
   }
   res.sendFile(resolve(distRoot, 'index.html'))
