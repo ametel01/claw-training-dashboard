@@ -284,8 +284,10 @@ export function DetailDialog({ date, data, open, onClose, onRefresh }: DetailDia
           }
         }
 
-        const z2InCap =
-          Number.isFinite(cardioHr) && cardioHr > 0 ? (cardioHr <= 125 ? 'Yes' : 'No') : '—';
+        let z2InCap = '—';
+        if (Number.isFinite(cardioHr) && cardioHr > 0) {
+          z2InCap = cardioHr <= 125 ? 'Yes' : 'No';
+        }
         const quality = getSessionQuality({
           cardioDuration,
           cardioHr,

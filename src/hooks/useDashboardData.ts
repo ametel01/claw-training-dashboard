@@ -34,7 +34,14 @@ export function useDashboardData(): UseDashboardDataResult {
     async (includeHealth = false) => {
       setLoading(true);
       try {
-        await fetch(`/api/refresh${includeHealth ? '?includeHealth=1' : ''}`, { method: 'POST' });
+        // biome-ignore lint/security/noSecrets: query param, not a secret
+        const endpoint = includeHealth ? '/api/refresh?includeHealth=1' : '/api/refresh';
+        const response = await fetch(endpoint, {
+          method: 'POST',
+        });
+        if (!response.ok) {
+          throw new Error('Refresh failed');
+        }
         await load();
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Refresh failed');
