@@ -381,10 +381,14 @@ function Z2HrTrendChart({
           />
         )}
         {effTrend.map((e, i) => {
-          const y = T +
+          const y =
+            T +
             (1 -
               (e.eff - Math.min(...effTrend.map((v) => v.eff))) /
-                Math.max(0.0001, Math.max(...effTrend.map((v) => v.eff)) - Math.min(...effTrend.map((v) => v.eff)))) *
+                Math.max(
+                  0.0001,
+                  Math.max(...effTrend.map((v) => v.eff)) - Math.min(...effTrend.map((v) => v.eff)),
+                )) *
               ph;
           const dy = i % 2 === 0 ? -7 : 11;
           return (
@@ -446,7 +450,11 @@ function Z2HrTrendChart({
       <p className="text-xs text-muted-foreground mt-1">
         Last {recent.length} Z2 sessions · HR Δ {deltaHr} bpm
         {estimatedCount > 0 && ` · ${estimatedCount} points estimated from max HR`} ·
-        <span className="text-pink-300"> pink dashed line = speed÷HR efficiency index (relative scale)</span> · {effLegend}
+        <span className="text-pink-300">
+          {' '}
+          pink dashed line = speed÷HR efficiency index (relative scale)
+        </span>{' '}
+        · {effLegend}
       </p>
     </div>
   );
@@ -600,6 +608,68 @@ function Z2ScatterChart({ points }: { points: { date: string; hr: number; speed:
   );
 }
 
+type VO2ProtocolSeriesPoint = VO2Point & {
+  speed: number;
+  hr: number;
+  workMin: number;
+  restMin: number;
+};
+
+type VO2ProtocolChartPoint = VO2ProtocolSeriesPoint & {
+  key: string;
+  x: number;
+  y: number;
+};
+
+function VO2ProtocolPointMarker({
+  index,
+  point,
+  protocol,
+  strokeColor,
+}: {
+  index: number;
+  point: VO2ProtocolChartPoint;
+  protocol: string;
+  strokeColor: string;
+}) {
+  const speedDy = index % 2 === 0 ? -8 : 14;
+  const hrDy = index % 2 === 0 ? 11 : -10;
+  const speedLabel = point.speed > 0 ? `${point.speed}k` : '';
+  const hrLabel = `${Math.round(point.hr)}`;
+  const workRest = point.workMin > 0 ? `${point.workMin}/${point.restMin}m` : 'n/a';
+
+  return (
+    <g key={point.key}>
+      <circle cx={point.x} cy={point.y} r={2.8} fill={strokeColor}>
+        <title>
+          {point.session_date} {protocol}: {point.speed > 0 ? `${point.speed} km/h` : 'no speed'} ·
+          HR {point.hr} · work/rest {workRest}
+        </title>
+      </circle>
+      {speedLabel && (
+        <text
+          x={point.x}
+          y={point.y + speedDy}
+          fontSize="7"
+          fill={CHART_COLORS.label}
+          textAnchor="middle"
+        >
+          {speedLabel}
+        </text>
+      )}
+      <text
+        x={point.x}
+        y={point.y + hrDy}
+        fontSize="7"
+        fill={CHART_COLORS.label}
+        textAnchor="middle"
+      >
+        {hrLabel}
+      </text>
+    </g>
+  );
+}
+
 // ─── VO2 protocol chart ─────────────────────────────────────────────────────
 
 function VO2ProtocolChart({
@@ -612,7 +682,7 @@ function VO2ProtocolChart({
   label: string;
 }) {
   const defaultRestByProtocol: Record<string, number> = { VO2_4x4: 3, VO2_1min: 1 };
-  const series = rows
+  const series: VO2ProtocolSeriesPoint[] = rows
     .filter((r) => r.protocol === protocol)
     .map((r) => ({
       ...r,
@@ -643,7 +713,7 @@ function VO2ProtocolChart({
     hr: Math.round(tick.value),
     y: T + (1 - tick.ratio) * ph,
   }));
-  const pts = series.map((r, i) => ({
+  const pts: VO2ProtocolChartPoint[] = series.map((r, i) => ({
     key: `${r.session_date}-${protocol}-${r.hr}-${r.speed}`,
     x: series.length === 1 ? L + pw / 2 : L + i * (pw / (series.length - 1)),
     y: T + (1 - (r.hr - minHr) / span) * ph,
@@ -706,43 +776,15 @@ function VO2ProtocolChart({
             strokeLinejoin="round"
           />
         )}
-        {pts.map((p, i) => {
-          const speedDy = i % 2 === 0 ? -8 : 14;
-          const hrDy = i % 2 === 0 ? 11 : -10;
-          const spd = p.speed > 0 ? `${p.speed}k` : '';
-          const hrLabel = `${Math.round(p.hr)}`;
-          const workRest = p.workMin > 0 ? `${p.workMin}/${p.restMin}m` : 'n/a';
-          return (
-            <g key={p.key}>
-              <circle cx={p.x} cy={p.y} r={2.8} fill={strokeColor}>
-                <title>
-                  {p.session_date} {protocol}: {p.speed > 0 ? `${p.speed} km/h` : 'no speed'} · HR
-                  {p.hr} · work/rest {workRest}
-                </title>
-              </circle>
-              {spd && (
-                <text
-                  x={p.x}
-                  y={p.y + speedDy}
-                  fontSize="7"
-                  fill={CHART_COLORS.label}
-                  textAnchor="middle"
-                >
-                  {spd}
-                </text>
-              )}
-              <text
-                x={p.x}
-                y={p.y + hrDy}
-                fontSize="7"
-                fill={CHART_COLORS.label}
-                textAnchor="middle"
-              >
-                {hrLabel}
-              </text>
-            </g>
-          );
-        })}
+        {pts.map((point, index) => (
+          <VO2ProtocolPointMarker
+            key={point.key}
+            index={index}
+            point={point}
+            protocol={protocol}
+            strokeColor={strokeColor}
+          />
+        ))}
         <text x={W / 2} y={H - 5} fontSize="8" fill={CHART_COLORS.label} textAnchor="middle">
           Session date
         </text>
