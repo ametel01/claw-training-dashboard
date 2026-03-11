@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { execFile } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -73,8 +73,9 @@ describe('health-pipeline cli', () => {
     expect(stderr).toBe('');
     expect(readFileSync(resolve(repo.repoRoot, 'imports', 'normalized', 'workouts.ndjson'), 'utf8'))
       .toContain('apple_watch_workout');
-    expect(
-      readFileSync(resolve(repo.repoRoot, 'imports', 'logs', 'ingestion-2026-03-10.md'), 'utf8'),
-    ).toContain('# Ingestion');
+    const logRoot = resolve(repo.repoRoot, 'imports', 'logs');
+    const ingestionLog = readdirSync(logRoot).find((file) => /^ingestion-\d{4}-\d{2}-\d{2}\.md$/.test(file));
+    expect(ingestionLog).toBeDefined();
+    expect(readFileSync(resolve(logRoot, ingestionLog!), 'utf8')).toContain('# Ingestion');
   });
 });
