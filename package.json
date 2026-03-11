@@ -21,7 +21,7 @@
     "test:e2e": "NODE_NO_WARNINGS=1 bun run build && NODE_NO_WARNINGS=1 playwright test",
     "test:watch": "NODE_NO_WARNINGS=1 vitest",
     "test:ci": "bun run verify && bun run test:e2e",
-    "verify": "bun run typecheck && bun run lint && bun run test"
+    "verify": "bun run format && bun run typecheck && bun run lint && bun run test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.5",
