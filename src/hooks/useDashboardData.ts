@@ -10,6 +10,15 @@ export interface UseDashboardDataResult {
   refresh: DashboardRefresh;
 }
 
+function assertDashboardJsonResponse(res: Response) {
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('text/html')) {
+    throw new Error(
+      'Expected dashboard JSON but received a non-JSON response. Ensure the backend is running on http://127.0.0.1:8080.',
+    );
+  }
+}
+
 export function useDashboardData(): UseDashboardDataResult {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,6 +30,7 @@ export function useDashboardData(): UseDashboardDataResult {
     try {
       const res = await fetch('/data.json', { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed to load data');
+      assertDashboardJsonResponse(res);
       const json = await res.json();
       setData(json);
     } catch (e) {
