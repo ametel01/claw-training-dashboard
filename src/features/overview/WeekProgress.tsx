@@ -79,15 +79,7 @@ function buildWeekProgressSummary(row: WeekProgressRow, today: string): WeekProg
   };
 }
 
-function renderChip({
-  label,
-  done,
-  detail,
-}: {
-  label: string;
-  done: boolean;
-  detail: string;
-}) {
+function renderChip({ label, done, detail }: { label: string; done: boolean; detail: string }) {
   return (
     <span
       className={cn(
