@@ -4,6 +4,14 @@ import { OverviewTab } from '@/features/overview/OverviewTab';
 import { StrengthTab } from '@/features/strength/StrengthTab';
 import { UploadsTab } from '@/features/uploads/UploadsTab';
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   DASHBOARD_TABS,
   isDashboardTab,
   type TabValue,
@@ -32,18 +40,43 @@ export function DashboardTabs({
   return (
     <Tabs
       value={activeTab}
+      className="flex flex-col gap-2"
       onValueChange={(value) => {
         if (isDashboardTab(value)) {
           onTabChange(value);
         }
       }}
     >
-      <TabsList className="my-4 w-full justify-start border border-border/30 bg-muted/30">
+      <div className="my-3 sm:hidden">
+        <Select
+          value={activeTab}
+          onValueChange={(value) => {
+            if (isDashboardTab(value)) {
+              onTabChange(value);
+            }
+          }}
+        >
+          <SelectTrigger className="h-11 border-border/30 bg-muted/30 text-sm">
+            <SelectValue placeholder="Select section" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {DASHBOARD_TABS.map((tab) => (
+                <SelectItem key={tab.value} value={tab.value}>
+                  {tab.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <TabsList className="hidden h-auto w-full flex-wrap justify-start gap-1 rounded-2xl border border-border/30 bg-muted/30 p-1 sm:my-4 sm:flex">
         {DASHBOARD_TABS.map((tab) => (
           <TabsTrigger
             key={tab.value}
             value={tab.value}
-            className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            className="min-h-10 rounded-xl px-4 py-2 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
             {tab.label}
           </TabsTrigger>

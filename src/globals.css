@@ -27,11 +27,18 @@
 }
 
 :root {
+  color-scheme: dark;
   --ok: #00c87a;
   --warn: #f0a030;
   --danger: #e05060;
   --dim: #243040;
   --muted-text: #4a6275;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
 * {
@@ -41,7 +48,8 @@
 body {
   background-color: hsl(210 60% 4%);
   color: hsl(210 30% 85%);
-  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
   font-family: "DM Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

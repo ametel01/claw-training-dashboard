@@ -409,7 +409,7 @@ export function DetailDialog({ date, data, open, onClose, onRefresh }: DetailDia
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-[92dvh] sm:max-h-[85dvh] sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-xl">
             Training details {dayName ? `· ${dayName}` : ''} {date}

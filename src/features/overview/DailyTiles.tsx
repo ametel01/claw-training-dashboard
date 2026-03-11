@@ -173,7 +173,7 @@ export function DailyTiles({
       <summary className="mb-3 list-none cursor-pointer text-sm font-medium uppercase tracking-widest text-muted-foreground">
         Last 14 Days
       </summary>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-2 xl:grid-cols-3">
         {orderedTiles.map((tile) => (
           <DailyTileCard
             key={tile.session_date}

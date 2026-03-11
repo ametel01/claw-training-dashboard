@@ -947,7 +947,7 @@ function AerobicTestModal({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle className="text-sm">{kind ? titles[kind] : ''}</DialogTitle>
         </DialogHeader>
@@ -1218,7 +1218,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
   const pctClamped = Math.min(100, Math.round(pct));
 
   return (
-    <div className="space-y-4 py-4">
+    <div className="flex flex-col gap-4 py-4">
       {/* Adaptation status */}
       {adaptState && (
         <Card className="border-border/50">
@@ -1332,7 +1332,7 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* AFS + metric cards */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-5">
             <Card className={cn('border', getAfsBandColor(afsLast?.afs ?? null))}>
               <CardContent className="p-3">
                 <p className="text-xs text-muted-foreground">AFS</p>
@@ -1389,33 +1389,53 @@ export function CardioTab({ data, onRefresh }: CardioTabProps) {
           </div>
 
           {/* Test specs */}
-          <div className="rounded border border-border/30 bg-muted/10 p-3 space-y-2 text-xs text-muted-foreground">
-            <p>
-              <strong className="text-foreground">Fixed-Speed Cardiovascular Efficiency</strong> ·
-              Run at <strong>11.0 km/h</strong>, <strong>0% incline</strong>,<strong>2.4 km</strong>
-              (~13:05). Log avg/max HR. Lower HR over time = better.
-            </p>
-            <p>
-              <strong className="text-foreground">Fixed-HR Aerobic Capacity</strong> ·
-              <strong>30 min</strong> treadmill at <strong>0% incline</strong>, hold
-              <strong>120 bpm</strong>. Log avg speed. Higher speed over time = better.
-            </p>
-            <p>
-              <strong className="text-foreground">Aerobic Decoupling (Pa:Hr)</strong> · During
-              steady Z2 run (prefer <strong>40+ min</strong>, min 30), keep pace constant. Log
-              first/second-half HR. Lower % drift = better.
-            </p>
-          </div>
+          <details className="rounded border border-border/30 bg-muted/10 p-3 text-xs text-muted-foreground">
+            <summary className="cursor-pointer list-none text-xs font-medium uppercase tracking-widest text-foreground">
+              Test protocols
+            </summary>
+            <div className="mt-3 flex flex-col gap-2">
+              <p>
+                <strong className="text-foreground">Fixed-Speed Cardiovascular Efficiency</strong> ·
+                Run at <strong>11.0 km/h</strong>, <strong>0% incline</strong>,{' '}
+                <strong>2.4 km</strong> (~13:05). Log avg/max HR. Lower HR over time = better.
+              </p>
+              <p>
+                <strong className="text-foreground">Fixed-HR Aerobic Capacity</strong> ·{' '}
+                <strong>30 min</strong> treadmill at <strong>0% incline</strong>, hold{' '}
+                <strong>120 bpm</strong>. Log avg speed. Higher speed over time = better.
+              </p>
+              <p>
+                <strong className="text-foreground">Aerobic Decoupling (Pa:Hr)</strong> · During
+                steady Z2 run (prefer <strong>40+ min</strong>, min 30), keep pace constant. Log
+                first/second-half HR. Lower % drift = better.
+              </p>
+            </div>
+          </details>
 
           {/* Log buttons */}
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={() => setModal('FIXED_SPEED')}>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setModal('FIXED_SPEED')}
+              className="w-full"
+            >
               Log Fixed-Speed (11 km/h)
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setModal('FIXED_HR')}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setModal('FIXED_HR')}
+              className="w-full"
+            >
               Log Fixed-HR (120 bpm)
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setModal('ZONE2_SESSION')}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setModal('ZONE2_SESSION')}
+              className="w-full"
+            >
               Log Decoupling (Z2)
             </Button>
           </div>

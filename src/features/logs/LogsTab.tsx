@@ -68,7 +68,7 @@ export function LogsTab({ entries }: LogsTabProps) {
 
   return (
     <div className="py-4">
-      <ScrollArea className="h-[600px] rounded-md border border-border/50">
+      <ScrollArea className="max-h-[70dvh] rounded-md border border-border/50 sm:h-[600px]">
         <div className="space-y-1 p-4">
           {entries.map((entry, index) => (
             <AuditEntryItem

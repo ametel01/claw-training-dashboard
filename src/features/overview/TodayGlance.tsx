@@ -87,7 +87,7 @@ function buildTodaySummary(day: DailyTile, details: Details, today: string): Tod
 
 function TodayTaskList({ tasks }: { tasks: TodayTask[] }) {
   return (
-    <div className="mb-3 grid grid-cols-2 gap-1.5 text-xs">
+    <div className="mb-3 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
       {tasks.map((task) => (
         <div
           key={task.key}
@@ -126,7 +126,7 @@ export function TodayGlance({ tiles, details, onStartSession }: TodayGlanceProps
   return (
     <Card className="border-border/50">
       <CardContent className="p-4">
-        <div className="mb-2 flex items-center justify-between">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: summary.dotColor }} />
             <p className="text-xs uppercase tracking-widest text-muted-foreground">
@@ -139,13 +139,17 @@ export function TodayGlance({ tiles, details, onStartSession }: TodayGlanceProps
         </div>
         <p className="mb-3 text-xs text-muted-foreground">
           Status: <strong className="text-foreground">{summary.status}</strong> · Planned time:
-          <strong className="text-foreground">
+          <strong className="ml-1 text-foreground">
             {Math.floor(summary.estimatedMinutes / 60)}h {summary.estimatedMinutes % 60}m
           </strong>
         </p>
         <TodayTaskList tasks={summary.tasks} />
         {summary.status === 'Not Started' ? (
-          <Button size="sm" onClick={() => onStartSession(today)} className="text-xs">
+          <Button
+            size="sm"
+            onClick={() => onStartSession(today)}
+            className="w-full text-xs sm:w-auto"
+          >
             Start Session
           </Button>
         ) : null}

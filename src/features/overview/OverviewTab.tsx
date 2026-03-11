@@ -127,8 +127,8 @@ export function OverviewTab({ data, onDateClick, onCycleRecoveryStatus }: Overvi
   const metrics = buildOverviewMetrics(data);
 
   return (
-    <div className="space-y-6 py-4">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="flex flex-col gap-6 py-4">
+      <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
         <StatCard label="Barbell Sessions" value={totals.barbell_sessions ?? 0} accent />
         <StatCard label="Cardio Sessions" value={totals.cardio_sessions ?? 0} />
         <StatCard label="Rings Sessions" value={totals.rings_sessions ?? 0} />
@@ -136,7 +136,7 @@ export function OverviewTab({ data, onDateClick, onCycleRecoveryStatus }: Overvi
         <StatCard label="Active Days (14d)" value={totals.active_days_last_14 ?? 0} />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
         <Card className="border-border/50">
           <CardContent className="space-y-2 p-4">
             <p className="text-xs uppercase tracking-widest text-muted-foreground">

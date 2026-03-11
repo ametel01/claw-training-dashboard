@@ -43,7 +43,7 @@ export function TrainingMaxCard({ tm, onRefresh }: TrainingMaxCardProps) {
 
   return (
     <Card className="border-border/50">
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="flex flex-col gap-3 p-4">
         <div className="flex items-center justify-between">
           <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
             {tm.lift}
@@ -55,13 +55,13 @@ export function TrainingMaxCard({ tm, onRefresh }: TrainingMaxCardProps) {
         <p className="font-display text-3xl font-bold text-primary">
           {Number(tm.tm_kg).toFixed(1)} <span className="text-sm text-muted-foreground">kg</span>
         </p>
-        <div className="flex gap-1">
+        <div className="grid grid-cols-3 gap-1.5">
           <Button
             variant="outline"
             size="sm"
             disabled={loading}
             onClick={() => adjustDelta(-2.5)}
-            className="flex-1 text-xs h-7"
+            className="text-xs"
           >
             −2.5
           </Button>
@@ -70,7 +70,7 @@ export function TrainingMaxCard({ tm, onRefresh }: TrainingMaxCardProps) {
             size="sm"
             disabled={loading}
             onClick={() => adjustDelta(2.5)}
-            className="flex-1 text-xs h-7"
+            className="text-xs"
           >
             +2.5
           </Button>
@@ -79,21 +79,21 @@ export function TrainingMaxCard({ tm, onRefresh }: TrainingMaxCardProps) {
             size="sm"
             disabled={loading}
             onClick={() => adjustDelta(5)}
-            className="flex-1 text-xs h-7"
+            className="text-xs"
           >
             +5
           </Button>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <Input
             type="number"
             step="0.5"
             placeholder="Set exact kg"
             value={customVal}
             onChange={(e) => setCustomVal(e.target.value)}
-            className="h-8 text-xs"
+            className="h-10 text-sm"
           />
-          <Button size="sm" disabled={loading} onClick={setExact} className="h-8 text-xs px-3">
+          <Button size="sm" disabled={loading} onClick={setExact} className="text-xs sm:px-3">
             Set
           </Button>
         </div>

@@ -27,7 +27,7 @@ export default function App() {
   if (error && !data) return <ErrorScreen error={error} />;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <TopBar
         onRefresh={refreshActions.refreshFromDb}
         onRefreshWithHealth={refreshActions.refreshWithHealth}
@@ -40,7 +40,7 @@ export default function App() {
           data?.generatedAt ? `Data generated: ${new Date(data.generatedAt).toLocaleString()}` : ''
         }
       />
-      <main className="mx-auto max-w-5xl px-4 pb-8">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-2 sm:px-4 sm:pb-10 lg:px-6">
         {data ? (
           <>
             <DashboardOverviewHeader data={data} onStartSession={detailDialog.openForDate} />

@@ -125,14 +125,17 @@ export function CyclePlan({ plan }: CyclePlanProps) {
                 );
               }
               return (
-                <div key={ws}>
-                  <p className="text-xs text-muted-foreground mb-2">
+                <section
+                  key={ws}
+                  className="rounded-xl border border-border/30 bg-muted/10 p-3 sm:p-4"
+                >
+                  <p className="mb-3 text-xs text-muted-foreground">
                     Week {wi + 1} <span className="font-mono">· {ws}</span>
                   </p>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-2 lg:grid-cols-4">
                     {cells}
                   </div>
-                </div>
+                </section>
               );
             })}
           </div>
@@ -140,7 +143,7 @@ export function CyclePlan({ plan }: CyclePlanProps) {
       </Card>
 
       <Dialog open={!!selectedDate} onOpenChange={(open) => !open && setSelectedDate(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base">Planned session · {selectedDate}</DialogTitle>
           </DialogHeader>
