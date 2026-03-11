@@ -50,7 +50,6 @@ export function createTempRepo(options: CreateTempRepoOptions = {}): TempRepo {
   const liveDbPath = resolve(dbStateRoot, 'training_dashboard.db');
 
   mkdirSync(resolve(repoRoot, 'dashboard'), { recursive: true });
-  mkdirSync(resolve(repoRoot, 'expenses'), { recursive: true });
   mkdirSync(resolve(repoRoot, 'dist'), { recursive: true });
   mkdirSync(dbStateRoot, { recursive: true });
 

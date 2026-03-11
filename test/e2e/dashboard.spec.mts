@@ -64,7 +64,6 @@ function createTempRepo(): TempRepo {
   const dbStateRoot = resolve(repoRoot, '.state');
 
   mkdirSync(resolve(repoRoot, 'dashboard'), { recursive: true });
-  mkdirSync(resolve(repoRoot, 'expenses'), { recursive: true });
   mkdirSync(dbStateRoot, { recursive: true });
 
   copyFileSync(resolve(projectRoot, 'training_dashboard.db'), resolve(repoRoot, 'training_dashboard.db'));
@@ -76,7 +75,6 @@ function createTempRepo(): TempRepo {
   cpSync(resolve(projectRoot, 'server', 'dist'), resolve(repoRoot, 'server', 'dist'), {
     recursive: true,
   });
-  cpSync(resolve(projectRoot, 'expenses'), resolve(repoRoot, 'expenses'), { recursive: true });
   return { dbStateRoot, repoRoot };
 }
 
