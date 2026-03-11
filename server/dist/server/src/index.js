@@ -41174,6 +41174,11 @@ app.get(/^(?!\/api\/).*/, (req, res) => {
 app.use("/api", (_req, res) => {
   sendJson(res, 404, { ok: false, error: "Not found" });
 });
-app.listen(port, "127.0.0.1", () => {
-  console.log(`Serving dashboard on http://127.0.0.1:${port}`);
-});
+if (process.env.CLAW_DISABLE_AUTOSTART !== "1") {
+  app.listen(port, "127.0.0.1", () => {
+    console.log(`Serving dashboard on http://127.0.0.1:${port}`);
+  });
+}
+export {
+  app
+};

@@ -380,6 +380,28 @@ function Z2HrTrendChart({
             strokeDasharray="4 2"
           />
         )}
+        {effTrend.map((e, i) => {
+          const y = T +
+            (1 -
+              (e.eff - Math.min(...effTrend.map((v) => v.eff))) /
+                Math.max(0.0001, Math.max(...effTrend.map((v) => v.eff)) - Math.min(...effTrend.map((v) => v.eff)))) *
+              ph;
+          const dy = i % 2 === 0 ? -7 : 11;
+          return (
+            <g key={`eff-${e.x}-${e.eff}`}>
+              <circle cx={e.x} cy={y} r={2.2} fill={CHART_COLORS.efficiency} />
+              <text
+                x={e.x}
+                y={y + dy}
+                fontSize="7"
+                fill={CHART_COLORS.efficiency}
+                textAnchor="middle"
+              >
+                {e.eff.toFixed(3)}
+              </text>
+            </g>
+          );
+        })}
         {points.map((p) => (
           <circle
             key={p.key}
@@ -423,7 +445,8 @@ function Z2HrTrendChart({
       </svg>
       <p className="text-xs text-muted-foreground mt-1">
         Last {recent.length} Z2 sessions · HR Δ {deltaHr} bpm
-        {estimatedCount > 0 && ` · ${estimatedCount} points estimated from max HR`}·{effLegend}
+        {estimatedCount > 0 && ` · ${estimatedCount} points estimated from max HR`} ·
+        <span className="text-pink-300"> pink dashed line = speed÷HR efficiency index (relative scale)</span> · {effLegend}
       </p>
     </div>
   );
@@ -684,8 +707,10 @@ function VO2ProtocolChart({
           />
         )}
         {pts.map((p, i) => {
-          const dy = i % 2 === 0 ? -6 : 12;
+          const speedDy = i % 2 === 0 ? -8 : 14;
+          const hrDy = i % 2 === 0 ? 11 : -10;
           const spd = p.speed > 0 ? `${p.speed}k` : '';
+          const hrLabel = `${Math.round(p.hr)}`;
           const workRest = p.workMin > 0 ? `${p.workMin}/${p.restMin}m` : 'n/a';
           return (
             <g key={p.key}>
@@ -698,7 +723,7 @@ function VO2ProtocolChart({
               {spd && (
                 <text
                   x={p.x}
-                  y={p.y + dy}
+                  y={p.y + speedDy}
                   fontSize="7"
                   fill={CHART_COLORS.label}
                   textAnchor="middle"
@@ -706,6 +731,15 @@ function VO2ProtocolChart({
                   {spd}
                 </text>
               )}
+              <text
+                x={p.x}
+                y={p.y + hrDy}
+                fontSize="7"
+                fill={CHART_COLORS.label}
+                textAnchor="middle"
+              >
+                {hrLabel}
+              </text>
             </g>
           );
         })}
