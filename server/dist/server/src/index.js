@@ -480,19 +480,21 @@ var require_supports_color = __commonJS((exports, module) => {
   var tty = __require("tty");
   var hasFlag = require_has_flag();
   var { env } = process;
-  var forceColor;
+  var flagForceColor;
   if (hasFlag("no-color") || hasFlag("no-colors") || hasFlag("color=false") || hasFlag("color=never")) {
-    forceColor = 0;
+    flagForceColor = 0;
   } else if (hasFlag("color") || hasFlag("colors") || hasFlag("color=true") || hasFlag("color=always")) {
-    forceColor = 1;
+    flagForceColor = 1;
   }
-  if ("FORCE_COLOR" in env) {
-    if (env.FORCE_COLOR === "true") {
-      forceColor = 1;
-    } else if (env.FORCE_COLOR === "false") {
-      forceColor = 0;
-    } else {
-      forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+  function envForceColor() {
+    if ("FORCE_COLOR" in env) {
+      if (env.FORCE_COLOR === "true") {
+        return 1;
+      }
+      if (env.FORCE_COLOR === "false") {
+        return 0;
+      }
+      return env.FORCE_COLOR.length === 0 ? 1 : Math.min(Number.parseInt(env.FORCE_COLOR, 10), 3);
     }
   }
   function translateLevel(level) {
@@ -506,15 +508,22 @@ var require_supports_color = __commonJS((exports, module) => {
       has16m: level >= 3
     };
   }
-  function supportsColor(haveStream, streamIsTTY) {
+  function supportsColor(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
+    const noFlagForceColor = envForceColor();
+    if (noFlagForceColor !== undefined) {
+      flagForceColor = noFlagForceColor;
+    }
+    const forceColor = sniffFlags ? flagForceColor : noFlagForceColor;
     if (forceColor === 0) {
       return 0;
     }
-    if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) {
-      return 3;
-    }
-    if (hasFlag("color=256")) {
-      return 2;
+    if (sniffFlags) {
+      if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) {
+        return 3;
+      }
+      if (hasFlag("color=256")) {
+        return 2;
+      }
     }
     if (haveStream && !streamIsTTY && forceColor === undefined) {
       return 0;
@@ -531,7 +540,7 @@ var require_supports_color = __commonJS((exports, module) => {
       return 1;
     }
     if ("CI" in env) {
-      if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => (sign in env)) || env.CI_NAME === "codeship") {
+      if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE", "DRONE"].some((sign) => (sign in env)) || env.CI_NAME === "codeship") {
         return 1;
       }
       return min;
@@ -543,7 +552,7 @@ var require_supports_color = __commonJS((exports, module) => {
       return 3;
     }
     if ("TERM_PROGRAM" in env) {
-      const version = parseInt((env.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+      const version = Number.parseInt((env.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
       switch (env.TERM_PROGRAM) {
         case "iTerm.app":
           return version >= 3 ? 3 : 2;
@@ -562,14 +571,17 @@ var require_supports_color = __commonJS((exports, module) => {
     }
     return min;
   }
-  function getSupportLevel(stream) {
-    const level = supportsColor(stream, stream && stream.isTTY);
+  function getSupportLevel(stream, options = {}) {
+    const level = supportsColor(stream, {
+      streamIsTTY: stream && stream.isTTY,
+      ...options
+    });
     return translateLevel(level);
   }
   module.exports = {
     supportsColor: getSupportLevel,
-    stdout: translateLevel(supportsColor(true, tty.isatty(1))),
-    stderr: translateLevel(supportsColor(true, tty.isatty(2)))
+    stdout: getSupportLevel({ isTTY: tty.isatty(1) }),
+    stderr: getSupportLevel({ isTTY: tty.isatty(2) })
   };
 });
 
