@@ -3,9 +3,9 @@
   "private": true,
   "packageManager": "bun@1.3.9",
   "scripts": {
-    "dev": "concurrently -k -n server,client -c cyan,yellow \"bun run dev:server\" \"bun run dev:client\"",
+    "dev": "concurrently -k -n server,client -c cyan,yellow \"PORT=8788 bun run dev:server\" \"DASHBOARD_SERVER_PORT=8788 bun run dev:client\"",
     "dev:client": "vite",
-    "dev:server": "PORT=8080 tsx watch server/src/index.ts",
+    "dev:server": "tsx watch server/src/index.ts",
     "build": "vite build && bun run build:dashboard && bun run build:server",
     "preview": "vite preview",
     "build:dashboard": "bun build ./dashboard/src/main.ts --outfile ./dashboard/app.js --target browser --format iife --minify",

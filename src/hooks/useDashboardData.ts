@@ -14,7 +14,7 @@ function assertDashboardJsonResponse(res: Response) {
   const contentType = res.headers.get('content-type') || '';
   if (contentType.includes('text/html')) {
     throw new Error(
-      'Expected dashboard JSON but received a non-JSON response. Ensure the backend is running on http://127.0.0.1:8080.',
+      'Expected dashboard JSON but received a non-JSON response. Ensure the local server from `bun run dev` is running and reachable.',
     );
   }
 }
