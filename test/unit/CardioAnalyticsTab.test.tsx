@@ -59,16 +59,27 @@ describe('CardioAnalyticsTab', () => {
     const z2Table = screen.getByRole('table', { name: 'Z2 raw cardio session data' });
     const vo2Table = screen.getByRole('table', { name: 'VO2 max raw cardio session data' });
 
-    expect(within(z2Table).getByRole('columnheader', { name: 'avg_speed_kmh' })).toBeInTheDocument();
-    expect(within(z2Table).getByRole('columnheader', { name: 'created_at' })).toBeInTheDocument();
-    expect(within(z2Table).getByText('16')).toBeInTheDocument();
-    expect(within(z2Table).getByText('17')).toBeInTheDocument();
+    expect(
+      within(z2Table).getByRole('columnheader', { name: 'Avg Speed (km/h)' }),
+    ).toBeInTheDocument();
+    expect(
+      within(z2Table).queryByRole('columnheader', { name: 'Protocol' }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(z2Table).queryByRole('columnheader', { name: 'created_at' }),
+    ).not.toBeInTheDocument();
+    expect(within(z2Table).queryByRole('columnheader', { name: 'id' })).not.toBeInTheDocument();
+    expect(within(z2Table).queryByRole('columnheader', { name: 'slot' })).not.toBeInTheDocument();
     expect(within(z2Table).getByText('8.2')).toBeInTheDocument();
-    expect(within(z2Table).queryByText('14')).not.toBeInTheDocument();
+    expect(within(z2Table).getAllByText('from TCX')).toHaveLength(2);
+    expect(within(z2Table).queryByText('2026-03-07')).not.toBeInTheDocument();
 
-    expect(within(vo2Table).getByText('14')).toBeInTheDocument();
+    expect(within(vo2Table).getByText('2026-03-07')).toBeInTheDocument();
+    expect(within(vo2Table).getByRole('columnheader', { name: 'Protocol' })).toBeInTheDocument();
     expect(within(vo2Table).getByText('VO2_1min')).toBeInTheDocument();
     expect(within(vo2Table).getByText('15')).toBeInTheDocument();
-    expect(within(vo2Table).queryByText('16')).not.toBeInTheDocument();
+    expect(within(vo2Table).getByText('from dashboard')).toBeInTheDocument();
+    expect(within(vo2Table).queryByRole('columnheader', { name: 'id' })).not.toBeInTheDocument();
+    expect(within(vo2Table).queryByRole('columnheader', { name: 'slot' })).not.toBeInTheDocument();
   });
 });
