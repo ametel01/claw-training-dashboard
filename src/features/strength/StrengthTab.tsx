@@ -16,28 +16,11 @@ export function StrengthTab({ data, onRefresh }: StrengthTabProps) {
   const plan = data.currentCyclePlan || [];
 
   return (
-    <div className="space-y-6 py-4">
-      {/* Cycle Controls */}
-      <CycleControl cycleControl={cycleControl} onRefresh={onRefresh} />
-
-      {/* Training Maxes */}
-      {tms.length > 0 && (
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 font-medium">
-            Training Maxes
-          </h3>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {tms.map((tm) => (
-              <TrainingMaxCard key={tm.lift} tm={tm} onRefresh={onRefresh} />
-            ))}
-          </div>
-        </div>
-      )}
-
+    <div className="flex flex-col gap-6 py-4">
       {/* Estimated 1RM */}
       {est1rm.length > 0 && (
         <div>
-          <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 font-medium">
+          <h3 className="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
             Estimated 1RM — Last 12 Weeks
           </h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -50,6 +33,23 @@ export function StrengthTab({ data, onRefresh }: StrengthTabProps) {
 
       {/* Current Cycle Plan */}
       {plan.length > 0 && <CyclePlan plan={plan} />}
+
+      {/* Training Maxes */}
+      {tms.length > 0 && (
+        <div>
+          <h3 className="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Training Maxes
+          </h3>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {tms.map((tm) => (
+              <TrainingMaxCard key={tm.lift} tm={tm} onRefresh={onRefresh} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Cycle Controls */}
+      <CycleControl cycleControl={cycleControl} onRefresh={onRefresh} />
     </div>
   );
 }
