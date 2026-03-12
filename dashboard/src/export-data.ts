@@ -286,21 +286,48 @@ ORDER BY bs.session_date, bsl.category, bsl.set_no
 
 const cardioRows = sqlJson(`
 SELECT
+  cs.id,
   cs.session_date,
+  cs.slot,
   cs.protocol,
   cs.duration_min,
+  cs.avg_hr,
   cs.max_hr,
+  CASE
+    WHEN cs.protocol IN ('VO2_4x4', 'VO2_1min') THEN vo2.speed_kmh
+    WHEN instr(lower(cs.notes), '@ ') > 0
+      AND instr(lower(cs.notes), ' km/h') > instr(lower(cs.notes), '@ ')
+      THEN ROUND(
+        CAST(
+          substr(
+            lower(cs.notes),
+            instr(lower(cs.notes), '@ ') + 2,
+            instr(lower(cs.notes), ' km/h') - (instr(lower(cs.notes), '@ ') + 2)
+          ) AS REAL
+        ),
+        2
+      )
+    WHEN instr(lower(cs.notes), 'speed ') > 0
+      AND instr(lower(cs.notes), ' km/h') > instr(lower(cs.notes), 'speed ')
+      THEN ROUND(
+        CAST(
+          substr(
+            lower(cs.notes),
+            instr(lower(cs.notes), 'speed ') + 6,
+            instr(lower(cs.notes), ' km/h') - (instr(lower(cs.notes), 'speed ') + 6)
+          ) AS REAL
+        ),
+        2
+      )
+    ELSE NULL
+  END AS avg_speed_kmh,
+  cs.z2_cap_respected,
   cs.notes,
-  ci.interval_no,
-  ci.work_min,
-  ci.easy_min,
-  ci.target_speed_kmh,
-  ci.achieved_hr,
-  ci.note AS interval_note
+  cs.created_at
 FROM cardio_sessions cs
-LEFT JOIN cardio_intervals ci ON ci.session_id = cs.id
+LEFT JOIN v_vo2_sessions vo2 ON vo2.id = cs.id
 WHERE cs.session_date >= date('now','localtime','-90 day')
-ORDER BY cs.session_date, ci.interval_no
+ORDER BY cs.session_date DESC, cs.id DESC
 `)
 
 const ringsRows = sqlJson(`

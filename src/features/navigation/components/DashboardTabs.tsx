@@ -1,4 +1,5 @@
 import { CardioTab } from '@/features/cardio/CardioTab';
+import { CardioAnalyticsTab } from '@/features/cardio/CardioAnalyticsTab';
 import { LogsTab } from '@/features/logs/LogsTab';
 import { OverviewTab } from '@/features/overview/OverviewTab';
 import { StrengthTab } from '@/features/strength/StrengthTab';
@@ -95,6 +96,9 @@ export function DashboardTabs({
       </TabsContent>
       <TabsContent value="cardio">
         <CardioTab data={data} onRefresh={onRefresh} />
+      </TabsContent>
+      <TabsContent value="cardio-analytics">
+        <CardioAnalyticsTab data={data} />
       </TabsContent>
       <TabsContent value="uploads">
         <UploadsTab onRefresh={onRefresh} />

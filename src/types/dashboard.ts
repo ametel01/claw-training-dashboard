@@ -95,13 +95,18 @@ export interface PlannedBarbellRow {
 }
 
 export interface CardioRow {
+  id?: number;
   session_date: string;
+  slot?: string;
   protocol: string;
   duration_min?: number;
   avg_hr?: number;
   max_hr?: number;
+  avg_speed_kmh?: number | null;
+  z2_cap_respected?: number | null;
   speed_kmh?: number;
   notes?: string;
+  created_at?: string;
   interval_no?: number;
   work_min?: number;
   easy_min?: number;

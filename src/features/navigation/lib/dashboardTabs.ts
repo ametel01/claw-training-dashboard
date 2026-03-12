@@ -2,6 +2,7 @@ export const DASHBOARD_TABS = [
   { value: 'overview', label: 'Overview' },
   { value: 'strength', label: 'Strength' },
   { value: 'cardio', label: 'Cardio' },
+  { value: 'cardio-analytics', label: 'Cardio Analytics' },
   { value: 'uploads', label: 'Uploads' },
   { value: 'logs', label: 'Logs & History' },
 ] as const;
